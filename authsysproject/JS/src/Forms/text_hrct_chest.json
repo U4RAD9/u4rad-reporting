@@ -341,14 +341,7 @@
 
 
 
-
-
-
-
-
-    
-    
-    
+ 
 
     "MRILocationR": "Extra-axial lentiform shaped subacute hemorrhage seen in right {1} lobes,",
     "MRILocationimpressionMR": "Subacute SDH in right {1} lobes with mass effect as described.",
@@ -470,20 +463,13 @@
     "HydrocephalusImpress": "Obstructive hydrocephalus with dilated {1} as described. ",
     "HydrocephalusNoIvans": "There is evidence of dilatation of {1},. transependymal edema seen. ",
     "HydrocephalusNoEdeama": "There is evidence of dilatation of {1},. Evans index measures {2}. No transependymal edema seen. ",
-    "HydrocephalusNoImpress": "Non-obstructive hydrocephalus with dilated {1} as described. "
+    "HydrocephalusNoImpress": "Non-obstructive hydrocephalus with dilated {1} as described. ", 
 
+    "AudiometryLeftAbnormal": "Hearing loss in left ear at the volume of {1}.",
+    "AudiometryRightAbnormal": "Hearing loss in right ear at the volume of {1}.",
+    "AudiometryLeftAbnormalBoth": "{1}",
+    "AudiometryRightAbnormalBoth": "{1}",
+    "AudiometryAbnormalImpression": "{1} hearing loss in left ear and {2} hearing loss in right ear"
 
-
-
-
-
-
-
-     
-
-
-   
-
-    
 
     }

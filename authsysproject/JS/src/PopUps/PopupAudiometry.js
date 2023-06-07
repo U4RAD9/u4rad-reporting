@@ -1,14 +1,18 @@
 import React from "react";
 import Modal from "react-bootstrap4-modal";
-//import "bootstrap/dist/css/bootstrap.min.css";
-import Form5 from "../Forms/form5";
+// import "bootstrap/dist/css/bootstrap.min.css";
+import Form19 from "../Forms/forms19";
 
-export default class PopUpXrayChest extends React.Component {
+export default class PopupAudiometry extends React.Component {
   constructor() {
     super();
     this.state = {
       data: {
-        brainParenchyma: true
+        name: "John Doe",
+        description: "Confirm if you have passed the subject\nHereby ...",
+        done: true,
+        recurrence: "Daily",
+        rating: 3,
       },
       err: false,
     };
@@ -20,12 +24,18 @@ export default class PopUpXrayChest extends React.Component {
     if (!err) {
       this.setState({ data }, () => this.props.handleData(data));
     }
+    
+
     this.setState({ err });
   }
+
 
   handleDone() {
     const { data, err } = this.state;
     console.log("======data", data);
+
+    
+
     if (!err) {
       this.props.handleClick();
     }
@@ -44,7 +54,7 @@ export default class PopUpXrayChest extends React.Component {
           </div>
         </div>
         <div className="modal-body">
-          <Form5 data={data} handleChange={this.handleChange} />
+          <Form19 data={data} handleChange={this.handleChange} />
         </div>
         <div className="modal-footer">
         </div>

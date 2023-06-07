@@ -10,7 +10,20 @@ import {
 const _schema = {
   type: "object",
   properties: {
-
+    
+    NameTextFR14: {
+      type: "string",
+    },
+    IDTextFR14: {
+      type: "string",
+    },
+    AgeTextFR14: {
+      type: "string",
+    },
+    GenderTextFR14: {
+      type: "string",
+      enum: ['Male', 'Female', 'Others'],
+    },
     //1 *****************************************
     SpineView: {
       type: 'string',
@@ -741,6 +754,37 @@ const uischema = {
     {
       type: "Group",
       elements: [
+        {
+          type: "HorizontalLayout",
+          label: "",
+          elements: [
+            {
+              type: "Control",
+              label: "Name",
+              scope: "#/properties/NameTextFR14",
+            },
+            {
+              type: "Control",
+              label: "Patient ID",
+              scope: "#/properties/IDTextFR14",
+            },
+            {
+              type: "Control",
+              label: "Age",
+              scope: "#/properties/AgeTextFR14",
+            },
+            
+          ],
+
+        },
+        {
+          type: "Control",
+          label: "Gender",
+          scope: "#/properties/GenderTextFR14",
+          options: {
+            format: "radio",
+          },
+        },
         // Dorsal Type********************
         {
           type: "Control",

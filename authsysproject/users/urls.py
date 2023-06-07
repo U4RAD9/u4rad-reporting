@@ -21,4 +21,6 @@ urlpatterns = [
     path('user-exists', views.userExists, name='userexists'),
     path('number-exists', views.numberExists, name='numberexists'),
     path('phone-exists', views.phoneExists, name='phoneexists'),
+    path('patientdata', views.patientData, name='patientdata'),
+    path('uploadcsv', views.uploadcsv, name='uploadcsv'),
 ]

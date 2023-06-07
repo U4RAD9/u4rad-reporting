@@ -109,6 +109,10 @@ class XraySpineCervical extends Component {
     let pageBreak = 0;
     let totalCovidPoints = 0;
 
+    if (frmData.NameTextFR10 && frmData.IDTextFR10 && frmData.AgeTextFR10 && frmData.GenderTextFR10)
+    {
+      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR10 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR10 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR10 + "</td>" + "<td>" + "Gender: " + frmData.GenderTextFR10 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+    }
 
     if (frmData.SpineView) {
       let arr = []
@@ -615,7 +619,7 @@ class XraySpineCervical extends Component {
 
     // cervical Normal************
     if (frmData.NormalSpine) {
-      report += "<p>" + "Normal Cervical curvature is maintained.<br><br>Bodies and pedicles of cervical vertebrae are normal.<br><br>Transverse processes and Spinous processes are normal.<br><br>Inter vertebral disc spaces are normal.<br><br>Pre vertebral spaces are normal." + "</p>"
+      report += "<p>" + "Normal cervical curvature is maintained.<br><br>Bodies and pedicles of cervical vertebrae are normal.<br><br>Transverse processes and spinous processes are normal.<br><br>Inter vertebral disc spaces are normal.<br><br>Pre vertebral spaces are normal." + "</p>"
     }
 
     // Degenerative without Inter Vertebral
@@ -703,21 +707,7 @@ class XraySpineCervical extends Component {
 
 
      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
     var current_user = JSON.parse(document.getElementById("current-user").textContent);
 
     report +=

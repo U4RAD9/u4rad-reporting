@@ -10,7 +10,19 @@ import {
 const _schema = {
   type: "object",
   properties: {
-
+    NameTextFR5: {
+      type: "string",
+    },
+    IDTextFR5: {
+      type: "string",
+    },
+    AgeTextFR5: {
+      type: "string",
+    },
+    GenderTextFR5: {
+      type: "string",
+      enum: ['Male', 'Female', 'Others'],
+    },
     allNormal: {
       type: "string",
       enum: ["Normal"],
@@ -110,8 +122,37 @@ const uischema = {
   elements: [
     {
       type: "Group",
-
       elements: [
+        {
+          type: "HorizontalLayout",
+          label: "",
+          elements: [
+            {
+              type: "Control",
+              label: "Name",
+              scope: "#/properties/NameTextFR5",
+            },
+            {
+              type: "Control",
+              label: "Patient ID",
+              scope: "#/properties/IDTextFR5",
+            },
+            {
+              type: "Control",
+              label: "Age",
+              scope: "#/properties/AgeTextFR5",
+            },
+            
+          ],
+        },
+        {
+          type: "Control",
+          label: "Gender",
+          scope: "#/properties/GenderTextFR5",
+          options: {
+            format: "radio",
+          },
+        },
         {
           type: "Control",
           label: "All Normal?",

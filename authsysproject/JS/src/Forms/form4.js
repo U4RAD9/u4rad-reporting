@@ -10,6 +10,19 @@ import {
 const _schema = {
 	type: "object",
 	properties: {
+		NameTextFR4: {
+			type: "string",
+		  },
+		  IDTextFR4: {
+			type: "string",
+		  },
+		  AgeTextFR4: {
+			type: "string",
+		  },
+		  GenderTextFR4: {
+			type: "string",
+			enum: ['Male', 'Female', 'Others'],
+		  },
 		// Sinus*****
 
 		Normalsinus: {
@@ -632,7 +645,37 @@ const uischema = {
 		{
 			type: "Group",
 			elements: [
-
+                {
+					type: "HorizontalLayout",
+					label: "",
+					elements: [
+					  {
+						type: "Control",
+						label: "Name",
+						scope: "#/properties/NameTextFR4",
+					  },
+					  {
+						type: "Control",
+						label: "Patient ID",
+						scope: "#/properties/IDTextFR4",
+					  },
+					  {
+						type: "Control",
+						label: "Age",
+						scope: "#/properties/AgeTextFR4",
+					  },
+					  
+					],
+		  
+				  },
+				  {
+					type: "Control",
+					label: "Gender",
+					scope: "#/properties/GenderTextFR4",
+					options: {
+					  format: "radio",
+					},
+				  },
 				// normal
 				{
 					type: "Control",
@@ -2575,7 +2618,7 @@ const uischema = {
 							elements: [
 								{
 									type: "Control",
-									label: "Keros Types",
+									label: "Keros Types*",
 									scope: "#/properties/MiscellaneousTypeKeros",
 								},
 								{
@@ -2610,7 +2653,7 @@ const uischema = {
 
 								{
 									type: "Control",
-									label: "Type of optic nerve",
+									label: "Type of optic nerve*",
 									scope: "#/properties/MiscellaneousTypeOpticNerve",
 								},
 								{
@@ -2756,7 +2799,7 @@ const uischema = {
 
 								{
 									type: "Control",
-									label: "Adenoid hypertrophy",
+									label: "Adenoid hypertrophy*",
 									scope: "#/properties/MiscellaneousAdenoid",
 								},
 								{

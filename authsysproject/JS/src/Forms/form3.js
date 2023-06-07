@@ -7,6 +7,19 @@ import {materialRenderers, materialCells,} from "@jsonforms/material-renderers";
 const _schema = {
   type: "object",
   properties: {
+    NameTextFR3: {
+      type: "string",
+    },
+    IDTextFR3: {
+      type: "string",
+    },
+    AgeTextFR3: {
+      type: "string",
+    },
+    GenderTextFR3: {
+      type: "string",
+      enum: ['Male', 'Female', 'Others'],
+    },
     allNormal: {
       type: "boolean",
     },
@@ -766,6 +779,36 @@ const uischema = {
     {
       type: "Group",
       elements: [
+        {
+          type: "HorizontalLayout",
+          label: "",
+          elements: [
+            {
+              type: "Control",
+              label: "Name",
+              scope: "#/properties/NameTextFR3",
+            },
+            {
+              type: "Control",
+              label: "Patient ID",
+              scope: "#/properties/IDTextFR3",
+            },
+            {
+              type: "Control",
+              label: "Age",
+              scope: "#/properties/AgeTextFR3",
+            },
+          ],
+          
+        },
+        {
+          type: "Control",
+          label: "Gender",
+          scope: "#/properties/GenderTextFR3",
+          options: {
+            format: "radio",
+          },
+        },
 
         // normal
         {
@@ -1353,7 +1396,7 @@ const uischema = {
                     },
                     {
                       type: "Group",
-                      label: "",
+                      label: "  ",
                       rule: {
                         effect: "HIDE",
                         condition: {
@@ -1366,11 +1409,11 @@ const uischema = {
                       elements: [
                         {
                           type: "HorizontalLayout",
-                          label: "",
+                          label: "  ",
                           elements: [
                             {
                               type: "HorizontalLayout",
-                              label: "",
+                              label: "  ",
                               elements: [
                                 {
                                   type: "Control",

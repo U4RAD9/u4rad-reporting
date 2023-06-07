@@ -7,7 +7,7 @@ class WorkExp(models.Model):
     exinstitution = models.CharField(max_length=30, null=True, default=None, blank=True)
     exstdate = models.DateField(null=True, default=None, blank=True)
     exenddate = models.DateField(null=True, default=None, blank=True)
-    designation = models.CharField(max_length=255, null=True, default=None)
+    designation = models.CharField(max_length=255, null=True, default=None, blank=True)
     exinstitution1 = models.CharField(max_length=30, null=True, default=None, blank=True)
     exstdate1 = models.DateField(null=True, default=None, blank=True)
     exenddate1 = models.DateField(null=True, default=None, blank=True)

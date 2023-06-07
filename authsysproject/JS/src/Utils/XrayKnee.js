@@ -223,6 +223,10 @@ class XrayKnee extends Component {
   //     report += "<h5>" + "<strong>" + "<u>" + "OBSERVATION:" + "</u>" + "</strong>" + "</h5>";
   //   }
 
+  if (frmData.NameTextFR15 && frmData.IDTextFR15 && frmData.AgeTextFR15 && frmData.GenderTextFR15)
+  {
+    report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR15 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR15 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR15 + "</td>" + "<td>" + "Gender: " + frmData.GenderTextFR15 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+  }
 
     if(frmData.XrayType){
       if(frmData.KneeNormal){
@@ -243,7 +247,7 @@ class XrayKnee extends Component {
         if(frmData.LeftKnee){
           arr.push('LEFT')
         }
-        if(frmData.RightKnee){
+        if(frmData.RightKnee){        
           arr.push("RIGHT")
         }
         report += "<h5>" + "<strong>" + "<u>" + text.XrayTypeText.replace("{1}", frmData.XrayType).replace("{2}", arr.join('')) + "</u>" + "</strong>" + "</h5>";

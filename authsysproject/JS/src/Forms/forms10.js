@@ -10,7 +10,19 @@ import {
 const _schema = {
   type: "object",
   properties: {
-
+    NameTextFR10: {
+      type: "string",
+    },
+    IDTextFR10: {
+      type: "string",
+    },
+    AgeTextFR10: {
+      type: "string",
+    },
+    GenderTextFR10: {
+      type: "string",
+      enum: ['Male', 'Female', 'Others'],
+    },
     SpineView: {
       type: 'string',
       enum: ['X-Ray View'],
@@ -496,6 +508,37 @@ const uischema = {
     {
       type: "Group",
       elements: [
+        {
+          type: "HorizontalLayout",
+          label: "",
+          elements: [
+            {
+              type: "Control",
+              label: "Name",
+              scope: "#/properties/NameTextFR10",
+            },
+            {
+              type: "Control",
+              label: "Patient ID",
+              scope: "#/properties/IDTextFR10",
+            },
+            {
+              type: "Control",
+              label: "Age",
+              scope: "#/properties/AgeTextFR10",
+            },
+            
+          ],
+
+        },
+        {
+          type: "Control",
+          label: "Gender",
+          scope: "#/properties/GenderTextFR10",
+          options: {
+            format: "radio",
+          },
+        },
         // Cervical Type********************
         {
           type: "Control",

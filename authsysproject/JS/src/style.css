@@ -287,3 +287,15 @@ tbody {
   max-height: calc(100vh - 210px);
   overflow-y: auto;
 }
+
+table{
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+table::before{
+  content: element(table);
+}

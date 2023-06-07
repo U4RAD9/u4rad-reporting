@@ -110,6 +110,11 @@ class XraySpineLumber extends Component {
     let pageBreak = 0;
     let totalCovidPoints = 0;
 
+    if (frmData.NameTextFR13 && frmData.IDTextFR13 && frmData.AgeTextFR13 && frmData.GenderTextFR13)
+    {
+      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR13 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR13 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR13 + "</td>" + "<td>" + "Gender: " + frmData.GenderTextFR13 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+    }
+
     if (frmData.SpineView) {
       let arr = []
       if (frmData.SpineViewAP) {
@@ -566,7 +571,7 @@ class XraySpineLumber extends Component {
 
     // cervical Normal************
     if (frmData.NormalSpine) {
-      report += "<p>" + "Normal lumber curvature is maintained.<br><br>Bodies and pedicles of lumber vertebrae are normal.<br><br>Transverse processes and Spinous processes are normal.<br><br>Inter Vertebral disc spaces are normal.<br><br>Pre Vertebral spaces are normal.<br><br>Both psoas shadows are normal." + "</p>"
+      report += "<p>" + "Normal lumber curvature is maintained.<br><br>Bodies and pedicles of lumber vertebrae are normal.<br><br>Transverse processes and spinous processes are normal.<br><br>Inter vertebral disc spaces are normal.<br><br>Pre vertebral spaces are normal.<br><br>Both psoas shadows are normal." + "</p>"
     }
 
 

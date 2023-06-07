@@ -133,6 +133,10 @@ class PnsAbnormal extends Component {
     let pageBreak = 0;
     let totalCovidPoints = 0;
 
+    if (frmData.NameTextFR4 && frmData.IDTextFR4 && frmData.AgeTextFR4 && frmData.GenderTextFR4)
+    {
+      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR4 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR4 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR4 + "</td>" + "<td>" + "Gender: " + frmData.GenderTextFR4 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+    }
     if (frmData.Normalsinus) {
       report += "<h5>" + "<strong>" + "<u>" + "LOW DOSE CT REPORT - PARANASAL SINUSES" + "</u>" + "</strong>" + "</h5>";
       report += "<h5>" + "<strong>" + "<u>" + "TECHNIQUE:" + "</u>" + "</strong>" + " Sequential scans of paranasal sinuses were done in both coronal and axial planes without intravenous contrast." + "</h5>";

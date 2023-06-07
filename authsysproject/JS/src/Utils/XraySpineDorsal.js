@@ -110,6 +110,11 @@ class XraySpineDorsal extends Component {
     let pageBreak = 0;
     let totalCovidPoints = 0;
 
+    if (frmData.NameTextFR14 && frmData.IDTextFR14 && frmData.AgeTextFR14 && frmData.GenderTextFR14)
+    {
+      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR14 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR14 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR14 + "</td>" + "<td>" + "Gender: " + frmData.GenderTextFR14 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+    }
+
     if (frmData.SpineView === 'AP') {
       report += "<h5>" + "<strong>" + "<u>" + "X-RAY SPINE-DORSAL AP" + "</u>" + "</strong>" + "</h5>";
       report += "<h5>" + "<strong>" + "<u>" + "OBSERVATION:" + "</u>" + "</strong>" + "</h5>";
@@ -880,33 +885,33 @@ class XraySpineDorsal extends Component {
 
     // cervical Normal************
     if (frmData.NormalSpine) {
-      report += "<p>" + "Normal dorsal curvature is maintained.<br><br>Bodies and pedicles of dorsal vertebrae are normal.<br><br>Transverse processes and Spinous processes are normal.<br><br>Inter vertebral disc spaces are normal.<br><br>Pre vertebral spaces are normal." + "</p>"
+      report += "<p>" + "Normal dorsal curvature is maintained.<br><br>Bodies and pedicles of dorsal vertebrae are normal.<br><br>Transverse processes and spinous processes are normal.<br><br>Inter vertebral disc spaces are normal.<br><br>Pre vertebral spaces are normal." + "</p>"
     }
 
 
     // Degenerative without Inter Vertebral
     if (frmData.CervicalDegenerative && !frmData.CervicalInterVertebralDiscSpace && !frmData.CervicalFracture && !frmData.CervicalSpondylolisthesis
       && !frmData.CervicalFacetJointDislocationFrature && !frmData.CerivicalOsteopenia && !frmData.CervicalCollapse) {
-      report += "<p>" + "Bodies and pedicles of dorsal Vertebrae are normal.<br><br>Transverse processes and Spinous processes are normal.<br><br>Inter vertebral disc spaces are normal.<br><br>Pre vertebral spaces are normal." + "</p>";
+      report += "<p>" + "Bodies and pedicles of dorsal vertebrae are normal.<br><br>Transverse processes and spinous processes are normal.<br><br>Inter vertebral disc spaces are normal.<br><br>Pre vertebral spaces are normal." + "</p>";
     }
     // With Inter Vertebral 
     else {
       if (frmData.CervicalDegenerative && frmData.CervicalInterVertebralDiscSpace && !frmData.CervicalFracture && !frmData.CervicalSpondylolisthesis
         && !frmData.CervicalFacetJointDislocationFrature && !frmData.CerivicalOsteopenia && !frmData.CervicalCollapse) {
-        report += "<p>" + "Bodies and pedicles of dorsal vertebrae are normal.<br><br>Transverse processes and Spinous processes are normal.<br><br>Pre vertebral spaces are normal." + "</p>";
+        report += "<p>" + "Bodies and pedicles of dorsal vertebrae are normal.<br><br>Transverse processes and spinous processes are normal.<br><br>Pre vertebral spaces are normal." + "</p>";
       }
     }
 
     // Degenerative without Inter Vertebral and rest line.
     if (frmData.CervicalDegenerative && !frmData.CervicalInterVertebralDiscSpace && !frmData.CervicalFracture  && (frmData.CervicalSpondylolisthesis || frmData.CervicalFacetJointDislocationFrature
       || frmData.CerivicalOsteopenia || frmData.CervicalCollapse)) {
-      report += "<p>" + "Bodies and pedicles of dorsal vertebrae are normal.<br><br>Transverse processes and Spinous processes are normal.<br><br>Inter vertebral disc spaces are normal.<br><br>Pre vertebral spaces are normal." + "</p>";
+      report += "<p>" + "Bodies and pedicles of dorsal vertebrae are normal.<br><br>Transverse processes and spinous processes are normal.<br><br>Inter vertebral disc spaces are normal.<br><br>Pre vertebral spaces are normal." + "</p>";
     }
     // Degenerative with Inter Vertebral and rest line.
     else {
       if (frmData.CervicalDegenerative && frmData.CervicalInterVertebralDiscSpace && !frmData.CervicalFracture  && (frmData.CervicalSpondylolisthesis || frmData.CervicalFacetJointDislocationFrature
         || frmData.CerivicalOsteopenia || frmData.CervicalCollapse)) {
-        report += "<p>" + "Bodies and pedicles of dorsal vertebrae are normal.<br><br>Transverse processes and Spinous processes are normal.<br><br>Pre vertebral spaces are normal." + "</p>";
+        report += "<p>" + "Bodies and pedicles of dorsal vertebrae are normal.<br><br>Transverse processes and spinous processes are normal.<br><br>Pre vertebral spaces are normal." + "</p>";
       }
     }
 
@@ -915,7 +920,7 @@ class XraySpineDorsal extends Component {
     if (frmData.CervicalFracture && !frmData.CervicalSpinousProcessFracture && !frmData.CervicalDegenerative &&
       !frmData.CervicalSpondylolisthesis && !frmData.CervicalFacetJointDislocationFrature
       && !frmData.CerivicalOsteopenia && !frmData.CervicalCollapse) {
-      report += "<p>" + "Bodies and pedicles of dorsal vertebrae are normal.<br><br>Transverse processes and Spinous processes are normal.<br><br>Inter vertebral disc spaces are normal.<br><br>Pre vertebral spaces are normal." + "</p>";
+      report += "<p>" + "Bodies and pedicles of dorsal vertebrae are normal.<br><br>Transverse processes and spinous processes are normal.<br><br>Inter vertebral disc spaces are normal.<br><br>Pre vertebral spaces are normal." + "</p>";
     }
     // Fracture with spinous Process
     else {
@@ -929,7 +934,7 @@ class XraySpineDorsal extends Component {
     // Fracture without spinous Process and rest
     if (frmData.CervicalFracture && !frmData.CervicalSpinousProcessFracture && !frmData.CervicalDegenerative && (frmData.CervicalSpondylolisthesis || frmData.CervicalFacetJointDislocationFrature
       || frmData.CerivicalOsteopenia || frmData.CervicalCollapse)) {
-      report += "<p>" + "Bodies and pedicles of dorsal vertebrae are normal.<br><br>Transverse processes and Spinous processes are normal.<br><br>Inter vertebral disc spaces are normal.<br><br>Pre vertebral spaces are normal." + "</p>";
+      report += "<p>" + "Bodies and pedicles of dorsal vertebrae are normal.<br><br>Transverse processes and spinous processes are normal.<br><br>Inter vertebral disc spaces are normal.<br><br>Pre vertebral spaces are normal." + "</p>";
     }
     // Fracture with spinous Process rest
     else {
@@ -949,12 +954,12 @@ class XraySpineDorsal extends Component {
       else {
         if (frmData.CervicalInterVertebralDiscSpace && !frmData.CervicalSpinousProcessFracture
           && !(frmData.CervicalFacetJointDislocationFrature || frmData.CerivicalOsteopenia || frmData.CervicalCollapse)) {
-          report += "<p>" + "Bodies and pedicles of dorsal vertebrae are normal.<br><br>Transverse processes and Spinous processes are normal.<br><br>Pre vertebral spaces are normal. " + "</p>";
+          report += "<p>" + "Bodies and pedicles of dorsal vertebrae are normal.<br><br>Transverse processes and spinous processes are normal.<br><br>Pre vertebral spaces are normal. " + "</p>";
         }
       }
       if (!(frmData.CervicalSpinousProcessFracture || frmData.CervicalInterVertebralDiscSpace)
         && !(frmData.CervicalFacetJointDislocationFrature || frmData.CerivicalOsteopenia || frmData.CervicalCollapse)) {
-        report += "<p>" + "Bodies and pedicles of dorsal vertebrae are normal.<br><br>Transverse processes and Spinous processes are normal.<br><br>Inter vertebral disc spaces are normal.<br><br>Pre vertebral spaces are normal." + "</p>";
+        report += "<p>" + "Bodies and pedicles of dorsal vertebrae are normal.<br><br>Transverse processes and spinous processes are normal.<br><br>Inter vertebral disc spaces are normal.<br><br>Pre vertebral spaces are normal." + "</p>";
       }
       if (frmData.CervicalInterVertebralDiscSpace && frmData.CervicalSpinousProcessFracture) {
         report += "<p>" + "Bodies and pedicles of dorsal vertebrae are normal.<br><br>Transverse processes are normal.<br><br>Pre vertebral spaces are normal." + "</p>";
@@ -964,7 +969,7 @@ class XraySpineDorsal extends Component {
 
     if ((frmData.CervicalSpondylolisthesis || frmData.CervicalFacetJointDislocationFrature || frmData.CerivicalOsteopenia || frmData.CervicalCollapse)
       && !(frmData.CervicalFracture || frmData.CervicalDegenerative)) {
-      report += "<p>" + "Bodies and pedicles of dorsal vertebrae are normal.<br><br>Transverse processes and Spinous processes are normal.<br><br>Inter vertebral disc spaces are normal.<br><br>Pre vertebral spaces are normal." + "</p>";
+      report += "<p>" + "Bodies and pedicles of dorsal vertebrae are normal.<br><br>Transverse processes and spinous processes are normal.<br><br>Inter vertebral disc spaces are normal.<br><br>Pre vertebral spaces are normal." + "</p>";
     }
 
     

@@ -48,21 +48,26 @@ class XrayRightShoulder extends Component {
     let pageBreak = 0;
     let totalCovidPoints = 0;
 
+    if (frmData.NameTextFR12 && frmData.IDTextFR12 && frmData.AgeTextFR12 && frmData.GenderTextFR12)
+    {
+      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR12 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR12 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR12 + "</td>" + "<td>" + "Gender: " + frmData.GenderTextFR12 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+    }
+
     if ((frmData.XrayType === 'AP' || frmData.Normal || frmData.fracture || frmData.dislocation
-      || frmData.degenerative) && !(frmData.XrayType === 'Axial' || frmData.XrayType === 'Lateral')) {
+      || frmData.degenerative) && !(frmData.XrayType === 'AXIAL' || frmData.XrayType === 'LATERAL')) {
       report += "<h5>" + "<strong>" + "<u>" + "X-RAY RIGHT-SHOULDER AP" + "</u>" + "</strong>" + "</h5>";
       report += "<h5>" + "<strong>" + "FINDINGS:" + "</strong>" + "</h5>";
     }
 
-    if ((frmData.XrayType === 'Axial' || frmData.Normal || frmData.fracture || frmData.dislocation
-      || frmData.degenerative) && !(frmData.XrayType === 'AP' || frmData.XrayType === 'Lateral')) {
-      report += "<h5>" + "<strong>" + "<u>" + "X-RAY RIGHT-SHOULDER Axial" + "</u>" + "</strong>" + "</h5>";
+    if ((frmData.XrayType === 'AXIAL' || frmData.Normal || frmData.fracture || frmData.dislocation
+      || frmData.degenerative) && !(frmData.XrayType === 'AP' || frmData.XrayType === 'LATERAL')) {
+      report += "<h5>" + "<strong>" + "<u>" + "X-RAY RIGHT-SHOULDER AXIAL" + "</u>" + "</strong>" + "</h5>";
       report += "<h5>" + "<strong>" + "FINDINGS:" + "</strong>" + "</h5>";
     }
 
-    if ((frmData.XrayType === 'Lateral' || frmData.Normal || frmData.fracture || frmData.dislocation
-      || frmData.degenerative) && !(frmData.XrayType === 'AP' || frmData.XrayType === 'Axial')) {
-      report += "<h5>" + "<strong>" + "<u>" + "X-RAY RIGHT-SHOULDER Lateral" + "</u>" + "</strong>" + "</h5>";
+    if ((frmData.XrayType === 'LATERAL' || frmData.Normal || frmData.fracture || frmData.dislocation
+      || frmData.degenerative) && !(frmData.XrayType === 'AP' || frmData.XrayType === 'AXIAL')) {
+      report += "<h5>" + "<strong>" + "<u>" + "X-RAY RIGHT-SHOULDER LATERAL" + "</u>" + "</strong>" + "</h5>";
       report += "<h5>" + "<strong>" + "FINDINGS:" + "</strong>" + "</h5>";
     }
 
@@ -580,10 +585,10 @@ class XrayRightShoulder extends Component {
 
     if (frmData.dislocation) {
       if (frmData.acromioclavicularJointType && !frmData.shoulderJointType) {
-        report += "<p>" + "Shoulder Joint is normal." + "</p>";
+        report += "<p>" + "Shoulder joint is normal." + "</p>";
       }
       if (!frmData.acromioclavicularJointType && frmData.shoulderJointType) {
-        report += "<p>" + "Acromioclavicular Joint is normal." + "</p>";
+        report += "<p>" + "Acromioclavicular joint is normal." + "</p>";
       }
     }
 

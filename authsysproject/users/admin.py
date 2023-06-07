@@ -6,6 +6,7 @@ from .models.reportingarea import ReportingArea
 from .models.timeavailability import TimeAvailability
 from .models.instpersonalinfo import InstPersonalInfo
 from .models.institutionmodalities import InstitutionModalities
+from .models.patientdata import PatientInfo
 from .models.workexp import WorkExp
 
 admin.site.register(PersonalInfo)
@@ -16,5 +17,6 @@ admin.site.register(ReportingArea)
 admin.site.register(TimeAvailability)
 admin.site.register(InstPersonalInfo)
 admin.site.register(InstitutionModalities)
+admin.site.register(PatientInfo)
 
 # Register your models here.

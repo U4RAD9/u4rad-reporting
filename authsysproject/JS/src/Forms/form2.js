@@ -12,7 +12,19 @@ const _schema = {
   properties: {
 
 
-
+    NameTextFR2: {
+      type: "string",
+    },
+    IDTextFR2: {
+      type: "string",
+    },
+    AgeTextFR2: {
+      type: "string",
+    },
+    GenderTextFR2: {
+      type: "string",
+      enum: ['Male', 'Female', 'Others'],
+    },
     XrayTypes: {
       type: "string",
       enum: ['AP', 'PA', 'LATERAL', 'AP/PA'],
@@ -347,6 +359,42 @@ const uischema = {
     {
       type: "Group",
       elements: [
+        {
+          type: "HorizontalLayout",
+          label: "",
+          elements: [
+            {
+              type: "Control",
+              label: "Name",
+              scope: "#/properties/NameTextFR2",
+            },
+            {
+              type: "Control",
+              label: "Patient ID",
+              scope: "#/properties/IDTextFR2",
+            },
+            {
+              type: "Control",
+              label: "Age",
+              scope: "#/properties/AgeTextFR2",
+            },
+
+          ],
+
+        },
+        {
+          type: "Control",
+          label: "Gender",
+          scope: "#/properties/GenderTextFR2",
+          options: {
+            format: "radio",
+          },
+        },
+      ],
+    },
+    {
+      type: "Group",
+      elements: [
         // ***************************Opacities****************************
         {
           type: "Control",
@@ -492,7 +540,7 @@ const uischema = {
                           elements: [
 
                             {
-                              type: "VerticalLayout",
+                              type: "HorizontalLayout",
                               label: "",
                               elements: [
                                 {
@@ -533,7 +581,7 @@ const uischema = {
                         },
                         {
                           type: "Group",
-                          label: "",
+                          label: " ",
                           rule: {
                             effect: "HIDE",
                             condition: {
@@ -545,9 +593,10 @@ const uischema = {
                           },
                           elements: [
                             {
-                              type: "VerticalLayout",
+                              type: "HorizontalLayout",
                               label: "",
                               elements: [
+
                                 {
                                   type: "Control",
                                   label: "Air Bronchogram?",
@@ -569,6 +618,7 @@ const uischema = {
                                   label: "Cavitation?",
                                   scope: "#/properties/RlzCavitation",
                                 },
+
                               ],
                             },
                           ],

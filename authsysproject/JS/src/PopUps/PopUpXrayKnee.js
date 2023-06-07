@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "react-bootstrap4-modal";
 // import "bootstrap/dist/css/bootstrap.min.css";
-import Form2 from "../Forms/forms15";
+import Form15 from "../Forms/forms15";
 
 export default class PopUpXrayKnee extends React.Component {
   constructor() {
@@ -146,7 +146,7 @@ export default class PopUpXrayKnee extends React.Component {
           </div>
         </div>
         <div className="modal-body">
-          <Form2 data={data} handleChange={this.handleChange} />
+          <Form15 data={data} handleChange={this.handleChange} />
         </div>
         <div className="modal-footer">
         </div>

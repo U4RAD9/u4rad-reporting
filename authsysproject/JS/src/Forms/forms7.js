@@ -9,6 +9,19 @@ import {
 const _schema = {
   type: "object",
   properties: {
+    NameTextFR7: {
+      type: "string",
+    },
+    IDTextFR7: {
+      type: "string",
+    },
+    AgeTextFR7: {
+      type: "string",
+    },
+    GenderTextFR7: {
+      type: "string",
+      enum: ['Male', 'Female', 'Others'],
+    },
     Normal: {
       type: "string",
       enum: ['X-RAY PELVIS WITH BOTH HIPS AP?',
@@ -30,6 +43,37 @@ const uischema = {
     {
       type: "Group",
       elements: [
+        {
+          type: "HorizontalLayout",
+          label: "",
+          elements: [
+            {
+              type: "Control",
+              label: "Name",
+              scope: "#/properties/NameTextFR7",
+            },
+            {
+              type: "Control",
+              label: "Patient ID",
+              scope: "#/properties/IDTextFR7",
+            },
+            {
+              type: "Control",
+              label: "Age",
+              scope: "#/properties/AgeTextFR7",
+            },
+            
+          ],
+
+        },
+        {
+          type: "Control",
+          label: "Gender",
+          scope: "#/properties/GenderTextFR7",
+          options: {
+            format: "radio",
+          },
+        },
         {
           type: "HorizontalLayout",
           label: "",

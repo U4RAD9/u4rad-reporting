@@ -103,7 +103,10 @@ class XrayChest extends Component {
 
 
 
-
+    if (frmData.NameTextFR2 && frmData.IDTextFR2 && frmData.AgeTextFR2 && frmData.GenderTextFR2)
+    {
+      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr ommousedown='return false' onselectstart='return false'>" + "<td>" + "Name: " + frmData.NameTextFR2 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR2 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR2 + "</td>" + "<td>" + "Gender: " + frmData.GenderTextFR2 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+    }
 
     if ((frmData.XrayTypes === 'AP' || frmData.opacities || frmData.mildHaziness
       || frmData.BothNormal || frmData.rightHilarShadow

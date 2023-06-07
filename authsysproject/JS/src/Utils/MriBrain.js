@@ -41,7 +41,10 @@ class MriBrain extends Component {
     let pageBreak = 0;
     let totalCovidPoints = 0;
 
-    
+    if (frmData.NameTextFR5 && frmData.IDTextFR5 && frmData.AgeTextFR5 && frmData.GenderTextFR5)
+    {
+      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR5 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextF5 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR5 + "</td>" + "<td>" + "Gender: " + frmData.GenderTextFR5 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+    }
     var current_user = JSON.parse(document.getElementById("current-user").textContent);
     if (frmData.allNormal || frmData.tonsillarHerniation || frmData.bonyCalvarium) {
       report += this.pageBreak(current_user) + "<h5>" + "<strong>" + "<u>" + "MRI-BRAIN" + "</u>" + "</strong>" + "</h5>";
