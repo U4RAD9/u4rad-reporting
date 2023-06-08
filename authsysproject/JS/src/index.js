@@ -227,40 +227,65 @@ class App extends Component {
     return filename;
   }
 
+  // GetDivContentOnPDF() {
+  //   var filename = this.createFilename();
+  //   const data = document.getElementsByClassName('ck-editor__editable')[0];
+  //   //remove border
+  //   data.classList.add("ck-blurred");
+  //   data.classList.remove("ck-focused");
+
+  //   //console.log(data);
+  //   if (data != undefined) {
+  //     var width = (2480 / 4) - 50;
+  //     var height = 3508 / 4.3;
+  //     var topLeftMArgin = 5;
+  //     var pdfWidth = width + (topLeftMArgin * 2);
+  //     var pdfheight = (pdfWidth * 1.5) + (topLeftMArgin * 2);
+  //     var canvasImgWidth = width;
+  //     var canvasImgHeight = height;
+
+  //     var totalPages = Math.ceil(height / pdfheight) - 1;
+  //     html2canvas(data, {
+  //       quality: 4,
+  //       //scale: 5
+  //     })
+  //       .then((canvas) => {
+  //         const imgData = canvas.toDataURL('image/png', 1.0);
+  //         const pdf = new jsPDF('p', 'pt', [canvas.width, canvas.height], true);
+  //         pdf.addImage(imgData, 'JPG', topLeftMArgin, topLeftMArgin, canvasImgWidth, canvasImgHeight, '0', 'FAST');
+  //         for (var i = 1; i <= totalPages; i++) {
+  //           pdf.addPage(pdfWidth, pdfheight);
+  //           pdf.addImage(imgData, 'JPG', topLeftMArgin, -(pdfheight * i) + (topLeftMArgin * 4), canvasImgWidth, canvasImgHeight, i, 'FAST');
+  //         }
+  //         pdf.save(filename ? filename + ".pdf" : "download.pdf");
+  //       });
+  //   }
+  // }
   GetDivContentOnPDF() {
     var filename = this.createFilename();
     const data = document.getElementsByClassName('ck-editor__editable')[0];
-    //remove border
+    // remove border
     data.classList.add("ck-blurred");
     data.classList.remove("ck-focused");
-
-    //console.log(data);
+  
     if (data != undefined) {
-      var width = (2480 / 4) - 50;
-      var height = 3508 / 4.3;
-      var topLeftMArgin = 5;
-      var pdfWidth = width + (topLeftMArgin * 2);
-      var pdfheight = (pdfWidth * 1.5) + (topLeftMArgin * 2);
-      var canvasImgWidth = width;
-      var canvasImgHeight = height;
-
-      var totalPages = Math.ceil(height / pdfheight) - 1;
+      var a4Width = 595.28; // A4 width in points (1 point = 1/72 inch)
+      var a4Height = 841.89; // A4 height in points
+  
+      var canvasWidth = a4Width - 40; // Adjusted width to leave some margin
+      var canvasHeight = (canvasWidth * 1.5) - 40; // Adjusted height to maintain aspect ratio and leave margin
+  
       html2canvas(data, {
-        quality: 4,
-        //scale: 5
-      })
-        .then((canvas) => {
-          const imgData = canvas.toDataURL('image/png', 1.0);
-          const pdf = new jsPDF('p', 'pt', [canvas.width, canvas.height], true);
-          pdf.addImage(imgData, 'JPG', topLeftMArgin, topLeftMArgin, canvasImgWidth, canvasImgHeight, '0', 'FAST');
-          for (var i = 1; i <= totalPages; i++) {
-            pdf.addPage(pdfWidth, pdfheight);
-            pdf.addImage(imgData, 'JPG', topLeftMArgin, -(pdfheight * i) + (topLeftMArgin * 4), canvasImgWidth, canvasImgHeight, i, 'FAST');
-          }
-          pdf.save(filename ? filename + ".pdf" : "download.pdf");
-        });
+        scale: 4 // Adjust the scale if needed for better quality
+      }).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png', 1.0);
+        const pdf = new jsPDF('p', 'pt', [a4Width, a4Height], true);
+        pdf.addImage(imgData, 'PNG', 20, 20, canvasWidth, canvasHeight);
+        pdf.save(filename ? filename + ".pdf" : "download.pdf");
+      });
     }
   }
+  
 
   toDataURL(url, index, callback) {
     var xhr = new XMLHttpRequest();
