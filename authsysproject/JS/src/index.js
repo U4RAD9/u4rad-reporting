@@ -218,7 +218,7 @@ class App extends Component {
       filename = ["Patient", "0", "Test", "Date"];
     }
     else {
-      filename = [PatientId.replace("Patient ID:", "").replace(" ", "_"), patientName.replace("Name: ", ""), TestType, formatDate.replace("TestDate: ", "")];
+      filename = [PatientId.replace("Patient ID:", "").replace(" ", "_"), patientName.replace("Name: ", ""), TestType, formatDate.replace("Test date: ", "")];
     }
 
     //return filename.join('_').toUpperCase();
