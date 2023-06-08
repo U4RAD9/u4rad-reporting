@@ -63,9 +63,9 @@
 
 /* Set the default font for the "page" of the content. */
 .document-editor .ck-content,
-.document-editor .ck-heading-dropdown .ck-list .ck-button__label {
+/* .document-editor .ck-heading-dropdown .ck-list .ck-button__label {
   font: 16px/1.6 "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
+} */
 
 /* Adjust the headings dropdown to host some larger heading styles. */
 .document-editor .ck-heading-dropdown .ck-list .ck-button__label {
