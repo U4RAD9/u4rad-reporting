@@ -147,39 +147,78 @@ class App extends Component {
     return list;
   }
 
-  copyAction(){
+  // copyAction(){
+  //   var btn = document.createElement("a");
+  //   btn.value = "Copy";
+  //   btn.innerHTML = "Copy";
+  //   btn.className = 'report-here';
+  //   btn.id="copy_data";
+  //   btn.onclick = this.GetCopiedEvents;
+  //   console.log("btn copy");
+  //   return btn;
+  // }
+
+  // GetCopiedEvents(event){
+  //   var content = document.querySelector('#root > div > div > div.document-editor__editable-container > div');
+  //   content = this.extractContent(content);
+  //   const clipboardItem = new ClipboardItem({
+  //     "text/html": new Blob(
+  //       [content.innerHTML],
+  //       { type: "text/html" }
+  //     ),
+  //   });
+  //   navigator.clipboard.write([clipboardItem]);
+  // }
+
+  // extractContent(s) {
+  //   var span = document.createElement('span');
+  //   span.innerHTML = s;
+  //   var filterHtml = [...s.getElementsByTagName('table')];
+  //   filterHtml.forEach((child) => { child.remove(); });
+  //   var img = [...s.getElementsByTagName('img')];
+  //   img.forEach((child) => { child.remove(); });
+    
+  //   return s;
+  // };
+
+  //Updated copy paste code by Aman Gupta
+  copyAction() {
     var btn = document.createElement("a");
     btn.value = "Copy";
     btn.innerHTML = "Copy";
     btn.className = 'report-here';
-    btn.id="copy_data";
-    btn.onclick = this.GetCopiedEvents;
+    btn.id = "copy_data";
+    btn.addEventListener('click', this.GetCopiedEvents.bind(this));
     console.log("btn copy");
     return btn;
   }
-
-  GetCopiedEvents(event){
+  
+  GetCopiedEvents(event) {
     var content = document.querySelector('#root > div > div > div.document-editor__editable-container > div');
     content = this.extractContent(content);
     const clipboardItem = new ClipboardItem({
       "text/html": new Blob(
-        [content.innerHTML],
+        [content.outerHTML],
         { type: "text/html" }
-      ),
+      )
     });
-    navigator.clipboard.write([clipboardItem]);
+    navigator.clipboard.write([clipboardItem]).then(() => {
+      console.log('Content copied to clipboard');
+    }).catch((err) => {
+      console.error('Failed to copy content to clipboard:', err);
+    });
   }
-
+  
   extractContent(s) {
     var span = document.createElement('span');
-    span.innerHTML = s;
-    var filterHtml = [...s.getElementsByTagName('table')];
+    span.innerHTML = s.innerHTML;
+    var filterHtml = [...span.getElementsByTagName('table')];
     filterHtml.forEach((child) => { child.remove(); });
-    var img = [...s.getElementsByTagName('img')];
+    var img = [...span.getElementsByTagName('img')];
     img.forEach((child) => { child.remove(); });
-    
-    return s;
-  };
+  
+    return span;
+  }
 
   userDropdown() {
     var userDiv = document.createElement('div');
