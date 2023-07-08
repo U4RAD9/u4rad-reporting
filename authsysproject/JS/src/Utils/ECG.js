@@ -103,7 +103,7 @@ class ECG extends Component {
       "<p><br><img src='" +
       user.signature +
       "' height='50' /><p>" +
-      user.full_name +
+      user.full_name + "<br>" +
       "<br>" +
       user.designation +
       "</p></p>"

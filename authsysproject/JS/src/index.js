@@ -257,7 +257,7 @@ class App extends Component {
       data.classList.remove("ck-focused");
   
       // Apply inline CSS styles
-      data.style.fontSize = "22px";
+      data.style.fontSize = "28px";
       data.style.padding = "6px";
   
       // Add CSS styles for the table
@@ -272,6 +272,7 @@ class App extends Component {
           td {
             border: 1px solid black;
             padding: 6px;
+            font-size: 20px;
             width: auto; /* Adjust this value as needed */
           }
         </style>

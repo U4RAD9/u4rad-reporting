@@ -679,7 +679,7 @@ class XraySpineLumber extends Component {
 
   getCorads(user) {
     return (
-      "<p><br><img src='" + user.signature + "' height='75' /><p>" + user.full_name + "<br>" + user.designation + ", MBBS</p></p>"
+      "<p><br><img src='" + user.signature + "' height='75' /><p>" + user.full_name + "<br>" + "<br>" + user.designation + "</p></p>"
     );
   }
 
