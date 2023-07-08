@@ -108,7 +108,7 @@ const uischema = {
 							label: "Test date",
 							scope: "#/properties/TestDateTextFR21",
 						},
-            {
+                        {
 							type: "Control",
 							label: "Report date",
 							scope: "#/properties/ReportDateTextFR21",

@@ -111,7 +111,7 @@ class XraySpineCervical extends Component {
 
     if (frmData.NameTextFR10 && frmData.IDTextFR10 && frmData.AgeTextFR10 && frmData.GenderTextFR10)
     {
-      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR10 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR10 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR10 + "</td>" + "<td>" + "Gender: " + frmData.GenderTextFR10 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR10 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR10 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR10 + "</td>" + "</tr>"  + "<tr>" + "<td>" + "Gender: " + frmData.GenderTextFR10 + "</td>" + "<td>" + "Test date: " + frmData.TestDateTextFR10 + "</td>" + "<td>" + "Report date: " + frmData.ReportDateTextFR10 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
     }
 
     if (frmData.SpineView) {

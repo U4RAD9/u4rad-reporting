@@ -12,7 +12,6 @@ class CtHead extends Component {
     this.state = {
       frmData: {
         cerebralParenchyma: true,
-
         extraAxialCollection: true,
         extraduralCollection: true,
         subduralCollection: true,
@@ -272,7 +271,7 @@ class CtHead extends Component {
 
     if (frmData.NameTextFR3 && frmData.IDTextFR3 && frmData.AgeTextFR3 && frmData.GenderTextFR3)
     {
-      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR3 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR3 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR3 + "</td>" + "<td>" + "Gender: " + frmData.GenderTextFR3 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR3 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR3 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR3 + "</td>" + "</tr>"  + "<tr>" + "<td>" + "Gender: " + frmData.GenderTextFR3 + "</td>" + "<td>" + "Test date: " + frmData.TestDateTextFR3 + "</td>" + "<td>" + "Report date: " + frmData.ReportDateTextFR3 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
     }
   
     if (
@@ -1588,7 +1587,7 @@ class CtHead extends Component {
   //TO BE ADDED
   getCorads(user) {
     return (
-      "<p><br><img src='" + user.signature + "' height='50' /><p>" + user.full_name + "<br>" + user.designation + ", MBBS</p></p>"
+      "<p><br><img src='" + user.signature + "' height='50' /><p>" + user.full_name + "<br>" + "<br>" + user.designation + ", MBBS</p></p>"
     );
   }
 

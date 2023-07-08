@@ -50,7 +50,7 @@ class XrayRightShoulder extends Component {
 
     if (frmData.NameTextFR12 && frmData.IDTextFR12 && frmData.AgeTextFR12 && frmData.GenderTextFR12)
     {
-      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR12 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR12 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR12 + "</td>" + "<td>" + "Gender: " + frmData.GenderTextFR12 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR12 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR12 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR12 + "</td>" + "</tr>"  + "<tr>" + "<td>" + "Gender: " + frmData.GenderTextFR12 + "</td>" + "<td>" + "Test date: " + frmData.TestDateTextFR12 + "</td>" + "<td>" + "Report date: " + frmData.ReportDateTextFR12 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
     }
 
     if ((frmData.XrayType === 'AP' || frmData.Normal || frmData.fracture || frmData.dislocation

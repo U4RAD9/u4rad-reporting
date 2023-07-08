@@ -22,6 +22,12 @@ const _schema = {
       type: "string",
       enum: ['Male', 'Female', 'Others'],
     },
+    TestDateTextFR12: {
+			type: "string",
+		},
+    ReportDateTextFR12: {
+			type: "string",
+		},
     XrayType: {
       type: "string",
       enum: ['AP', 'AXIAL', 'LATERAL'],
@@ -199,7 +205,16 @@ const uischema = {
               label: "Age",
               scope: "#/properties/AgeTextFR12",
             },
-            
+            {
+							type: "Control",
+							label: "Test date",
+							scope: "#/properties/TestDateTextFR12",
+						},
+                        {
+							type: "Control",
+							label: "Report date",
+							scope: "#/properties/ReportDateTextFR12",
+						},
           ],
 
         },
@@ -741,36 +756,128 @@ const styleContextValue = {
   ],
 };
 
+// export default class Form12 extends Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       data: props.data,
+//       schema: _schema,
+//     };
+//   }
+
+//   componentDidUpdate() { }
+
+//   handleForm(data) {
+//     const { schema } = this.state;
+//     this.setState(data, () => {
+//       this.props.handleChange(data, false);
+//     });
+//   }
+
+//   render() {
+//     const { data, schema } = this.state;
+//     return (
+//       <JsonForms
+//         schema={schema}
+//         uischema={uischema}
+//         data={data}
+//         renderers={materialRenderers}
+//         cells={materialCells}
+//         ValidationMode="ValidateAndShow"
+//         onChange={({ data, _errors }) => this.handleForm(data)}
+//       />
+//     );
+//   }
+// }
+//Auto data update by Aman Gupta on 23/06/23
 export default class Form12 extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: props.data,
-      schema: _schema,
-    };
-  }
+	constructor(props) {
+	  super(props);
+	  this.state = {
+		data: props.data,
+		schema: _schema,
+		patients: [],
+		query: '',
+	  };
 
-  componentDidUpdate() { }
+	  this.search = this.search.bind(this);
+	  this.setQuery = this.setQuery.bind(this);
+	  this.patientSelected = this.patientSelected.bind(this);
+	}
+  
+	componentDidUpdate() { }
+  
+	handleForm(data) {
+	  const { schema } = this.state;
+	  this.setState({data: data}, () => {
+		this.props.handleChange(data, false);
+	  });
+	  this.forceUpdate();
+	}
 
-  handleForm(data) {
-    const { schema } = this.state;
-    this.setState(data, () => {
-      this.props.handleChange(data, false);
-    });
-  }
+	setQuery(e) {
+		this.setState({query: e.target.value})
+	}
 
-  render() {
-    const { data, schema } = this.state;
-    return (
-      <JsonForms
-        schema={schema}
-        uischema={uischema}
-        data={data}
-        renderers={materialRenderers}
-        cells={materialCells}
-        ValidationMode="ValidateAndShow"
-        onChange={({ data, _errors }) => this.handleForm(data)}
-      />
-    );
-  }
-}
+	search() {
+		fetch(`/patientdata?query=${this.state.query}`).then((r) => {
+			if (r.ok) {
+				return r.json();
+			}
+		}).then((d) => {
+			let patients = [];
+			d.forEach((p) => {
+				patients.push(p.fields);
+			});
+			//this.setState(patients);
+			this.setState({patients: patients});
+			//this.forceUpdate();
+		}).catch((e) => {
+			console.error(e);
+		})
+	}
+
+	patientSelected(e) {
+		const {data} = this.state;
+		const pid = e.target.value;
+		const patient = this.state.patients.find((p) => {
+			return p.PatientId === pid;
+		});
+		let formData = {
+			...data,
+			GenderTextFR12: patient.gender,
+			AgeTextFR12: patient.age,
+			NameTextFR12: patient.PatientName,
+			IDTextFR12: patient.PatientId,
+			TestDateTextFR12: patient.TestDate,
+			ReportDateTextFR12: patient.ReportDate
+		}
+		this.handleForm(formData);
+	}
+  
+	render() {
+	  const { data, schema, patients } = this.state;
+	  return (
+		<div>
+			<input type="text" placeholder="Enter name or Patient ID" onChange={this.setQuery}/> <button onClick={this.search}>Search</button>
+			{patients.length > 0 &&
+				<select id="patients" onChange={this.patientSelected}>
+					<option value="-1">-- Select Patient --</option>
+					{patients.map((p) => {
+						return <option value={p.PatientId} key={p.PatientId}>{p.PatientName} | ID: {p.PatientId}</option>;
+					})};	
+				</select>
+			}
+			<JsonForms
+			schema={schema}
+			uischema={uischema}
+			data={data}
+			renderers={materialRenderers}
+			cells={materialCells}
+			ValidationMode="ValidateAndShow"
+			onChange={({ data, _errors }) => this.handleForm(data)}
+			/>
+		</div>
+	  );
+	}
+} 

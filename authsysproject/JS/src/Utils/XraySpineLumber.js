@@ -112,7 +112,7 @@ class XraySpineLumber extends Component {
 
     if (frmData.NameTextFR13 && frmData.IDTextFR13 && frmData.AgeTextFR13 && frmData.GenderTextFR13)
     {
-      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR13 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR13 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR13 + "</td>" + "<td>" + "Gender: " + frmData.GenderTextFR13 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR13 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR13 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR13 + "</td>" + "</tr>"  + "<tr>" + "<td>" + "Gender: " + frmData.GenderTextFR13 + "</td>" + "<td>" + "Test date: " + frmData.TestDateTextFR13 + "</td>" + "<td>" + "Report date: " + frmData.ReportDateTextFR13 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
     }
 
     if (frmData.SpineView) {

@@ -43,39 +43,9 @@ class ECG extends Component {
     let pageBreak = 0;
     let totalCovidPoints = 0;
 
-    if (
-      frmData.NameTextFR20 &&
-      frmData.IDTextFR20 &&
-      frmData.AgeTextFR20 &&
-      frmData.GenderTextFR20
-    ) {
-      report +=
-        "<pre>" +
-        "<b>" +
-        "<header>" +
-        "<table>" +
-        "<tr>" +
-        "<td>" +
-        "Name: " +
-        frmData.NameTextFR20 +
-        "</td>" +
-        "<td>" +
-        "Patient ID: " +
-        frmData.IDTextFR20 +
-        "</td>" +
-        "<td>" +
-        "Age: " +
-        frmData.AgeTextFR20 +
-        "</td>" +
-        "<td>" +
-        "Gender: " +
-        frmData.GenderTextFR20 +
-        "</td>" +
-        "</tr>" +
-        "</table>" +
-        "</b>" +
-        "</pre>" +
-        "</header>";
+    if (frmData.NameTextFR20 && frmData.IDTextFR20 && frmData.AgeTextFR20 && frmData.GenderTextFR20)
+    {
+      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR20 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR20 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR20 + "</td>" + "</tr>"  + "<tr>" + "<td>" + "Gender: " + frmData.GenderTextFR20 + "</td>" + "<td>" + "Test date: " + frmData.TestDateTextFR20 + "</td>" + "<td>" + "Report date: " + frmData.ReportDateTextFR20 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
     }
 
     if (

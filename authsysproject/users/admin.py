@@ -8,6 +8,7 @@ from .models.instpersonalinfo import InstPersonalInfo
 from .models.institutionmodalities import InstitutionModalities
 from .models.patientdata import PatientInfo
 from .models.workexp import WorkExp
+from .models.serviceslist import ServicesList
 
 admin.site.register(PersonalInfo)
 admin.site.register(WorkExp)
@@ -18,5 +19,6 @@ admin.site.register(TimeAvailability)
 admin.site.register(InstPersonalInfo)
 admin.site.register(InstitutionModalities)
 admin.site.register(PatientInfo)
+admin.site.register(ServicesList)
 
 # Register your models here.

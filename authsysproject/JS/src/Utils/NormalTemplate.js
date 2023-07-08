@@ -39,7 +39,7 @@ class NormalTemplate extends Component {
 
     if (frmData.NameTextFR7 && frmData.IDTextFR7 && frmData.AgeTextFR7 && frmData.GenderTextFR7)
     {
-      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR7 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR7 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR7 + "</td>" + "<td>" + "Gender: " + frmData.GenderTextFR7 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR7 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR7 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR7 + "</td>" + "</tr>"  + "<tr>" + "<td>" + "Gender: " + frmData.GenderTextFR7 + "</td>" + "<td>" + "Test date: " + frmData.TestDateTextFR7 + "</td>" + "<td>" + "Report date: " + frmData.ReportDateTextFR7 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
     }
     if (frmData.Normal === 'X-RAY PELVIS WITH BOTH HIPS AP?') {
       report += "<h5>" + "<strong>" + "<u>" + "X-RAY PELVIS WITH BOTH HIPS AP" + "</u>" + "</strong>" + "</h5>";

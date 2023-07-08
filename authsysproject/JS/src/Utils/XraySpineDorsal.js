@@ -112,7 +112,7 @@ class XraySpineDorsal extends Component {
 
     if (frmData.NameTextFR14 && frmData.IDTextFR14 && frmData.AgeTextFR14 && frmData.GenderTextFR14)
     {
-      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR14 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR14 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR14 + "</td>" + "<td>" + "Gender: " + frmData.GenderTextFR14 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR14 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR14 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR14 + "</td>" + "</tr>"  + "<tr>" + "<td>" + "Gender: " + frmData.GenderTextFR14 + "</td>" + "<td>" + "Test date: " + frmData.TestDateTextFR14 + "</td>" + "<td>" + "Report date: " + frmData.ReportDateTextFR14 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
     }
 
     if (frmData.SpineView === 'AP') {

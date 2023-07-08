@@ -23,6 +23,12 @@ const _schema = {
       type: "string",
       enum: ['Male', 'Female', 'Others'],
     },
+    TestDateTextFR10: {
+			type: "string",
+		},
+    ReportDateTextFR10: {
+			type: "string",
+		},
     SpineView: {
       type: 'string',
       enum: ['X-Ray View'],
@@ -527,7 +533,16 @@ const uischema = {
               label: "Age",
               scope: "#/properties/AgeTextFR10",
             },
-            
+            {
+							type: "Control",
+							label: "Test date",
+							scope: "#/properties/TestDateTextFR10",
+						},
+                        {
+							type: "Control",
+							label: "Report date",
+							scope: "#/properties/ReportDateTextFR10",
+						},
           ],
 
         },
@@ -1846,36 +1861,128 @@ const styleContextValue = {
     },
   ],
 };
-export default class form10 extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: props.data,
-      schema: _schema
-    };
-  }
+// export default class form10 extends Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       data: props.data,
+//       schema: _schema
+//     };
+//   }
 
-  componentDidUpdate() { }
+//   componentDidUpdate() { }
 
-  handleForm(data) {
-    const { schema } = this.state;
-    this.setState(data, () => {
-      this.props.handleChange(data, false);
-    });
-  }
+//   handleForm(data) {
+//     const { schema } = this.state;
+//     this.setState(data, () => {
+//       this.props.handleChange(data, false);
+//     });
+//   }
 
-  render() {
-    const { data, schema } = this.state;
-    return (
-      <JsonForms
-        schema={schema}
-        uischema={uischema}
-        data={data}
-        renderers={materialRenderers}
-        cells={materialCells}
-        ValidationMode="ValidateAndShow"
-        onChange={({ data, _errors }) => this.handleForm(data)}
-      />
-    );
-  }
+//   render() {
+//     const { data, schema } = this.state;
+//     return (
+//       <JsonForms
+//         schema={schema}
+//         uischema={uischema}
+//         data={data}
+//         renderers={materialRenderers}
+//         cells={materialCells}
+//         ValidationMode="ValidateAndShow"
+//         onChange={({ data, _errors }) => this.handleForm(data)}
+//       />
+//     );
+//   }
+// }
+//Auto update by Aman Gupta on 23/06/23
+export default class Form10 extends Component {
+	constructor(props) {
+	  super(props);
+	  this.state = {
+		data: props.data,
+		schema: _schema,
+		patients: [],
+		query: '',
+	  };
+
+	  this.search = this.search.bind(this);
+	  this.setQuery = this.setQuery.bind(this);
+	  this.patientSelected = this.patientSelected.bind(this);
+	}
+  
+	componentDidUpdate() { }
+  
+	handleForm(data) {
+	  const { schema } = this.state;
+	  this.setState({data: data}, () => {
+		this.props.handleChange(data, false);
+	  });
+	  this.forceUpdate();
+	}
+
+	setQuery(e) {
+		this.setState({query: e.target.value})
+	}
+
+	search() {
+		fetch(`/patientdata?query=${this.state.query}`).then((r) => {
+			if (r.ok) {
+				return r.json();
+			}
+		}).then((d) => {
+			let patients = [];
+			d.forEach((p) => {
+				patients.push(p.fields);
+			});
+			//this.setState(patients);
+			this.setState({patients: patients});
+			//this.forceUpdate();
+		}).catch((e) => {
+			console.error(e);
+		})
+	}
+
+	patientSelected(e) {
+		const {data} = this.state;
+		const pid = e.target.value;
+		const patient = this.state.patients.find((p) => {
+			return p.PatientId === pid;
+		});
+		let formData = {
+			...data,
+			GenderTextFR10: patient.gender,
+			AgeTextFR10: patient.age,
+			NameTextFR10: patient.PatientName,
+			IDTextFR10: patient.PatientId,
+			TestDateTextFR10: patient.TestDate,
+			ReportDateTextFR10: patient.ReportDate
+		}
+		this.handleForm(formData);
+	}
+  
+	render() {
+	  const { data, schema, patients } = this.state;
+	  return (
+		<div>
+			<input type="text" placeholder="Enter name or Patient ID" onChange={this.setQuery}/> <button onClick={this.search}>Search</button>
+			{patients.length > 0 &&
+				<select id="patients" onChange={this.patientSelected}>
+					<option value="-1">-- Select Patient --</option>
+					{patients.map((p) => {
+						return <option value={p.PatientId} key={p.PatientId}>{p.PatientName} | ID: {p.PatientId}</option>;
+					})};	
+				</select>
+			}
+			<JsonForms
+			schema={schema}
+			uischema={uischema}
+			data={data}
+			renderers={materialRenderers}
+			cells={materialCells}
+			ValidationMode="ValidateAndShow"
+			onChange={({ data, _errors }) => this.handleForm(data)}
+			/>
+		</div>
+	  );
+	}
 }

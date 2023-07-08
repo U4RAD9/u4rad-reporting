@@ -43,7 +43,7 @@ class MriBrain extends Component {
 
     if (frmData.NameTextFR5 && frmData.IDTextFR5 && frmData.AgeTextFR5 && frmData.GenderTextFR5)
     {
-      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR5 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextF5 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR5 + "</td>" + "<td>" + "Gender: " + frmData.GenderTextFR5 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR5 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR5 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR5 + "</td>" + "</tr>"  + "<tr>" + "<td>" + "Gender: " + frmData.GenderTextFR5 + "</td>" + "<td>" + "Test date: " + frmData.TestDateTextFR5 + "</td>" + "<td>" + "Report date: " + frmData.ReportDateTextFR5 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
     }
     var current_user = JSON.parse(document.getElementById("current-user").textContent);
     if (frmData.allNormal || frmData.tonsillarHerniation || frmData.bonyCalvarium) {

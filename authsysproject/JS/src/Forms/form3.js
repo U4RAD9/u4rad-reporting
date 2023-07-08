@@ -8,18 +8,24 @@ const _schema = {
   type: "object",
   properties: {
     NameTextFR3: {
-      type: "string",
-    },
-    IDTextFR3: {
-      type: "string",
-    },
-    AgeTextFR3: {
-      type: "string",
-    },
-    GenderTextFR3: {
-      type: "string",
-      enum: ['Male', 'Female', 'Others'],
-    },
+			type: "string",
+		},
+		IDTextFR3: {
+			type: "string",
+		},
+		AgeTextFR3: {
+			type: "string",
+		},
+		GenderTextFR3: {
+			type: "string",
+			enum: ['Male', 'Female', 'Others'],
+		},
+		TestDateTextFR3: {
+			type: "string",
+		},
+    ReportDateTextFR3: {
+			type: "string",
+		},
     allNormal: {
       type: "boolean",
     },
@@ -784,20 +790,30 @@ const uischema = {
           label: "",
           elements: [
             {
-              type: "Control",
-              label: "Name",
-              scope: "#/properties/NameTextFR3",
-            },
-            {
-              type: "Control",
-              label: "Patient ID",
-              scope: "#/properties/IDTextFR3",
-            },
-            {
-              type: "Control",
-              label: "Age",
-              scope: "#/properties/AgeTextFR3",
-            },
+							type: "Control",
+							label: "Name",
+							scope: "#/properties/NameTextFR3",
+						},
+						{
+							type: "Control",
+							label: "Patient ID",
+							scope: "#/properties/IDTextFR3",
+						},
+						{
+							type: "Control",
+							label: "Age",
+							scope: "#/properties/AgeTextFR3",
+						},
+						{
+							type: "Control",
+							label: "Test date",
+							scope: "#/properties/TestDateTextFR3",
+						},
+                        {
+							type: "Control",
+							label: "Report date",
+							scope: "#/properties/ReportDateTextFR3",
+						},
           ],
           
         },
@@ -3531,36 +3547,128 @@ const styleContextValue = {
     },
   ],
 };
+// export default class Form3 extends Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       data: props.data,
+//       schema: _schema,
+//     };
+//   }
+
+//   componentDidUpdate() { }
+
+//   handleForm(data) {
+//     const { schema } = this.state;
+//     this.setState(data, () => {
+//       this.props.handleChange(data, false);
+//     });
+//   }
+
+//   render() {
+//     const { data, schema } = this.state;
+//     return (
+//       <JsonForms
+//         schema={schema}
+//         uischema={uischema}
+//         data={data}
+//         renderers={materialRenderers}
+//         cells={materialCells}
+//         ValidationMode="ValidateAndShow"
+//         onChange={({ data, _errors }) => this.handleForm(data)}
+//       />
+//     );
+//   }
+// }
+//Auto data by Aman Gupta on 23/06/23
 export default class Form3 extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: props.data,
-      schema: _schema,
-    };
-  }
+	constructor(props) {
+	  super(props);
+	  this.state = {
+		data: props.data,
+		schema: _schema,
+		patients: [],
+		query: '',
+	  };
 
-  componentDidUpdate() { }
+	  this.search = this.search.bind(this);
+	  this.setQuery = this.setQuery.bind(this);
+	  this.patientSelected = this.patientSelected.bind(this);
+	}
+  
+	componentDidUpdate() { }
+  
+	handleForm(data) {
+	  const { schema } = this.state;
+	  this.setState({data: data}, () => {
+		this.props.handleChange(data, false);
+	  });
+	  this.forceUpdate();
+	}
 
-  handleForm(data) {
-    const { schema } = this.state;
-    this.setState(data, () => {
-      this.props.handleChange(data, false);
-    });
-  }
+	setQuery(e) {
+		this.setState({query: e.target.value})
+	}
 
-  render() {
-    const { data, schema } = this.state;
-    return (
-      <JsonForms
-        schema={schema}
-        uischema={uischema}
-        data={data}
-        renderers={materialRenderers}
-        cells={materialCells}
-        ValidationMode="ValidateAndShow"
-        onChange={({ data, _errors }) => this.handleForm(data)}
-      />
-    );
-  }
+	search() {
+		fetch(`/patientdata?query=${this.state.query}`).then((r) => {
+			if (r.ok) {
+				return r.json();
+			}
+		}).then((d) => {
+			let patients = [];
+			d.forEach((p) => {
+				patients.push(p.fields);
+			});
+			//this.setState(patients);
+			this.setState({patients: patients});
+			//this.forceUpdate();
+		}).catch((e) => {
+			console.error(e);
+		})
+	}
+
+	patientSelected(e) {
+		const {data} = this.state;
+		const pid = e.target.value;
+		const patient = this.state.patients.find((p) => {
+			return p.PatientId === pid;
+		});
+		let formData = {
+			...data,
+			GenderTextFR3: patient.gender,
+			AgeTextFR3: patient.age,
+			NameTextFR3: patient.PatientName,
+			IDTextFR3: patient.PatientId,
+			TestDateTextFR3: patient.TestDate,
+			ReportDateTextFR3: patient.ReportDate
+		}
+		this.handleForm(formData);
+	}
+  
+	render() {
+	  const { data, schema, patients } = this.state;
+	  return (
+		<div>
+			<input type="text" placeholder="Enter name or Patient ID" onChange={this.setQuery}/> <button onClick={this.search}>Search</button>
+			{patients.length > 0 &&
+				<select id="patients" onChange={this.patientSelected}>
+					<option value="-1">-- Select Patient --</option>
+					{patients.map((p) => {
+						return <option value={p.PatientId} key={p.PatientId}>{p.PatientName} | ID: {p.PatientId}</option>;
+					})};	
+				</select>
+			}
+			<JsonForms
+			schema={schema}
+			uischema={uischema}
+			data={data}
+			renderers={materialRenderers}
+			cells={materialCells}
+			ValidationMode="ValidateAndShow"
+			onChange={({ data, _errors }) => this.handleForm(data)}
+			/>
+		</div>
+	  );
+	}
 }

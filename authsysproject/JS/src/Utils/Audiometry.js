@@ -57,9 +57,10 @@ class Audiometry extends Component {
 		// 	}
 		// }
 
-		if (frmData.NameTextFR19 && frmData.IDTextFR19 && frmData.AgeTextFR19 && frmData.GenderTextFR19) {
-			report += "<pre>" + "<b>" + "<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR19 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR19 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR19 + "</td>" + "<td>" + "Gender: " + frmData.GenderTextFR19 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
-		}
+		if (frmData.NameTextFR19 && frmData.IDTextFR19 && frmData.AgeTextFR19 && frmData.GenderTextFR19)
+        {
+          report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR19 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR19 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR19 + "</td>" + "</tr>"  + "<tr>" + "<td>" + "Gender: " + frmData.GenderTextFR19 + "</td>" + "<td>" + "Test date: " + frmData.TestDateTextFR19 + "</td>" + "<td>" + "Report date: " + frmData.ReportDateTextFR19 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+        }
 
 		if (frmData.AudiometryNormal) {
 			if (frmData.AudiometryNormalL && !frmData.AudiometryNormalR) {
@@ -100,6 +101,7 @@ class Audiometry extends Component {
 				if(frmData.AudiometryAbnormalLType && frmData.AudiometryAbnormalRType){
 					report += "<p>" + "<b>" + "Hearing loss in left side at volume of " + frmData.AudiometryAbnormalLType +  " and right eat at volume of " + frmData.AudiometryAbnormalRType + " and between frequency 250-8000Hz."  + "</b>" + "</p>";
 				}
+				let arr = [];
 				if(frmData.AudiometryAbnormalLType === '21-40 dB'){
 					arr.push('Mild')
 				}

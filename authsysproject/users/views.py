@@ -20,6 +20,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.core.serializers import serialize
+from django.contrib.auth import get_user_model
 import json
 import csv
 
@@ -134,33 +135,68 @@ def InstitutionModalities(request):
         return JsonResponse(status=400, data={"message": "invalid data"})
 
 # 3
+# def PersonalInfo(request):
+#     if request.method == 'POST':
+#         name = request.POST['name']
+#         email = request.POST['email']
+#         password = request.POST['password']
+#         phone = request.POST['phone']
+#         altphone = request.POST['altphone']
+#         reference = request.POST['reference']
+#         resume = request.FILES['resume']
+#         uploadpicture = request.FILES['uploadpicture']
+#         signature = request.FILES['signature']
+#         companylogo = request.FILES['companylogo']
+#         serviceslist = request.POST['serviceslist']
+
+#         user = User.objects.create_user(username=email, email=email, password=password, first_name=name)
+
+#         insti_group = Group.objects.get(name="radiologist")
+#         insti_group.user_set.add(user)
+
+#         x = PersonalInfoModel.objects.create(user=user, phone=phone, altphone=altphone,
+#                                              reference=reference, resume=resume,
+#                                              uploadpicture=uploadpicture, signature=signature, companylogo=companylogo, serviceslist=serviceslist)
+#         x.save()
+#         print("Done.!!")
+#         return JsonResponse(status=201, data={"message": "success"})
+#     else:
+#         print("Not done..")
+#         return JsonResponse(status=400, data={"message": "invalid data"})
+
+############## Try ##################
+User = get_user_model()
+
 def PersonalInfo(request):
     if request.method == 'POST':
-        name = request.POST['name']
-        email = request.POST['email']
-        password = request.POST['password']
-        phone = request.POST['phone']
-        altphone = request.POST['altphone']
-        reference = request.POST['reference']
-        resume = request.FILES['resume']
-        uploadpicture = request.FILES['uploadpicture']
-        signature = request.FILES['signature']
-        companylogo = request.FILES['companylogo']
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        phone = request.POST.get('phone')
+        altphone = request.POST.get('altphone')
+        reference = request.POST.get('reference')
+        resume = request.FILES.get('resume')
+        uploadpicture = request.FILES.get('uploadpicture')
+        signature = request.FILES.get('signature')
+        companylogo = request.FILES.get('companylogo')
+        serviceslist = request.POST.getlist('serviceslist')  # Get a list of selected services
+
+        if not all([name, email, password, phone, resume, uploadpicture, signature, companylogo, serviceslist]):
+            return JsonResponse(status=400, data={"message": "Missing required fields"})
 
         user = User.objects.create_user(username=email, email=email, password=password, first_name=name)
-
-        insti_group = Group.objects.get(name="radiologist")
+        insti_group, _ = Group.objects.get_or_create(name="radiologist")
         insti_group.user_set.add(user)
 
-        x = PersonalInfoModel.objects.create(user=user, phone=phone, altphone=altphone,
-                                             reference=reference, resume=resume,
-                                             uploadpicture=uploadpicture, signature=signature, companylogo=companylogo)
-        x.save()
-        print("Done.!!")
+        personal_info = PersonalInfoModel.objects.create(user=user, phone=phone, altphone=altphone,
+                                                         reference=reference, resume=resume,
+                                                         uploadpicture=uploadpicture, signature=signature,
+                                                         companylogo=companylogo)
+        personal_info.serviceslist.set(serviceslist)  # Set the ManyToManyField with the selected services
+
         return JsonResponse(status=201, data={"message": "success"})
     else:
-        print("Not done..")
-        return JsonResponse(status=400, data={"message": "invalid data"})
+        return JsonResponse(status=400, data={"message": "Invalid request method"})
 
 
 # 4
@@ -413,6 +449,3 @@ def uploadcsv(request):
         # return HttpResponse('Please upload a CSV file.')
         return render(request, 'users/uploadcsv.html')
     #@login_required
-        
-    
-    

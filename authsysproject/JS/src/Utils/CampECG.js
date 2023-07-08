@@ -114,7 +114,7 @@ class CampECG extends Component {
       user.signature +
       "' height='50' /><p>" +
       user.full_name +
-      "<br>" +
+      "<br>" + "<br>" + 
       user.designation +
       "</p></p>"
     );

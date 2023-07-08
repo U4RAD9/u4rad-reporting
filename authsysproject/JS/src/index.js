@@ -22,9 +22,16 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { Test } from "@jsonforms/core";
 
-const options = [{ label: 'X-RAY CHEST', id: 1 }, { label: "X-RAY KNEE", id: 2 }, { label: "X-RAY SPINE(DORSAL)", id: 3 }, { label: "X-RAY SPINE(CERVICAL)", id: 4 }, { label: "X-RAY SPINE(LUMBER)", id: 5 }, { label: "X-RAY RIGHT-SHOULDER", id: 6 }, { label: "X-RAY LEFT-SHOULDER", id: 7 }, { label: "X-RAY TEMPLATE", id: 8 }, { label: 'CT HEAD', id: 9 }, { label: 'CT PNS', id: 10 }, { label: 'CT ABDOMEN', id: 11 }, { label: 'MRI BRAIN', id: 12 }, { label: 'AUDIOMETRY', id: 13 }, { label: 'ECG', id: 14 }, { label: 'CAMP ECG', id: 15 }]
+// const options = [{ label: 'X-RAY CHEST', id: 1 }, { label: "X-RAY KNEE", id: 2 }, { label: "X-RAY SPINE(DORSAL)", id: 3 }, { label: "X-RAY SPINE(CERVICAL)", id: 4 }, { label: "X-RAY SPINE(LUMBER)", id: 5 }, { label: "X-RAY RIGHT-SHOULDER", id: 6 }, { label: "X-RAY LEFT-SHOULDER", id: 7 }, { label: "X-RAY TEMPLATE", id: 8 }, { label: 'CT HEAD', id: 9 }, { label: 'CT PNS', id: 10 }, { label: 'CT ABDOMEN', id: 11 }, { label: 'MRI BRAIN', id: 12 }, { label: 'AUDIOMETRY', id: 13 }, { label: 'ECG', id: 14 }, { label: 'CAMP ECG', id: 15 }]
 
 var current_user = JSON.parse(document.getElementById("current-user").textContent);
+
+///////////// Dynamic lists by aman gupta on 07/07/2023 ///////////////
+const options = JSON.parse(current_user.serviceslist).map((service) => ({
+          label: service.fields.title,
+          id: service.pk,
+        }));
+
 class App extends Component {
   editor = null;
   constructor() {
@@ -42,6 +49,7 @@ class App extends Component {
     this.GetDivContentOnPDF = this.GetDivContentOnPDF.bind(this);
     this.GetDivContentOnWord = this.GetDivContentOnWord.bind(this);
     this.onclickDiv = this.onclickDiv.bind(this);
+    
   }
 
   onclickDiv(e) {
@@ -113,7 +121,7 @@ class App extends Component {
     return ("<img src='" + user.companylogo + "' height='' width='300' />");
   }
 
-
+///////////// Dynamic lists by aman gupta on 07/07/2023 ///////////////
   choose() {
     var list = document.createElement('select');
     list.id = "choose_scan"
@@ -122,6 +130,7 @@ class App extends Component {
     optionSelect.text = 'Reporting BOT';
     list.appendChild(optionSelect);
     options.forEach(({ label, id }) => {
+      
       var option = document.createElement('option');
       option.value = id;
       option.text = label;
@@ -131,9 +140,11 @@ class App extends Component {
     return list;
   }
 
+  
+
   actionDropDown() {
     var list = document.createElement("select");
-    var filetype = ['Export Report', 'Get PDF', 'Get WORD'];
+    var filetype = ['Export Report', 'Get PDF', 'Get WORD', 'PRINT'];
     list.id = "export_data"
 
     filetype.forEach((item, id) => {
@@ -237,6 +248,41 @@ class App extends Component {
     return userDiv;
   }
 
+  //print function add by Aman Gupta on 28/06/23
+  printReport() {
+    const data = document.querySelector('.ck-editor__editable');
+  
+    if (data !== null) {
+      data.classList.add("ck-blurred");
+      data.classList.remove("ck-focused");
+  
+      // Apply inline CSS styles
+      data.style.fontSize = "22px";
+      data.style.padding = "6px";
+  
+      // Add CSS styles for the table
+      const tableStyle = `
+        <style>
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed; /* Added to ensure equal cell sizes */
+          }
+  
+          td {
+            border: 1px solid black;
+            padding: 6px;
+            width: auto; /* Adjust this value as needed */
+          }
+        </style>
+      `;
+      data.innerHTML = tableStyle + data.innerHTML;
+  
+      window.print();
+    }
+  }
+  
+
   //Aman(searchfield for IDs)
   
 
@@ -266,40 +312,6 @@ class App extends Component {
     return filename;
   }
 
-  // GetDivContentOnPDF() {
-  //   var filename = this.createFilename();
-  //   const data = document.getElementsByClassName('ck-editor__editable')[0];
-  //   //remove border
-  //   data.classList.add("ck-blurred");
-  //   data.classList.remove("ck-focused");
-
-  //   //console.log(data);
-  //   if (data != undefined) {
-  //     var width = (2480 / 4) - 50;
-  //     var height = 3508 / 4.3;
-  //     var topLeftMArgin = 5;
-  //     var pdfWidth = width + (topLeftMArgin * 2);
-  //     var pdfheight = (pdfWidth * 1.5) + (topLeftMArgin * 2);
-  //     var canvasImgWidth = width;
-  //     var canvasImgHeight = height;
-
-  //     var totalPages = Math.ceil(height / pdfheight) - 1;
-  //     html2canvas(data, {
-  //       quality: 4,
-  //       //scale: 5
-  //     })
-  //       .then((canvas) => {
-  //         const imgData = canvas.toDataURL('image/png', 1.0);
-  //         const pdf = new jsPDF('p', 'pt', [canvas.width, canvas.height], true);
-  //         pdf.addImage(imgData, 'JPG', topLeftMArgin, topLeftMArgin, canvasImgWidth, canvasImgHeight, '0', 'FAST');
-  //         for (var i = 1; i <= totalPages; i++) {
-  //           pdf.addPage(pdfWidth, pdfheight);
-  //           pdf.addImage(imgData, 'JPG', topLeftMArgin, -(pdfheight * i) + (topLeftMArgin * 4), canvasImgWidth, canvasImgHeight, i, 'FAST');
-  //         }
-  //         pdf.save(filename ? filename + ".pdf" : "download.pdf");
-  //       });
-  //   }
-  // }
   GetDivContentOnPDF() {
     var filename = this.createFilename();
     const data = document.getElementsByClassName('ck-editor__editable')[0];
@@ -497,6 +509,9 @@ class App extends Component {
       case 2:
         this.Export2Doc();
         break;
+      case 3:
+        this.printReport();
+      break;   
       default:
         console.log("---");
         break;

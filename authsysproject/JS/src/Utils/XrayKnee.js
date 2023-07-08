@@ -224,9 +224,9 @@ class XrayKnee extends Component {
   //   }
 
   if (frmData.NameTextFR15 && frmData.IDTextFR15 && frmData.AgeTextFR15 && frmData.GenderTextFR15)
-  {
-    report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR15 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR15 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR15 + "</td>" + "<td>" + "Gender: " + frmData.GenderTextFR15 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
-  }
+    {
+      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR15 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR15 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR15 + "</td>" + "</tr>"  + "<tr>" + "<td>" + "Gender: " + frmData.GenderTextFR15 + "</td>" + "<td>" + "Test date: " + frmData.TestDateTextFR15 + "</td>" + "<td>" + "Report date: " + frmData.ReportDateTextFR15 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+    }
 
     if(frmData.XrayType){
       if(frmData.KneeNormal){

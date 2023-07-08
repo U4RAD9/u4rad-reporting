@@ -135,7 +135,7 @@ class PnsAbnormal extends Component {
 
     if (frmData.NameTextFR4 && frmData.IDTextFR4 && frmData.AgeTextFR4 && frmData.GenderTextFR4)
     {
-      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR4 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR4 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR4 + "</td>" + "<td>" + "Gender: " + frmData.GenderTextFR4 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR4 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR4 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR4 + "</td>" + "</tr>"  + "<tr>" + "<td>" + "Gender: " + frmData.GenderTextFR4 + "</td>" + "<td>" + "Test date: " + frmData.TestDateTextFR4 + "</td>" + "<td>" + "Report date: " + frmData.ReportDateTextFR4 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
     }
     if (frmData.Normalsinus) {
       report += "<h5>" + "<strong>" + "<u>" + "LOW DOSE CT REPORT - PARANASAL SINUSES" + "</u>" + "</strong>" + "</h5>";

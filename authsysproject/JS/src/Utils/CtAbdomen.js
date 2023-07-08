@@ -40,9 +40,9 @@ class CtAbdomen extends Component {
 		let pageBreak = 0;
 		let totalCovidPoints = 0;
         
-		if (frmData.NameTextFR18 && frmData.IDTextFR18 && frmData.AgeTextFR18 && frmData.GenderTextFR18)
+		if (frmData.NameTextFR21 && frmData.IDTextFR21 && frmData.AgeTextFR21 && frmData.GenderTextFR21)
         {
-          report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR18 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR18 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR18 + "</td>" + "<td>" + "Gender: " + frmData.GenderTextFR18 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+           report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR21 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR21 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR21 + "</td>" + "</tr>"  + "<tr>" + "<td>" + "Gender: " + frmData.GenderTextFR21 + "</td>" + "<td>" + "Test date: " + frmData.TestDateTextFR21 + "</td>" + "<td>" + "Report date: " + frmData.ReportDateTextFR21 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
         }
 
         if(frmData.Appendix) {
