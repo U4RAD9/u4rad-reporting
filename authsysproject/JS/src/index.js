@@ -16,7 +16,7 @@ import PnsAbnormal from "./Utils/PnsAbnormal";
 import MriBrain from "./Utils/MriBrain";
 import CtAbdomen from "./Utils/CtAbdomen";
 import Audiometry from "./Utils/Audiometry";
-import ECG from "./Utils/Ecg";
+import ECG from "./Utils/ECG";
 import CampECG from "./Utils/CampECG";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -271,8 +271,8 @@ class App extends Component {
   
           td {
             border: 1px solid black;
-            padding: 6px;
-            font-size: 20px;
+            padding: 2px;
+            font-size: 22px;
             width: auto; /* Adjust this value as needed */
           }
         </style>
