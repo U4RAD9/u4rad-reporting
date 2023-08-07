@@ -1474,7 +1474,7 @@ const uischema = {
                 /////////////////////////Left eye color/////////////////////
                 {
                   type: "Control",
-                  label: "Left eye olor blindness",
+                  label: "Left eye color blindness",
                   scope: "#/properties/OptometryLColorType",
                   options: {
                     format: "radio",

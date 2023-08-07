@@ -102,13 +102,13 @@ class Optometry extends Component {
         //test/////////////
         ////all normal//////////
         if (frmData.OptometryNormal) {
-            report += "<pre>" + "<b>" + "<header>" + '<table>' + "<tr>" + "<td colspan='9'>" + "Visual Acuity" + "</td>" + "</tr>" + "<tr>" + "<td colspan='5'>" 
-			  + "Distance(Far)" + "</td>" + "<td colspan='4'>" + "Reading(Near)" + "</td>" + "</tr>" + "<tr>" + "<td>" + "EYE" + "</td>" + "<td>" + "SPH" 
-			  + "</td>" + "<td>" + "CYL" + "</td>" + "<td>" + "AXIS" + "</td>" + "<td>" + "VISION" + "</td>" + "<td>" + "SPH" + "</td>" + "<td>" + "CYL" + "</td>" 
-			  + "<td>" + "AXIS" + "</td>"+ "<td>" + "VISION" + "</td>"+ "</tr>" + "<tr>" + "<td>" + "R/E" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" 
+            report += "<pre>" + "<header>" + '<table>' + "<tr>" + "<td colspan='9'>" + "<b>" + "Visual Acuity" + "</b>" + "</td>" + "</tr>" + "<tr>" + "<td colspan='5'>" 
+			  + "<b>" + "Distance(Far)" + "</b>" + "</td>" + "<td colspan='4'>" + "<b>" + "Reading(Near)" + "</b>" + "</td>" + "</tr>" + "<tr>" + "<td>" + "<b>" + "EYE" + "</b>" + "</td>" + "<td>" + "<b>" + "SPH" 
+			  + "</b>" + "</td>" + "<td>" + "<b>" + "CYL" + "</b>" + "</td>" + "<td>" + "<b>" + "AXIS" + "</b>" + "</td>" + "<td>" + "<b>" + "VISION" + "</b>" + "</td>" + "<td>" + "<b>" + "SPH" + "</b>" + "</td>" + "<td>" + "<b>" + "CYL" + "</b>" + "</td>" 
+			  + "<td>" + "<b>" + "AXIS" + "</b>" + "</td>"+ "<td>" + "<b>" + "VISION" + "</b>" + "</td>"+ "</tr>" + "<tr>" + "<td>" + "<b>" + "R/E" + "</b>" + "</td>" + "</b>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" 
 			  + "<td>" + "N/A" + "</td>" + "<td>" + "6/6" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/6" + "</td>" 
-			   + "</tr>" + "<tr>" + "<td>" + "L/E" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "6/6" + "</td>" 
-			  + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/6" + "</td>" + "</tr>"  + "</table>" + "</header>" + "</b>" + "</pre>";
+			   + "</tr>" + "<tr>" + "<td>" + "<b>" + "L/E" + "</b>" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "6/6" + "</td>" 
+			  + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/6" + "</td>" + "</tr>"  + "</table>" + "</header>" + "</pre>";
             
               impression.push("<p>" + "<b>" + "Normal vision in both eye." + "</b>" + "</p>");  
         }
@@ -442,6 +442,12 @@ class Optometry extends Component {
         if (frmData.OptometryLColorType=="Total color blindness" && frmData.OptometryRColorType=="Partial color blindness") {
             report += "<h5>" + "<strong>" + "Color vision check(Ishihara test): " + "</strong>" + "Total color blindness in left eye and partial color blindness in right eye: " + frmData.OptometryRColorType1 + "." + "</h5>";
             impression.push("<p>" + "<b>" + "Total color blindness in left eye and partial color blindness in right eye: " + frmData.OptometryRColorType1 + "." + "</b>" + "</p>");
+        }
+
+		//Left partial-Right Partial//////////////
+        if (frmData.OptometryLColorType=="Partial color blindness" && frmData.OptometryRColorType=="Partial color blindness" && !(frmData.OptometryLColorType1=="Red" && frmData.OptometryRColorType1=="Red") && !(frmData.OptometryLColorType1=="Green" && frmData.OptometryRColorType1=="Green") && !(frmData.OptometryLColorType1=="Red-Green" && frmData.OptometryRColorType1=="Red-Green")) {
+            report += "<h5>" + "<strong>" + "Color vision check(Ishihara test): " + "</strong>" + "Partial color blindness in left eye: " + frmData.OptometryLColorType1 + " and partial color blindness in right eye: " + frmData.OptometryRColorType1 + "." + "</h5>";
+            impression.push("<p>" + "<b>" +"Partial color blindness in left eye: " + frmData.OptometryLColorType1 + " and partial color blindness in right eye: " + frmData.OptometryRColorType1 + "." + "</b>" + "</p>");
         }
 		   
 		

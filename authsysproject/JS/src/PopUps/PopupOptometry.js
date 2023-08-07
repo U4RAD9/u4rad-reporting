@@ -36,6 +36,19 @@ export default class PopupOptometry extends React.Component {
 
     
 
+    if (data.OptometryNormal) {
+      if ((data.OptometryAbnormalLType || data.OptometryAbnormalRType || data.OptometryAbnormalLTypeN || data.OptometryAbnormalRTypeN || data.OptometryPrescriptionLminusPowerType || data.OptometryPrescriptionLplusPowerType || data.OptometryPrescriptionLAxis 
+        || data.OptometryPrescriptionRminusPowerType || data.OptometryPrescriptionRplusPowerType || data.OptometryPrescriptionRAxis || data.OptometryPrescriptionLminusPowerTypeFar || data.OptometryPrescriptionLplusPowerTypeFar || data.OptometryPrescriptionLAxisFar || data.OptometryPrescriptionRminusPowerTypeFar
+        || data.OptometryPrescriptionRplusPowerTypeFar || data.OptometryPrescriptionRAxisFar) && data.OptometryNormal){
+        document.querySelectorAll('label[id^="#/properties/OptometryNormal"]').forEach((el) => {
+          el.classList.add("err");
+        });
+        return;
+      }
+    }
+
+
+
     if (!err) {
       this.props.handleClick();
     }
