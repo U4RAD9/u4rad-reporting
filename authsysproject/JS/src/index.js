@@ -18,8 +18,11 @@ import CtAbdomen from "./Utils/CtAbdomen";
 import Audiometry from "./Utils/Audiometry";
 import ECG from "./Utils/ECG";
 import CampECG from "./Utils/CampECG";
+import Optometry from "./Utils/Optometry";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import firebase from 'firebase/app';
+import 'firebase/storage';
 import { Test } from "@jsonforms/core";
 
 // const options = [{ label: 'X-RAY CHEST', id: 1 }, { label: "X-RAY KNEE", id: 2 }, { label: "X-RAY SPINE(DORSAL)", id: 3 }, { label: "X-RAY SPINE(CERVICAL)", id: 4 }, { label: "X-RAY SPINE(LUMBER)", id: 5 }, { label: "X-RAY RIGHT-SHOULDER", id: 6 }, { label: "X-RAY LEFT-SHOULDER", id: 7 }, { label: "X-RAY TEMPLATE", id: 8 }, { label: 'CT HEAD', id: 9 }, { label: 'CT PNS', id: 10 }, { label: 'CT ABDOMEN', id: 11 }, { label: 'MRI BRAIN', id: 12 }, { label: 'AUDIOMETRY', id: 13 }, { label: 'ECG', id: 14 }, { label: 'CAMP ECG', id: 15 }]
@@ -272,7 +275,7 @@ class App extends Component {
           td {
             border: 1px solid black;
             padding: 2px;
-            font-size: 22px;
+            font-size: 20px;
             width: auto; /* Adjust this value as needed */
           }
         </style>
@@ -337,8 +340,50 @@ class App extends Component {
       });
     }
   }
-  
 
+////////////////////pdf try////////////////////
+
+
+
+
+
+
+
+////////////////////////////////// Another one ////////////////////////
+// GetDivContentOnPDF() {
+//   var filename = this.createFilename();
+//   const data = document.getElementsByClassName('ck-editor__editable')[0];
+//   var htmlWidth = 595.28;
+//   var htmlHeight = 841.89;
+//   var pdfWidth = htmlWidth - 40;
+//   var pdfHeight = htmlHeight - 40;
+
+//   var totalContentHeight = data.scrollHeight;
+//   var pageCount = Math.ceil(totalContentHeight / pdfHeight);
+
+//   html2canvas(data, {
+//     scale: 4
+//   }).then((canvas) => {
+//     const pdf = new jsPDF('p', 'pt', [pdfWidth, pdfHeight]);
+
+//     const imgData = canvas.toDataURL("image/png", 1.0);
+//     pdf.addImage(imgData, 'PNG', 15, 15, htmlWidth, htmlHeight);
+
+//     for (var i = 1; i < pageCount; i++) {
+//       pdf.addPage([pdfWidth, pdfHeight]);
+//       pdf.addImage(imgData, 'PNG', 15, -(pdfHeight * i) + 15, htmlWidth, htmlHeight);
+//     }
+
+//     pdf.save(filename ? filename + ".pdf" : "download.pdf");
+//   });
+// };
+
+  
+  
+  
+  
+  
+//////////////////////////////////////////////////////////////
   toDataURL(url, index, callback) {
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
@@ -571,6 +616,8 @@ class App extends Component {
                                        <ECG handleClick={this.handleClick} reportFrmData={reportFrmData} generateReport={this.generateReport} generatePatientTable={this.generatePatientTable()} /> :
                                        this.state.modal && (options_label === "CAMP ECG") ?
                                          <CampECG handleClick={this.handleClick} reportFrmData={reportFrmData} generateReport={this.generateReport} generatePatientTable={this.generatePatientTable()} /> :
+                                         this.state.modal && (options_label === "OPTOMETRY") ?
+                                          <Optometry handleClick={this.handleClick} reportFrmData={reportFrmData} generateReport={this.generateReport} generatePatientTable={this.generatePatientTable()} /> :
                                     ""
         }
         <div className="document-editor">
