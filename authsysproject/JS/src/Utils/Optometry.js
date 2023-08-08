@@ -96,21 +96,34 @@ class Optometry extends Component {
 
 		if (frmData.NameTextFR22 && frmData.IDTextFR22 && frmData.AgeTextFR22 && frmData.GenderTextFR22)
         {
-          report += "<pre>" + "<b>" + "<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR22 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR22 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR22 + "</td>" + "</tr>"  + "<tr>" + "<td>" + "Gender: " + frmData.GenderTextFR22 + "</td>" + "<td>" + "Test date: " + frmData.TestDateTextFR22 + "</td>" + "<td>" + "Report date: " + frmData.ReportDateTextFR22 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+          report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR22 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR22 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR22 + "</td>" + "</tr>"  + "<tr>" + "<td>" + "Gender: " + frmData.GenderTextFR22 + "</td>" + "<td>" + "Test date: " + frmData.TestDateTextFR22 + "</td>" + "<td>" + "Report date: " + frmData.ReportDateTextFR22 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+		  
         }
         
         //test/////////////
         ////all normal//////////
         if (frmData.OptometryNormal) {
-            report += "<pre>" + "<header>" + '<table>' + "<tr>" + "<td colspan='9'>" + "<b>" + "Visual Acuity" + "</b>" + "</td>" + "</tr>" + "<tr>" + "<td colspan='5'>" 
+			report += "<h5>" +
+			"<strong>" +
+			"<u>" +
+			"OPTOMETRY" +
+			"</u>" +
+			"</strong>" +
+			"</h5>" +
+			"<strong>" +
+			"<u>" +
+			"Observation:" +
+			"</u>" +
+			"</strong>";
+            report += "<table>" + "<tr>" + "<td colspan='9'>" + "<b>" + "Visual Acuity" + "</b>" + "</td>" + "</tr>" + "<tr>" + "<td colspan='5'>" 
 			  + "<b>" + "Distance(Far)" + "</b>" + "</td>" + "<td colspan='4'>" + "<b>" + "Reading(Near)" + "</b>" + "</td>" + "</tr>" + "<tr>" + "<td>" + "<b>" + "EYE" + "</b>" + "</td>" + "<td>" + "<b>" + "SPH" 
 			  + "</b>" + "</td>" + "<td>" + "<b>" + "CYL" + "</b>" + "</td>" + "<td>" + "<b>" + "AXIS" + "</b>" + "</td>" + "<td>" + "<b>" + "VISION" + "</b>" + "</td>" + "<td>" + "<b>" + "SPH" + "</b>" + "</td>" + "<td>" + "<b>" + "CYL" + "</b>" + "</td>" 
 			  + "<td>" + "<b>" + "AXIS" + "</b>" + "</td>"+ "<td>" + "<b>" + "VISION" + "</b>" + "</td>"+ "</tr>" + "<tr>" + "<td>" + "<b>" + "R/E" + "</b>" + "</td>" + "</b>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" 
 			  + "<td>" + "N/A" + "</td>" + "<td>" + "6/6" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/6" + "</td>" 
 			   + "</tr>" + "<tr>" + "<td>" + "<b>" + "L/E" + "</b>" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "6/6" + "</td>" 
-			  + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/6" + "</td>" + "</tr>"  + "</table>" + "</header>" + "</pre>";
+			  + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/A" + "</td>" + "<td>" + "N/6" + "</td>" + "</tr>"  + "</table>";
             
-              impression.push("<p>" + "<b>" + "Normal vision in both eye." + "</b>" + "</p>");  
+              impression.push("<p>" + "Normal vision in both eye." + "</p>");  
         }
 
         if (!frmData.OptometryNormal) {
@@ -347,27 +360,38 @@ class Optometry extends Component {
             //far///////////
             let arr13 = [];
             if (frmData.OptometryAbnormalLType && !frmData.OptometryAbnormalRType) {
-                arr13.push(frmData.OptometryAbnormalLType + " vision in left eye(far) ");
+                arr13.push("<b>" + "Far: " + "</b>" + frmData.OptometryAbnormalLType + " vision in left eye. ");
             }
             if (frmData.OptometryAbnormalRType && !frmData.OptometryAbnormalLType) {
-                arr13.push(frmData.OptometryAbnormalRType + " vision in right eye(far) ");
+                arr13.push("<b>" + "Far: " + "</b>" + frmData.OptometryAbnormalRType + " vision in right eye. ");
             }
             if (frmData.OptometryAbnormalRType && frmData.OptometryAbnormalLType) {
-                arr13.push(frmData.OptometryAbnormalRType + " vision in right eye- " + frmData.OptometryAbnormalLType + " vision in left eye(far) ");
+                arr13.push("<b>" + "Far: " + "</b>" + frmData.OptometryAbnormalRType + " vision in right eye- " + frmData.OptometryAbnormalLType + " vision in left eye." + "<br>");
             }
             if (frmData.OptometryAbnormalLTypeN && !frmData.OptometryAbnormalRTypeN) {
-                arr13.push(frmData.OptometryAbnormalLTypeN + " vision in left eye(near) ");
+                arr13.push("<b>" + "Near: " + "</b>" + frmData.OptometryAbnormalLTypeN + " vision in left eye. ");
             }
             if (frmData.OptometryAbnormalRTypeN && !frmData.OptometryAbnormalLTypeN) {
-                arr13.push(frmData.OptometryAbnormalRTypeN + " vision in right eye(near) ");
+                arr13.push("<b>" + "Near: " + "</b>" + frmData.OptometryAbnormalRTypeN + " vision in right eye. ");
             }
             if (frmData.OptometryAbnormalRTypeN && frmData.OptometryAbnormalLTypeN) {
-                arr13.push(frmData.OptometryAbnormalRTypeN + " vision in right eye- " + frmData.OptometryAbnormalLTypeN + " vision in left eye(near) ");
+                arr13.push("<b>" + "Near: " + "</b>" + frmData.OptometryAbnormalRTypeN + " vision in right eye- " + frmData.OptometryAbnormalLTypeN + " vision in left eye.");
             }
 			
 			
 			
-		  
+		    report += "<h5>" +
+			"<strong>" +
+			"<u>" +
+			"OPTOMETRY" +
+			"</u>" +
+			"</strong>" +
+			"</h5>" +
+			"<strong>" +
+			"<u>" +
+			"Observation:" +
+			"</u>" +
+			"</strong>";
 			report += "<pre>" + "<b>" + "<header>" + '<table>' + "<tr>" + "<td colspan='9'>" + "Visual Acuity" + "</td>" + "</tr>" + "<tr>" + "<td colspan='5'>" 
 			  + "Distance(Far)" + "</td>" + "<td colspan='4'>" + "Reading(Near)" + "</td>" + "</tr>" + "<tr>" + "<td>" + "EYE" + "</td>" + "<td>" + "SPH" 
 			  + "</td>" + "<td>" + "CYL" + "</td>" + "<td>" + "AXIS" + "</td>" + "<td>" + "VISION" + "</td>" + "<td>" + "SPH" + "</td>" + "<td>" + "CYL" + "</td>" 
@@ -377,7 +401,7 @@ class Optometry extends Component {
 			  + "<td>" + arr9 + "</td>" + "<td>" + arr10 + "</td>" + "<td>" + arr11 + "</td>" + "<td>" + "N/6" + "</td>" + "</tr>"  + "</table>" + "</header>" + "</b>" + "</pre>"
 			  + "<p>" + "<b>" + "Addition: " + arr12 + "</b>" + "</p>";
 		
-              impression.push("<p>" + "<b>" + arr13 + "</b>" + "</p>");
+              impression.push("<p>" + arr13.join("") + "</p>");
         } 
 
         
@@ -385,69 +409,58 @@ class Optometry extends Component {
 		
 		//Normal both/////////////////////
         if (frmData.OptometryLColorType=="Normal" && frmData.OptometryRColorType=="Normal") {
-            report += "<h5>" + "<strong>" + "Color vision check(Ishihara test): " + "</strong>" + "Normal in both eyes." + "</h5>";
-            impression.push("<p>" + "<b>" + "Eye vision in both eyes normal." + "</b>" + "</p>");
+            report += "<h5>" + "<strong>" + "<u>" + "Color vision check(Ishihara test): " + "</u>" + "</strong>" + "Normal in both eyes." + "</h5>";
         }
         //Total color blindness both//////////////////////
         if (frmData.OptometryLColorType=="Total color blindness" && frmData.OptometryRColorType=="Total color blindness") {
-            report += "<h5>" + "<strong>" + "Color vision check(Ishihara test): " + "</strong>" + "Total color blindness in both eyes." + "</h5>";
-            impression.push("<p>" + "<b>" + "Total color blindness in both eyes." + "</b>" + "</p>");
+            report += "<h5>" + "<strong>" + "<u>" + "Color vision check(Ishihara test)" + "</u>" + ": " + "</strong>" + "Total color blindness in both eyes." + "</h5>";
         }
         //Partial both
         //Red
         if (frmData.OptometryLColorType=="Partial color blindness" && frmData.OptometryRColorType=="Partial color blindness" && frmData.OptometryLColorType1=="Red" && frmData.OptometryRColorType1=="Red"
         && !(frmData.OptometryLColorType1=="Green" && frmData.OptometryRColorType1=="Green") && !(frmData.OptometryLColorType1=="Red-Green" && frmData.OptometryRColorType1=="Red-Green")) {
-            report += "<h5>" + "<strong>" + "Color vision check(Ishihara test): " + "</strong>" + "Partial color blindness(both eye): Red." + "</h5>";
-            impression.push("<p>" + "<b>" + "Partial color blindness in both eye difficulty in viewing Red color." + "</b>" + "</p>");
+            report += "<h5>" + "<strong>" + "<u>" + "Color vision check(Ishihara test)" + "</u>" + ": " + "</strong>" + "Partial color blindness(both eye): Red." + "</h5>";
         }
         //Green
         if (frmData.OptometryLColorType=="Partial color blindness" && frmData.OptometryRColorType=="Partial color blindness" 
         && frmData.OptometryLColorType1=="Green" && frmData.OptometryRColorType1=="Green" && !(frmData.OptometryLColorType1=="Red-Green" && frmData.OptometryRColorType1=="Red-Green") 
         && !(frmData.OptometryLColorType1=="Red" && frmData.OptometryRColorType1=="Red")) {
-            report += "<h5>" + "<strong>" + "Color vision check(Ishihara test): " + "</strong>" + "Partial color blindness(both eye): Green." + "</h5>";
-            impression.push("<p>" + "<b>" + "Partial color blindness in both eye difficulty in viewing Green color." + "</b>" + "</p>");
+            report += "<h5>" + "<strong>" + "<u>" + "Color vision check(Ishihara test)" + "</u>" + ": " + "</strong>" + "Partial color blindness(both eye): Green." + "</h5>";
         }
         //Red-Green
         if (frmData.OptometryLColorType=="Partial color blindness" && frmData.OptometryRColorType=="Partial color blindness" 
         && frmData.OptometryLColorType1=="Red-Green" && frmData.OptometryRColorType1=="Red-Green" && !(frmData.OptometryLColorType1=="Red" && frmData.OptometryRColorType1=="Red") && !(frmData.OptometryLColorType1=="Green" && frmData.OptometryRColorType1=="Green")) {
-            report += "<h5>" + "<strong>" + "Color vision check(Ishihara test): " + "</strong>" + "Partial color blindness(both eye): Red-Green." + "</h5>";
-            impression.push("<p>" + "<b>" + "Partial color blindness in both eye difficulty in viewing Red-Green color." + "</b>" + "</p>");
+            report += "<h5>" + "<strong>" + "<u>" + "Color vision check(Ishihara test)" + "</u>" + ": " + "</strong>" + "Partial color blindness(both eye): Red-Green." + "</h5>";
+            
         }
         //Left Normal-Right Partial//////////////
         if (frmData.OptometryLColorType=="Normal" && frmData.OptometryRColorType=="Partial color blindness") {
-            report += "<h5>" + "<strong>" + "Color vision check(Ishihara test): " + "</strong>" + "Normal in left eye and partial color blindness in right eye: " + frmData.OptometryRColorType1 + "." + "</h5>";
-            impression.push("<p>" + "<b>" + "Normal vision in left eye and partial color blindness in right eye: " + frmData.OptometryRColorType1 + "." + "</b>" + "</p>");
+            report += "<h5>" + "<strong>" + "<u>" + "Color vision check(Ishihara test)" + "</u>" + ": " + "</strong>" + "Normal in left eye." + "<br>" + "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Partial color blindness in right eye: " + frmData.OptometryRColorType1 + "." + "</h5>";
         }
         //Left Normal-Right Total//////////////
         if (frmData.OptometryLColorType=="Normal" && frmData.OptometryRColorType=="Total color blindness") {
-            report += "<h5>" + "<strong>" + "Color vision check(Ishihara test): " + "</strong>" + "Normal in left eye and Total color blindness in right eye." + "</h5>";
-            impression.push("<p>" + "<b>" + "Normal vision in left eye and Total color blindness in right eye." + "</b>" + "</p>");
+            report += "<h5>" + "<strong>" + "<u>" + "Color vision check(Ishihara test)" + "</u>" + ": " + "</strong>" + "Normal in left eye." + "<br>" + "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Total color blindness in right eye." + "</h5>";
         }
         //Left Partial-Right Normal//////////////
         if (frmData.OptometryLColorType=="Partial color blindness" && frmData.OptometryRColorType=="Normal") {
-            report += "<h5>" + "<strong>" + "Color vision check(Ishihara test): " + "</strong>" + "Partial color blindness in left eye: " + frmData.OptometryLColorType1 + " and Normal in right eye." + "</h5>";
-            impression.push("<p>" + "<b>" + "Partial color blindness in left eye: " + frmData.OptometryLColorType1 + " and Normal vision in right eye." + "</b>" + "</p>");
+            report += "<h5>" + "<strong>" + "<u>" + "Color vision check(Ishihara test)" + "</u>" + ": " + "</strong>" + "Partial color blindness in left eye: " + frmData.OptometryLColorType1 + "<br>" + "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Normal in right eye." + "</h5>";
         }
         //Left Partial-Right Total//////////////
         if (frmData.OptometryLColorType=="Partial color blindness" && frmData.OptometryRColorType=="Total color blindness") {
-            report += "<h5>" + "<strong>" + "Color vision check(Ishihara test): " + "</strong>" + "Partial color blindness in left eye: " + frmData.OptometryLColorType1 + " and Total color blindness in right eye." + "</h5>";
-            impression.push("<p>" + "<b>" + "Partial color blindness in left eye: " + frmData.OptometryLColorType1 + " and Total color blindness in right eye." + "</b>" + "</p>");
+            report += "<h5>" + "<strong>" + "<u>" + "Color vision check(Ishihara test)" + "</u>" + ": " + "</strong>" + "Partial color blindness in left eye: " + frmData.OptometryLColorType1 + "<br>" + "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Total color blindness in right eye." + "</h5>";
         }
         //Left Total-Right Normal//////////////
         if (frmData.OptometryLColorType=="Total color blindness" && frmData.OptometryRColorType=="Normal") {
-            report += "<h5>" + "<strong>" + "Color vision check(Ishihara test): " + "</strong>" + "Total color blindness in left eye and Normal in right eye." + "</h5>";
-            impression.push("<p>" + "<b>" + "Total color blindness in left eye and Normal vision in right eye." + "</b>" + "</p>");
+            report += "<h5>" + "<strong>" + "<u>" + "Color vision check(Ishihara test)" + "</u>" + ": " + "</strong>" + "Total color blindness in left eye. " + "<br>" + "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Normal in right eye." + "</h5>";
         }
         //Left Total-Right Partial//////////////
         if (frmData.OptometryLColorType=="Total color blindness" && frmData.OptometryRColorType=="Partial color blindness") {
-            report += "<h5>" + "<strong>" + "Color vision check(Ishihara test): " + "</strong>" + "Total color blindness in left eye and partial color blindness in right eye: " + frmData.OptometryRColorType1 + "." + "</h5>";
-            impression.push("<p>" + "<b>" + "Total color blindness in left eye and partial color blindness in right eye: " + frmData.OptometryRColorType1 + "." + "</b>" + "</p>");
+            report += "<h5>" + "<strong>" + "<u>" + "Color vision check(Ishihara test)" + "</u>" + ": " + "</strong>" + "Total color blindness in left eye." + "<br>" + "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Partial color blindness in right eye: " + frmData.OptometryRColorType1 + "." + "</h5>";
         }
 
 		//Left partial-Right Partial//////////////
         if (frmData.OptometryLColorType=="Partial color blindness" && frmData.OptometryRColorType=="Partial color blindness" && !(frmData.OptometryLColorType1=="Red" && frmData.OptometryRColorType1=="Red") && !(frmData.OptometryLColorType1=="Green" && frmData.OptometryRColorType1=="Green") && !(frmData.OptometryLColorType1=="Red-Green" && frmData.OptometryRColorType1=="Red-Green")) {
-            report += "<h5>" + "<strong>" + "Color vision check(Ishihara test): " + "</strong>" + "Partial color blindness in left eye: " + frmData.OptometryLColorType1 + " and partial color blindness in right eye: " + frmData.OptometryRColorType1 + "." + "</h5>";
-            impression.push("<p>" + "<b>" +"Partial color blindness in left eye: " + frmData.OptometryLColorType1 + " and partial color blindness in right eye: " + frmData.OptometryRColorType1 + "." + "</b>" + "</p>");
+            report += "<h5>" + "<strong>" + "<u>" + "Color vision check(Ishihara test)" + "</u>" + ": " + "</strong>" + "Partial color blindness in left eye: " + frmData.OptometryLColorType1 + "<br>" +  "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Partial color blindness in right eye: " + frmData.OptometryRColorType1 + "." + "</h5>";
         }
 		   
 		
@@ -457,9 +470,8 @@ class Optometry extends Component {
 
 
 		report +=
-			this.pageBreak() +
-			this.getImpression(impression, totalCovidPoints) +
-			this.getCorads(current_user);
+		   this.getImpression(impression, totalCovidPoints) +
+		   this.getCorads(current_user);
 
 
 		this.setState({ reportFrmData: report }, () => {
@@ -473,14 +485,20 @@ class Optometry extends Component {
 
 	getCorads(user) {
 		return (
-			"<p><br><img src='" + user.signature + "' height='50' /><p>" + user.full_name + "<br>" + "<br>" + user.designation + "</p></p>"
+			"<p><br><img src='" + 
+			user.signature + 
+			"' height='50' /><p>" + 
+			user.full_name + 
+			"<br>" + "<br>" + 
+			user.designation + 
+			"</p></p>"
 
 		);
 	}
 
 	getImpression(impression, totalCovidPoints) {
-		let text = "<strong><u>IMPRESSION:</u></strong>";
-		return text + (impression.join(" ") + "<b>" + " ") + "</b>" + "</p> ";
+		let text = "<strong><u>Visual Acuity</u>:</strong>";
+		return text + (impression.join(" ") + "<b>" + " ") + "</b>";
 	}
 
 
