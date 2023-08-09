@@ -112,7 +112,7 @@ class Optometry extends Component {
 			"</h5>" +
 			"<strong>" +
 			"<u>" +
-			"Observation:" +
+			"Corrective Vision" +
 			"</u>" +
 			"</strong>";
             report += "<table>" + "<tr>" + "<td colspan='9'>" + "<b>" + "Visual Acuity" + "</b>" + "</td>" + "</tr>" + "<tr>" + "<td colspan='5'>" 
