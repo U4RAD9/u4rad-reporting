@@ -38,14 +38,14 @@ class Optometry extends Component {
 				// OptometryPrescriptionRminusPower: false,
                 // OptometryPrescriptionRplus: false,
 				// OptometryPrescriptionRplusPower: false,
-				// OptometryPrescriptionRPTypeCylindrical: false,
-				// OptometryPrescriptionRPTypeSpherical: false,
-				// OptometryPrescriptionRMTypeCylindrical: false,
-				// OptometryPrescriptionRMTypeSpherical: false,
-				// OptometryPrescriptionLPTypeCylindrical: false,
-				// OptometryPrescriptionLPTypeSpherical: false,
-				// OptometryPrescriptionLMTypeCylindrical: false,
-				// OptometryPrescriptionLMTypeSpherical: false,
+			    OptometryPrescriptionRPTypeCylindrical: false,
+				OptometryPrescriptionRPTypeSpherical: false,
+				OptometryPrescriptionRMTypeCylindrical: false,
+				OptometryPrescriptionRMTypeSpherical: false,
+				OptometryPrescriptionLPTypeCylindrical: false,
+				OptometryPrescriptionLPTypeSpherical: false,
+				OptometryPrescriptionLMTypeCylindrical: false,
+				OptometryPrescriptionLMTypeSpherical: false,
 				// ////////////////far////////////
 				// OptometryPrescriptionFar: false,
 				// OptometryPrescriptionLFar: false,
@@ -58,14 +58,14 @@ class Optometry extends Component {
 				// OptometryPrescriptionRminusPowerFar: false,
                 // OptometryPrescriptionRplusFar: false,
 				// OptometryPrescriptionRplusPowerFar: false,
-				// OptometryPrescriptionRPTypeCylindricalFar: false,
-				// OptometryPrescriptionRPTypeSphericalFar: false,
-				// OptometryPrescriptionRMTypeCylindricalFar: false,
-				// OptometryPrescriptionRMTypeSphericalFar: false,
-				// OptometryPrescriptionLPTypeCylindricalFar: false,
-				// OptometryPrescriptionLPTypeSphericalFar: false,
-				// OptometryPrescriptionLMTypeCylindricalFar: false,
-				// OptometryPrescriptionLMTypeSphericalFar: false,
+				OptometryPrescriptionRPTypeCylindricalFar: false,
+				OptometryPrescriptionRPTypeSphericalFar: false,
+				OptometryPrescriptionRMTypeCylindricalFar: false,
+				OptometryPrescriptionRMTypeSphericalFar: false,
+				OptometryPrescriptionLPTypeCylindricalFar: false,
+				OptometryPrescriptionLPTypeSphericalFar: false,
+				OptometryPrescriptionLMTypeCylindricalFar: false,
+				OptometryPrescriptionLMTypeSphericalFar: false,
 				// OptometryOtherText: false,
 				// OptometryColor: false,
 				// OptometryLColor: false,
@@ -129,219 +129,219 @@ class Optometry extends Component {
         if (!frmData.OptometryNormal) {
 			let arr = [];
 			//right far minus-plus spherical
-			if (frmData.OptometryPrescriptionRminusPowerTypeFar && !frmData.OptometryPrescriptionRAxisFar) {
-				arr.push(frmData.OptometryPrescriptionRminusPowerTypeFar);
+			if (frmData.OptometryPrescriptionRminusSPowerTypeFar) {
+				arr.push(frmData.OptometryPrescriptionRminusSPowerTypeFar);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionRplusPowerTypeFar && !frmData.OptometryPrescriptionRminusPowerTypeFar) {
+				if(!frmData.OptometryPrescriptionRplusSPowerTypeFar && !frmData.OptometryPrescriptionRminusSPowerTypeFar) {
 					arr.push("-");
 				}
 			}
-			if (frmData.OptometryPrescriptionRplusPowerTypeFar && !frmData.OptometryPrescriptionRAxisFar) {
-				arr.push(frmData.OptometryPrescriptionRplusPowerTypeFar);
+			if (frmData.OptometryPrescriptionRplusSPowerTypeFar) {
+				arr.push(frmData.OptometryPrescriptionRplusSPowerTypeFar);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionRminusPowerTypeFar && !frmData.OptometryPrescriptionRplusPowerTypeFar) {
+				if(!frmData.OptometryPrescriptionRminusSPowerTypeFar && !frmData.OptometryPrescriptionRplusSPowerTypeFar) {
 					arr.push("-");
 				}
 			}
-			//right far minus-plus cylindrical
+			//right far minus cylindrical
 			let arr1 = [];
-			if (frmData.OptometryPrescriptionRminusPowerTypeFar && frmData.OptometryPrescriptionRAxisFar) {
-			   arr1.push(frmData.OptometryPrescriptionRminusPowerTypeFar);
+			if (frmData.OptometryPrescriptionRminusCPowerTypeFar && frmData.OptometryPrescriptionRMAxisFar) {
+			   arr1.push(frmData.OptometryPrescriptionRminusCPowerTypeFar);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionRminusPowerTypeFar && !frmData.OptometryPrescriptionRplusPowerTypeFar) {
+				if(!frmData.OptometryPrescriptionRminusCPowerTypeFar && !frmData.OptometryPrescriptionRplusCPowerTypeFar) {
 					arr1.push("-");
 				}
 			   
 			}
-			if (frmData.OptometryPrescriptionRplusPowerTypeFar && frmData.OptometryPrescriptionRAxisFar) {
-			   arr1.push(frmData.OptometryPrescriptionRplusPowerTypeFar);
+			if (frmData.OptometryPrescriptionRplusCPowerTypeFar && frmData.OptometryPrescriptionRPAxisFar) {
+			   arr1.push(frmData.OptometryPrescriptionRplusCPowerTypeFar);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionRminusPowerTypeFar && !frmData.OptometryPrescriptionRplusPowerTypeFar) {
+				if(!frmData.OptometryPrescriptionRminusCPowerTypeFar && !frmData.OptometryPrescriptionRplusCPowerTypeFar) {
 					arr1.push("-");
 				}
 			}
 			//right far minus-plus cylindrical-axis
 			let arr2 =[];
-			if (frmData.OptometryPrescriptionRminusPowerTypeFar && frmData.OptometryPrescriptionRAxisFar) {
-				arr2.push(frmData.OptometryPrescriptionRAxisFar);
+			if (frmData.OptometryPrescriptionRminusCPowerTypeFar && frmData.OptometryPrescriptionRMAxisFar) {
+				arr2.push(frmData.OptometryPrescriptionRMAxisFar);
 			}
 			else {
-                if(!frmData.OptometryPrescriptionRAxisFar && !frmData.OptometryPrescriptionLAxisFar) {
+                if(!frmData.OptometryPrescriptionRPAxisFar && !frmData.OptometryPrescriptionLPAxisFar && !frmData.OptometryPrescriptionRMAxisFar && !frmData.OptometryPrescriptionLMAxisFar) {
 					arr2.push("-");
 				}
 			}
-			if (frmData.OptometryPrescriptionRplusPowerTypeFar && frmData.OptometryPrescriptionRAxisFar) {
-			    arr2.push(frmData.OptometryPrescriptionRAxisFar);
+			if (frmData.OptometryPrescriptionRplusCPowerTypeFar && frmData.OptometryPrescriptionRPAxisFar) {
+			    arr2.push(frmData.OptometryPrescriptionRPAxisFar);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionRAxisFar && !frmData.OptometryPrescriptionLAxisFar) {
+				if(!frmData.OptometryPrescriptionRPAxisFar && !frmData.OptometryPrescriptionLPAxisFar && !frmData.OptometryPrescriptionRMAxisFar && !frmData.OptometryPrescriptionLMAxisFar) {
 					arr2.push("-");
 				}
 			}
 			//right near minus-plus spherical
 			let arr3 = [];
-			if (frmData.OptometryPrescriptionRminusPowerType && !frmData.OptometryPrescriptionRAxis) {
-				arr3.push(frmData.OptometryPrescriptionRminusPowerType);
+			if (frmData.OptometryPrescriptionRminusSPowerType) {
+				arr3.push(frmData.OptometryPrescriptionRminusSPowerType);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionRminusPowerType && !frmData.OptometryPrescriptionRplusPowerType) {
+				if(!frmData.OptometryPrescriptionRminusSPowerType && !frmData.OptometryPrescriptionRplusSPowerType) {
 					arr3.push("-");
 				}
 			}
-			if (frmData.OptometryPrescriptionRplusPowerType && !frmData.OptometryPrescriptionRAxis) {
-				arr3.push(frmData.OptometryPrescriptionRplusPowerType);
+			if (frmData.OptometryPrescriptionRplusSPowerType) {
+				arr3.push(frmData.OptometryPrescriptionRplusSPowerType);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionRminusPowerType && !frmData.OptometryPrescriptionRplusPowerType) {
+				if(!frmData.OptometryPrescriptionRminusSPowerType && !frmData.OptometryPrescriptionRplusSPowerType) {
 					arr3.push("-");
 				}
 			}
 			//right near minus-plus cylindrical
 			let arr4 = [];
-			if (frmData.OptometryPrescriptionRminusPowerType && frmData.OptometryPrescriptionRAxis) {
-			   arr4.push(frmData.OptometryPrescriptionRminusPowerType);
+			if (frmData.OptometryPrescriptionRminusCPowerType && frmData.OptometryPrescriptionRMAxis) {
+			   arr4.push(frmData.OptometryPrescriptionRminusCPowerType);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionRminusPowerType && !frmData.OptometryPrescriptionRplusPowerType) {
+				if(!frmData.OptometryPrescriptionRminusCPowerType && !frmData.OptometryPrescriptionRplusCPowerType) {
 					arr4.push("-");
 				}
 			}
-			if (frmData.OptometryPrescriptionRplusPowerType && frmData.OptometryPrescriptionRAxis) {
-			   arr4.push(frmData.OptometryPrescriptionRplusPowerType);
+			if (frmData.OptometryPrescriptionRplusCPowerType && frmData.OptometryPrescriptionRPAxis) {
+			   arr4.push(frmData.OptometryPrescriptionRplusCPowerType);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionRminusPowerType && !frmData.OptometryPrescriptionRplusPowerType) {
+				if(!frmData.OptometryPrescriptionRminusCPowerType && !frmData.OptometryPrescriptionRplusCPowerType) {
 					arr4.push("-");
 				}
 			}
 			//right near minus-plus cylindrical-axis
 			let arr5 =[];
-			if (frmData.OptometryPrescriptionRminusPowerType && frmData.OptometryPrescriptionRAxis) {
-				arr5.push(frmData.OptometryPrescriptionRAxis);
+			if (frmData.OptometryPrescriptionRminusCPowerType && frmData.OptometryPrescriptionRMAxis) {
+				arr5.push(frmData.OptometryPrescriptionRMAxis);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionRAxis && !frmData.OptometryPrescriptionLAxis) {
+				if(!frmData.OptometryPrescriptionRMAxis && !frmData.OptometryPrescriptionLMAxis && !frmData.OptometryPrescriptionRPAxis && !frmData.OptometryPrescriptionLPAxis) {
 					arr5.push("-");
 				}
 			}
-			if (frmData.OptometryPrescriptionRplusPowerType && frmData.OptometryPrescriptionRAxis) {
-			    arr5.push(frmData.OptometryPrescriptionRAxis);
+			if (frmData.OptometryPrescriptionRplusCPowerType && frmData.OptometryPrescriptionRPAxis) {
+			    arr5.push(frmData.OptometryPrescriptionRPAxis);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionRAxis && !frmData.OptometryPrescriptionLAxis) {
+				if(!frmData.OptometryPrescriptionRMAxis && !frmData.OptometryPrescriptionLMAxis && !frmData.OptometryPrescriptionRPAxis && !frmData.OptometryPrescriptionLPAxis) {
 					arr5.push("-");
 				}
 			}
 			//////////////left///////////////////
 			let arr6 = [];
 			//left far minus-plus spherical
-			if (frmData.OptometryPrescriptionLminusPowerTypeFar && !frmData.OptometryPrescriptionLAxisFar) {
-				arr6.push(frmData.OptometryPrescriptionLminusPowerTypeFar);
+			if (frmData.OptometryPrescriptionLminusSPowerTypeFar) {
+				arr6.push(frmData.OptometryPrescriptionLminusSPowerTypeFar);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionLminusPowerTypeFar && !frmData.OptometryPrescriptionLplusPowerTypeFar) {
+				if(!frmData.OptometryPrescriptionLminusSPowerTypeFar && !frmData.OptometryPrescriptionLplusSPowerTypeFar) {
 					arr6.push("-");
 				}
 			}
-			if (frmData.OptometryPrescriptionLplusPowerTypeFar && !frmData.OptometryPrescriptionLAxisFar) {
-				arr6.push(frmData.OptometryPrescriptionLplusPowerTypeFar);
+			if (frmData.OptometryPrescriptionLplusSPowerTypeFar) {
+				arr6.push(frmData.OptometryPrescriptionLplusSPowerTypeFar);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionLminusPowerTypeFar && !frmData.OptometryPrescriptionLplusPowerTypeFar) {
+				if(!frmData.OptometryPrescriptionLminusSPowerTypeFar && !frmData.OptometryPrescriptionLplusSPowerTypeFar) {
 					arr6.push("-");
 				}
 			}
 			//left far minus-plus cylindrical
 			let arr7 = [];
-			if (frmData.OptometryPrescriptionLminusPowerTypeFar && frmData.OptometryPrescriptionLAxisFar) {
-			   arr7.push(frmData.OptometryPrescriptionLminusPowerTypeFar);
+			if (frmData.OptometryPrescriptionLminusCPowerTypeFar && frmData.OptometryPrescriptionLMAxisFar) {
+			   arr7.push(frmData.OptometryPrescriptionLminusCPowerTypeFar);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionLminusPowerTypeFar && !frmData.OptometryPrescriptionLplusPowerTypeFar) {
+				if(!frmData.OptometryPrescriptionLminusCPowerTypeFar && !frmData.OptometryPrescriptionLplusCPowerTypeFar) {
 					arr7.push("-");
 				}
 			}
-			if (frmData.OptometryPrescriptionLplusPowerTypeFar && frmData.OptometryPrescriptionLAxisFar) {
-			   arr7.push(frmData.OptometryPrescriptionLplusPowerTypeFar);
+			if (frmData.OptometryPrescriptionLplusCPowerTypeFar && frmData.OptometryPrescriptionLPAxisFar) {
+			   arr7.push(frmData.OptometryPrescriptionLplusCPowerTypeFar);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionLminusPowerTypeFar && !frmData.OptometryPrescriptionLplusPowerTypeFar) {
+				if(!frmData.OptometryPrescriptionLminusCPowerTypeFar && !frmData.OptometryPrescriptionLplusCPowerTypeFar) {
 					arr7.push("-");
 				}
 			}
 			//left far minus-plus cylindrical-axis
 			let arr8 =[];
-			if (frmData.OptometryPrescriptionLminusPowerTypeFar && frmData.OptometryPrescriptionLAxisFar) {
-				arr8.push(frmData.OptometryPrescriptionLAxisFar);
+			if (frmData.OptometryPrescriptionLminusCPowerTypeFar && frmData.OptometryPrescriptionLMAxisFar) {
+				arr8.push(frmData.OptometryPrescriptionLMAxisFar);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionRAxisFar && !frmData.OptometryPrescriptionLAxisFar) {
+				if(!frmData.OptometryPrescriptionRMAxisFar && !frmData.OptometryPrescriptionLMAxisFar && !frmData.OptometryPrescriptionRPAxisFar && !frmData.OptometryPrescriptionLPAxisFar) {
 					arr8.push("-");
 				}
 			}
-			if (frmData.OptometryPrescriptionLplusPowerTypeFar && frmData.OptometryPrescriptionLAxisFar) {
-			    arr8.push(frmData.OptometryPrescriptionLAxisFar);
+			if (frmData.OptometryPrescriptionLplusCPowerTypeFar && frmData.OptometryPrescriptionLPAxisFar) {
+			    arr8.push(frmData.OptometryPrescriptionLPAxisFar);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionRAxisFar && !frmData.OptometryPrescriptionLAxisFar) {
+				if(!frmData.OptometryPrescriptionRMAxisFar && !frmData.OptometryPrescriptionLMAxisFar && !frmData.OptometryPrescriptionRPAxisFar && !frmData.OptometryPrescriptionLPAxisFar) {
 					arr8.push("-");
 				}
 			}
 			//left near minus-plus spherical
 			let arr9 = [];
-			if (frmData.OptometryPrescriptionLminusPowerType && !frmData.OptometryPrescriptionLAxis) {
-				arr9.push(frmData.OptometryPrescriptionLminusPowerType);
+			if (frmData.OptometryPrescriptionLminusSPowerType) {
+				arr9.push(frmData.OptometryPrescriptionLminusSPowerType);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionLminusPowerType && !frmData.OptometryPrescriptionLplusPowerType) {
+				if(!frmData.OptometryPrescriptionLminusSPowerType && !frmData.OptometryPrescriptionLplusSPowerType) {
 					arr9.push("-");
 				}
 			}
-			if (frmData.OptometryPrescriptionLplusPowerType && !frmData.OptometryPrescriptionLAxis) {
-				arr9.push(frmData.OptometryPrescriptionLplusPowerType);
+			if (frmData.OptometryPrescriptionLplusSPowerType) {
+				arr9.push(frmData.OptometryPrescriptionLplusSPowerType);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionLminusPowerType && !frmData.OptometryPrescriptionLplusPowerType) {
+				if(!frmData.OptometryPrescriptionLminusSPowerType && !frmData.OptometryPrescriptionLplusSPowerType) {
 					arr9.push("-");
 				}
 			}
 			//left near minus-plus cylindrical
 			let arr10 = [];
-			if (frmData.OptometryPrescriptionLminusPowerType && frmData.OptometryPrescriptionLAxis) {
-			   arr10.push(frmData.OptometryPrescriptionLminusPowerType);
+			if (frmData.OptometryPrescriptionLminusCPowerType && frmData.OptometryPrescriptionLMAxis) {
+			   arr10.push(frmData.OptometryPrescriptionLminusCPowerType);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionLminusPowerType && !frmData.OptometryPrescriptionLplusPowerType) {
+				if(!frmData.OptometryPrescriptionLminusCPowerType && !frmData.OptometryPrescriptionLplusCPowerType) {
 					arr10.push("-");
 				}
 			}
-			if (frmData.OptometryPrescriptionLplusPowerType && frmData.OptometryPrescriptionLAxis) {
-			   arr10.push(frmData.OptometryPrescriptionLplusPowerType);
+			if (frmData.OptometryPrescriptionLplusCPowerType && frmData.OptometryPrescriptionLPAxis) {
+			   arr10.push(frmData.OptometryPrescriptionLplusCPowerType);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionLminusPowerType && !frmData.OptometryPrescriptionLplusPowerType) {
+				if(!frmData.OptometryPrescriptionLminusCPowerType && !frmData.OptometryPrescriptionLplusCPowerType) {
 					arr10.push("-");
 				}
 			}
 			//left near minus-plus cylindrical-axis
 			let arr11 =[];
-			if (frmData.OptometryPrescriptionLminusPowerType && frmData.OptometryPrescriptionLAxis) {
-				arr11.push(frmData.OptometryPrescriptionLAxis);
+			if (frmData.OptometryPrescriptionLminusCPowerType && frmData.OptometryPrescriptionLMAxis) {
+				arr11.push(frmData.OptometryPrescriptionLMAxis);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionRAxis && !frmData.OptometryPrescriptionLAxis) {
+				if(!frmData.OptometryPrescriptionRMAxis && !frmData.OptometryPrescriptionLMAxis && !frmData.OptometryPrescriptionRPAxis && !frmData.OptometryPrescriptionLPAxis) {
 					arr11.push("-");
 				}
 			}
-			if (frmData.OptometryPrescriptionLplusPowerType && frmData.OptometryPrescriptionLAxis) {
-			    arr11.push(frmData.OptometryPrescriptionLAxis);
+			if (frmData.OptometryPrescriptionLplusCPowerType && frmData.OptometryPrescriptionLPAxis) {
+			    arr11.push(frmData.OptometryPrescriptionLPAxis);
 			}
 			else {
-				if(!frmData.OptometryPrescriptionRAxis && !frmData.OptometryPrescriptionLAxis) {
+				if(!frmData.OptometryPrescriptionRMAxis && !frmData.OptometryPrescriptionLMAxis && !frmData.OptometryPrescriptionRPAxis && !frmData.OptometryPrescriptionLPAxis) {
 					arr11.push("-");
 				}
 			}
@@ -399,7 +399,7 @@ class Optometry extends Component {
 			  + "<td>" + arr2 + "</td>" + "<td>" + "6/6" + "</td>" + "<td>" + arr3 + "</td>" + "<td>" + arr4 + "</td>" + "<td>" + arr5 + "</td>" + "<td>" + "N/6" + "</td>" 
 			   + "</tr>" + "<tr>" + "<td>" + "L/E" + "</td>" + "<td>" + arr6 + "</td>" + "<td>" + arr7 + "</td>" + "<td>" + arr8 + "</td>" + "<td>" + "6/6" + "</td>" 
 			  + "<td>" + arr9 + "</td>" + "<td>" + arr10 + "</td>" + "<td>" + arr11 + "</td>" + "<td>" + "N/6" + "</td>" + "</tr>"  + "</table>" + "</header>" + "</b>" + "</pre>"
-			  + "<p>" + "<b>" + "Addition: " + arr12 + "</b>" + "</p>";
+			  + "<p>" + "<b>" + "Addition: " + arr12 + "DS." + "</b>" + "</p>";
 		
               impression.push("<p>" + arr13.join("") + "</p>");
         } 

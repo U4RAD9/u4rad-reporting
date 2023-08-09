@@ -292,20 +292,25 @@ class App extends Component {
     //Aman
     var patientName = document.querySelector("#root > div > div > div.document-editor__editable-container > div > figure.table.ck-widget.ck-widget_with-selection-handle > table > tbody > tr:nth-child(1) > td:nth-child(1) > span > strong")?.innerHTML;
     var PatientId = document.querySelector("#root > div > div > div.document-editor__editable-container > div > figure.table.ck-widget.ck-widget_with-selection-handle > table > tbody > tr:nth-child(1) > td:nth-child(2) > span > strong")?.innerHTML;
-    var TestType = document.querySelector("#root > div > div > div.document-editor__editable-container > div > p:nth-child(3) > strong > u")?.innerHTML;
-    var formatDate = document.querySelector("#root > div > div > div.document-editor__editable-container > div > figure.table.ck-widget.ck-widget_with-selection-handle > table > tbody > tr:nth-child(2) > td:nth-child(2) > span > strong")?.innerHTML;
+    // TestType = document.querySelector("#root > div > div > div.document-editor__editable-container > div > p:nth-child(3) > strong > u")?.innerHTML;
+    //var formatDate = document.querySelector("#root > div > div > div.document-editor__editable-container > div > figure.table.ck-widget.ck-widget_with-selection-handle > table > tbody > tr:nth-child(2) > td:nth-child(2) > span > strong")?.innerHTML;
 
 
     //var currentDate = new Date();
     //var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     //var date = currentDate.getDate();
     //var formatDate = (date < 10 ?+"0" + date : date) + month[currentDate.getMonth()];
-    var filename = [patientName, PatientId, TestType, formatDate];
-    if (patientName == undefined || patientName == null || PatientId == undefined || TestType == undefined || PatientId == null || TestType == null) {
-      filename = ["Patient", "0", "Test", "Date"];
+    // var filename = [patientName, PatientId, TestType, formatDate];
+    // if (patientName == undefined || patientName == null || PatientId == undefined || TestType == undefined || PatientId == null || TestType == null) {
+    //   filename = ["Patient", "0", "Test", "Date"];
+    // }
+    var filename = [patientName, PatientId];
+    if (patientName == undefined || patientName == null || PatientId == undefined) {
+      filename = ["Patient", "0"];
     }
     else {
-      filename = [PatientId.replace("Patient ID:", "").replace(" ", "_"), patientName.replace("Name: ", ""), TestType, formatDate.replace("Test date: ", "")];
+      // filename = [PatientId.replace("Patient ID:", "").replace(" ", "_"), patientName.replace("Name: ", ""), TestType, formatDate.replace("Test date: ", "")];
+      filename = [PatientId.replace("Patient ID:", "").replace(" ", "_"), patientName.replace("Name: ", "")];
     }
 
     //return filename.join('_').toUpperCase();
