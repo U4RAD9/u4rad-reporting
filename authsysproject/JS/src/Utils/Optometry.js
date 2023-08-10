@@ -407,7 +407,7 @@ class Optometry extends Component {
         
 		//others
 		if (frmData.OptometryOtherTextField) {
-			impression.push("<p>" + "<br>" + "<b>" + "Finding: " + "</b>" + frmData.OptometryOtherTextField + "</p>");
+			impression.push("<br>" + "<b>" + "Finding: " + "</b>" + frmData.OptometryOtherTextField);
 		}
 		
 		//Normal both/////////////////////
