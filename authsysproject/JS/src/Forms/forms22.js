@@ -51,11 +51,11 @@ const _schema = {
     
     OptometryAbnormalLTypeN: {
       type: "string",
-      enum: ["N/6", "N/36", "N/24", "N/18", "N/12", "N/9"],
+      enum: ["N/6", "N/36", "N/24", "N/18", "N/12", "N/10", "N/8"],
     },
     OptometryAbnormalRTypeN: {
       type: "string",
-      enum: ["N/6", "N/36", "N/24", "N/18", "N/12", "N/9"],
+      enum: ["N/6", "N/36", "N/24", "N/18", "N/12", "N/10", "N/8"],
     },
 
     /////////////prescription//////////////////////////

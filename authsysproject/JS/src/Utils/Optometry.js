@@ -389,7 +389,7 @@ class Optometry extends Component {
 			"</h5>" +
 			"<strong>" +
 			"<u>" +
-			"Observation:" +
+			"Corrective Vision" +
 			"</u>" +
 			"</strong>";
 			report += "<pre>" + "<b>" + "<header>" + '<table>' + "<tr>" + "<td colspan='9'>" + "Visual Acuity" + "</td>" + "</tr>" + "<tr>" + "<td colspan='5'>" 
@@ -405,7 +405,10 @@ class Optometry extends Component {
         } 
 
         
-		
+		//others
+		if (frmData.OptometryOtherTextField) {
+			impression.push("<p>" + "<br>" + "<b>" + "Finding: " + "</b>" + frmData.OptometryOtherTextField + "</p>");
+		}
 		
 		//Normal both/////////////////////
         if (frmData.OptometryLColorType=="Normal" && frmData.OptometryRColorType=="Normal") {
