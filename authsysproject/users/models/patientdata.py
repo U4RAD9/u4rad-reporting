@@ -9,5 +9,5 @@ class PatientInfo(models.Model):
     TestDate = models.CharField(max_length=20)
     ReportDate = models.CharField(max_length=20)
 
-    def __str__(self):
-        return (self.PatientId, self.PatientName)
+    # def __str__(self):
+    #     return (self.PatientId, self.PatientName)
