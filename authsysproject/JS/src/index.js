@@ -20,6 +20,7 @@ import ECG from "./Utils/ECG";
 import CampECG from "./Utils/CampECG";
 import Optometry from "./Utils/Optometry";
 import Optometry2 from "./Utils/Optometry2";
+import Optometry3 from "./Utils/Optometry3";
 import Vitals from "./Utils/Vitals";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -625,8 +626,10 @@ class App extends Component {
                                           <Optometry handleClick={this.handleClick} reportFrmData={reportFrmData} generateReport={this.generateReport} generatePatientTable={this.generatePatientTable()} /> :
                                           this.state.modal && (options_label === "OPTOMETRY NO-INPUT") ?
                                             <Optometry2 handleClick={this.handleClick} reportFrmData={reportFrmData} generateReport={this.generateReport} generatePatientTable={this.generatePatientTable()} /> :
-                                            this.state.modal && (options_label === "VITALS") ?
-                                              <Vitals handleClick={this.handleClick} reportFrmData={reportFrmData} generateReport={this.generateReport} generatePatientTable={this.generatePatientTable()} /> :
+                                            this.state.modal && (options_label === "OPTOMETRY (CAMP)") ?
+                                              <Optometry3 handleClick={this.handleClick} reportFrmData={reportFrmData} generateReport={this.generateReport} generatePatientTable={this.generatePatientTable()} /> :
+                                              this.state.modal && (options_label === "VITALS") ?
+                                                <Vitals handleClick={this.handleClick} reportFrmData={reportFrmData} generateReport={this.generateReport} generatePatientTable={this.generatePatientTable()} /> :
                                     ""
         }
         <div className="document-editor">
