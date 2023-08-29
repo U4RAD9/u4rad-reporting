@@ -418,7 +418,7 @@ def uploadcsv(request):
         csv_file = request.FILES['csv_file']
         
         # Adjust the field names according to your CSV file structure
-        field_names = ['PatientId', 'PatientName', 'age', 'gender', 'TestDate', 'ReportDate']
+        field_names = ['PatientId', 'PatientName', 'age', 'gender', 'TestDate', 'ReportDate', 'height', 'weight', 'blood', 'pulse']
         
         try:
             # Decode the CSV file data and split it into lines
@@ -440,6 +440,10 @@ def uploadcsv(request):
                     gender=row['gender'],
                     TestDate=row['TestDate'],
                     ReportDate=row['ReportDate'],
+                    height=row['height'],
+                    weight=row['weight'],
+                    blood=row['blood'],
+                    pulse=row['pulse'],
                 )
             
             return HttpResponse('CSV file uploaded successfully.')
