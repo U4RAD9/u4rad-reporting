@@ -195,6 +195,10 @@ export default class Form24 extends Component {
       IDTextFR24: patient.PatientId,
       TestDateTextFR24: patient.TestDate,
       ReportDateTextFR24: patient.ReportDate,
+      HeightText24: patient.height,
+      WeightText24: patient.weight,
+      BloodText24: patient.blood,
+      PulseText24: patient.pulse,
     };
     this.handleForm(formData);
   }
