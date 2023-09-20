@@ -26,6 +26,7 @@ import Vitals from "./Utils/Vitals";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { Test } from "@jsonforms/core";
+import html2pdf from 'html2pdf.js';
 
 // const options = [{ label: 'X-RAY CHEST', id: 1 }, { label: "X-RAY KNEE", id: 2 }, { label: "X-RAY SPINE(DORSAL)", id: 3 }, { label: "X-RAY SPINE(CERVICAL)", id: 4 }, { label: "X-RAY SPINE(LUMBER)", id: 5 }, { label: "X-RAY RIGHT-SHOULDER", id: 6 }, { label: "X-RAY LEFT-SHOULDER", id: 7 }, { label: "X-RAY TEMPLATE", id: 8 }, { label: 'CT HEAD', id: 9 }, { label: 'CT PNS', id: 10 }, { label: 'CT ABDOMEN', id: 11 }, { label: 'MRI BRAIN', id: 12 }, { label: 'AUDIOMETRY', id: 13 }, { label: 'ECG', id: 14 }, { label: 'CAMP ECG', id: 15 }]
 
@@ -323,38 +324,79 @@ class App extends Component {
     return filename;
   }
 
-  GetDivContentOnPDF() {
-    var filename = this.createFilename();
-    const data = document.getElementsByClassName('ck-editor__editable')[0];
-    // remove border
-    data.classList.add("ck-blurred");
-    data.classList.remove("ck-focused");
+  // GetDivContentOnPDF() {
+  //   var filename = this.createFilename();
+  //   const data = document.getElementsByClassName('ck-editor__editable')[0];
+  //   // remove border
+  //   data.classList.add("ck-blurred");
+  //   data.classList.remove("ck-focused");
   
-    if (data != undefined) {
-      var a4Width = 595.28; // A4 width in points (1 point = 1/72 inch)
-      var a4Height = 841.89; // A4 height in points
+  //   if (data != undefined) {
+  //     var a4Width = 595.28; // A4 width in points (1 point = 1/72 inch)
+  //     var a4Height = 841.89; // A4 height in points
   
-      var canvasWidth = a4Width - 40; // Adjusted width to leave some margin
-      var canvasHeight = (canvasWidth * 1.5) - 40; // Adjusted height to maintain aspect ratio and leave margin
+  //     var canvasWidth = a4Width - 40; // Adjusted width to leave some margin
+  //     var canvasHeight = (canvasWidth * 1.5) - 40; // Adjusted height to maintain aspect ratio and leave margin
   
-      html2canvas(data, {
-        scale: 4 // Adjust the scale if needed for better quality
-      }).then((canvas) => {
-        const imgData = canvas.toDataURL('image/png', 1.0);
-        const pdf = new jsPDF('p', 'pt', [a4Width, a4Height], true);
-        pdf.addImage(imgData, 'PNG', 20, 20, canvasWidth, canvasHeight);
-        pdf.save(filename ? filename + ".pdf" : "download.pdf");
-      });
-    }
-  }
+  //     html2canvas(data, {
+  //       scale: 4 // Adjust the scale if needed for better quality
+  //     }).then((canvas) => {
+  //       const imgData = canvas.toDataURL('image/png', 1.0);
+  //       const pdf = new jsPDF('p', 'pt', [a4Width, a4Height], true);
+  //       pdf.addImage(imgData, 'PNG', 20, 20, canvasWidth, canvasHeight);
+  //       pdf.save(filename ? filename + ".pdf" : "download.pdf");
+  //     });
+  //   }
+  // }
 
 ////////////////////pdf try////////////////////
 
 
+GetDivContentOnPDF() {
+  var filename = this.createFilename();
+  const data = document.getElementsByClassName('ck-editor__editable')[0];
+  const table = data.querySelector('table');
+  data.classList.add("ck-blurred");
+  data.classList.remove("ck-focused");
 
+  if (data != undefined) {
+    // Create a new jsPDF instance
+    const pdf = new jsPDF('p', 'pt', [595.28, 841.89], true); // A4 dimensions
 
+    // Capture the entire content, including text and images
+    html2canvas(data, {
+      scale: 4, // Adjust the scale if needed for better image quality
+      useCORS: true, // Added to address potential CORS issues
+    }).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png', 1.0);
 
+      // Calculate the position to center the image
+      const imgWidth = 595.28 - 40; // Adjusted width to leave some margin
+      const imgHeight = (imgWidth * 1.5) - 40; // Adjusted height to maintain aspect ratio and leave margin
+      const imgX = (595.28 - imgWidth) / 2;
+      const imgY = (841.89 - imgHeight) / 2;
 
+      // Add the image to the PDF
+      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth, imgHeight);
+
+      // Calculate the position to place the text at the bottom
+      const textX = 40;
+      const textY = 841.89 - 2; // 20 points from the bottom
+
+      // If a table exists within the ck-editor__editable div, capture its text content
+      if (table) {
+        const tableText = table.textContent || '';
+
+        // Add the table text as text (preserve original formatting)
+        pdf.setFontSize(2); // Adjust the font size as needed
+        pdf.text(textX, textY, tableText);
+      }
+
+      // Save the PDF
+      pdf.save(filename ? filename + ".pdf" : "download.pdf");
+    });
+  }
+}
 
 ////////////////////////////////// Another one ////////////////////////
 // GetDivContentOnPDF() {
