@@ -352,6 +352,53 @@ class App extends Component {
 ////////////////////pdf try////////////////////
 
 
+// GetDivContentOnPDF() {
+//   var filename = this.createFilename();
+//   const data = document.getElementsByClassName('ck-editor__editable')[0];
+//   const table = data.querySelector('table');
+//   data.classList.add("ck-blurred");
+//   data.classList.remove("ck-focused");
+
+//   if (data != undefined) {
+//     // Create a new jsPDF instance
+//     const pdf = new jsPDF('p', 'pt', [595.28, 841.89], true); // A4 dimensions
+
+//     // Capture the entire content, including text and images
+//     html2canvas(data, {
+//       scale: 4, // Adjust the scale if needed for better image quality
+//       useCORS: true, // Added to address potential CORS issues
+//     }).then((canvas) => {
+//       const imgData = canvas.toDataURL('image/png', 1.0);
+
+//       // Calculate the position to center the image
+//       const imgWidth = 595.28 - 40; // Adjusted width to leave some margin
+//       const imgHeight = (imgWidth * 1.5) - 40; // Adjusted height to maintain aspect ratio and leave margin
+//       const imgX = (595.28 - imgWidth) / 2;
+//       const imgY = (841.89 - imgHeight) / 2;
+
+//       // Add the image to the PDF
+//       pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth, imgHeight);
+
+//       // Calculate the position to place the text at the bottom
+//       const textX = 40;
+//       const textY = 841.89 - 2; // 20 points from the bottom
+
+//       // If a table exists within the ck-editor__editable div, capture its text content
+//       if (table) {
+//         const tableText = table.textContent || '';
+
+//         // Add the table text as text (preserve original formatting)
+//         pdf.setFontSize(2); // Adjust the font size as needed
+//         pdf.text(textX, textY, tableText);
+//       }
+
+//       // Save the PDF
+//       pdf.save(filename ? filename + ".pdf" : "download.pdf");
+//     });
+//   }
+// }
+
+////////////////////////////////// Another one ////////////////////////
 GetDivContentOnPDF() {
   var filename = this.createFilename();
   const data = document.getElementsByClassName('ck-editor__editable')[0];
@@ -378,7 +425,7 @@ GetDivContentOnPDF() {
 
       // Add the image to the PDF
       pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth, imgHeight);
-
+      pdf.setTextColor(255, 255, 255);
       // Calculate the position to place the text at the bottom
       const textX = 40;
       const textY = 841.89 - 2; // 20 points from the bottom
@@ -392,40 +439,21 @@ GetDivContentOnPDF() {
         pdf.text(textX, textY, tableText);
       }
 
+      // If the ck-editor__editable div contains paragraphs, capture the text from the first paragraph
+      const paragraphs = data.querySelectorAll('p');
+      if (paragraphs.length > 0) {
+        const firstParagraphText = paragraphs[0].textContent || '';
+
+        // Add the first paragraph text as text (preserve original formatting)
+        pdf.setFontSize(2); // Adjust the font size as needed
+        pdf.text(textX, textY - 2, firstParagraphText); // Place it above the table text
+      }
+
       // Save the PDF
       pdf.save(filename ? filename + ".pdf" : "download.pdf");
     });
   }
 }
-
-////////////////////////////////// Another one ////////////////////////
-// GetDivContentOnPDF() {
-//   var filename = this.createFilename();
-//   const data = document.getElementsByClassName('ck-editor__editable')[0];
-//   var htmlWidth = 595.28;
-//   var htmlHeight = 841.89;
-//   var pdfWidth = htmlWidth - 40;
-//   var pdfHeight = htmlHeight - 40;
-
-//   var totalContentHeight = data.scrollHeight;
-//   var pageCount = Math.ceil(totalContentHeight / pdfHeight);
-
-//   html2canvas(data, {
-//     scale: 4
-//   }).then((canvas) => {
-//     const pdf = new jsPDF('p', 'pt', [pdfWidth, pdfHeight]);
-
-//     const imgData = canvas.toDataURL("image/png", 1.0);
-//     pdf.addImage(imgData, 'PNG', 15, 15, htmlWidth, htmlHeight);
-
-//     for (var i = 1; i < pageCount; i++) {
-//       pdf.addPage([pdfWidth, pdfHeight]);
-//       pdf.addImage(imgData, 'PNG', 15, -(pdfHeight * i) + 15, htmlWidth, htmlHeight);
-//     }
-
-//     pdf.save(filename ? filename + ".pdf" : "download.pdf");
-//   });
-// };
 
   
   
