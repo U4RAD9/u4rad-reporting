@@ -64,27 +64,8 @@ const _schema = {
     OptometryOtherTextField: {
       type: "string",
     },
-    OptometryLColor: {
-      type: "boolean",
-    },
-    OptometryLColorType: {
+    OptometryColor: {
       type: "string",
-      enum: ["Normal", "Partial color blindness", "Total color blindness"],
-    },
-    OptometryLColorType1: {
-      type: "string",
-      enum: ["Red", "Green", "Red-Green"],
-    },
-    OptometryRColor: {
-      type: "boolean",
-    },
-    OptometryRColorType: {
-      type: "string",
-      enum: ["Normal", "Partial color blindness", "Total color blindness"],
-    },
-    OptometryRColorType1: {
-      type: "string",
-      enum: ["Red", "Green", "Red-Green"],
     },
   },
   required: [],
@@ -269,7 +250,7 @@ const uischema = {
           elements: [
             {
               type: "HorizontalLayout",
-              label: "Findings",
+              label: "Findings hai ye",
               elements: [
                 {
                   "type": "Control",
@@ -292,58 +273,10 @@ const uischema = {
               type: "VerticalLayout",
               label: " ",
               elements: [
-                /////////////////////////Left eye color/////////////////////
                 {
                   type: "Control",
-                  label: "Left eye color blindness",
-                  scope: "#/properties/OptometryLColorType",
-                  options: {
-                    format: "radio",
-                  },
-                }, 
-                {
-                  type: "Control",
-                  label: "Partial color blindness",
-                  scope: "#/properties/OptometryLColorType1",
-                  options: {
-                    format: "radio",
-                  },
-                  rule: {
-                    effect: "SHOW",
-                    condition: {
-                      scope: "#/properties/OptometryLColorType",
-                      schema: {
-                        const: "Partial color blindness",
-                      },
-                    },
-                  },
-                },
-                
-                ////////////////Right eye color//////////////////
-                {
-                  type: "Control",
-                  label: "Right eye color blindness",
-                  scope: "#/properties/OptometryRColorType",
-                  options: {
-                    format: "radio",
-                  },
-                },  
-                {
-                  type: "Control",
-                  label: "Partial color blindness",
-                  scope: "#/properties/OptometryRColorType1",
-                  options: {
-                    format: "radio",
-                  },
-                  rule: {
-                    effect: "SHOW",
-                    condition: {
-                      scope: "#/properties/OptometryRColorType",
-                      schema: {
-                        const: "Partial color blindness",
-                      },
-                    },
-                  },
+                  label: "Color blindness",
+                  scope: "#/properties/OptometryColor",
                 },
               ],
             },
@@ -355,35 +288,144 @@ const uischema = {
 };
 //Auto data update by Aman Gupta on 23/06/23
 export default class Form26 extends Component {
-	constructor(props) {
-	  super(props);
-	  this.state = {
-		data: props.data,
-		schema: _schema,
-	  };
-	}
-  
-	componentDidUpdate() { }
-  
-	handleForm(data) {
-	  const { schema } = this.state;
-	  this.setState(data, () => {
-		this.props.handleChange(data, false);
-	  });
-	}
-  
-	render() {
-	  const { data, schema } = this.state;
-	  return (
-		<JsonForms
-		  schema={schema}
-		  uischema={uischema}
-		  data={data}
-		  renderers={materialRenderers}
-		  cells={materialCells}
-		  ValidationMode="ValidateAndShow"
-		  onChange={({ data, _errors }) => this.handleForm(data)}
-		/>
-	  );
-	}
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: props.data,
+      schema: _schema,
+      patients: [],
+      query: "",
+    };
+
+    this.search = this.search.bind(this);
+    this.setQuery = this.setQuery.bind(this);
+    this.patientSelected = this.patientSelected.bind(this);
+  }
+
+  componentDidUpdate() {}
+
+  handleForm(data) {
+    const { schema } = this.state;
+    this.setState({ data: data }, () => {
+      this.props.handleChange(data, false);
+    });
+    this.forceUpdate();
+  }
+
+  setQuery(e) {
+    this.setState({ query: e.target.value });
+  }
+
+  search() {
+    fetch(`/patientdata?query=${this.state.query}`)
+      .then((r) => {
+        if (r.ok) {
+          return r.json();
+        }
+      })
+      .then((d) => {
+        let patients = [];
+        d.forEach((p) => {
+          patients.push(p.fields);
+        });
+        //this.setState(patients);
+        this.setState({ patients: patients });
+        //this.forceUpdate();
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }
+
+  patientSelected(e) {
+    const { data } = this.state;
+    const pid = e.target.value;
+    const patient = this.state.patients.find((p) => {
+      return p.PatientId === pid;
+    });
+    let formData = {
+      ...data,
+      GenderTextFR26: patient.gender,
+      AgeTextFR26: patient.age,
+      NameTextFR26: patient.PatientName,
+      IDTextFR26: patient.PatientId,
+      TestDateTextFR26: patient.TestDate,
+      ReportDateTextFR26: patient.ReportDate,
+      OptometryAbnormalRType: patient.FarVisionRight,
+      OptometryAbnormalLType: patient.FarVisionLeft,
+      OptometryAbnormalRTypeN: patient.NearVisionRight,
+      OptometryAbnormalLTypeN: patient.NearVisionLeft,
+      OptometryColor: patient.ColorBlindness,
+    };
+    this.handleForm(formData);
+  }
+
+  render() {
+    const { data, schema, patients } = this.state;
+    return (
+      <div>
+        <input
+          type="text"
+          placeholder="Enter name or Patient ID"
+          onChange={this.setQuery}
+        />{" "}
+        <button onClick={this.search}>Search</button>
+        {patients.length > 0 && (
+          <select id="patients" onChange={this.patientSelected}>
+            <option value="-1">-- Select Patient --</option>
+            {patients.map((p) => {
+              return (
+                <option value={p.PatientId} key={p.PatientId}>
+                  {p.PatientName} | ID: {p.PatientId}
+                </option>
+              );
+            })}
+            ;
+          </select>
+        )}
+        <JsonForms
+          schema={schema}
+          uischema={uischema}
+          data={data}
+          renderers={materialRenderers}
+          cells={materialCells}
+          ValidationMode="ValidateAndShow"
+          onChange={({ data, _errors }) => this.handleForm(data)}
+        />
+      </div>
+    );
+  }
 }
+// export default class Form26 extends Component {
+// 	constructor(props) {
+// 	  super(props);
+// 	  this.state = {
+// 		data: props.data,
+// 		schema: _schema,
+// 	  };
+// 	}
+  
+// 	componentDidUpdate() { }
+  
+// 	handleForm(data) {
+// 	  const { schema } = this.state;
+// 	  this.setState(data, () => {
+// 		this.props.handleChange(data, false);
+// 	  });
+// 	}
+  
+// 	render() {
+// 	  const { data, schema } = this.state;
+// 	  return (
+// 		<JsonForms
+// 		  schema={schema}
+// 		  uischema={uischema}
+// 		  data={data}
+// 		  renderers={materialRenderers}
+// 		  cells={materialCells}
+// 		  ValidationMode="ValidateAndShow"
+// 		  onChange={({ data, _errors }) => this.handleForm(data)}
+// 		/>
+// 	  );
+// 	}
+// }

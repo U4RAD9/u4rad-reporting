@@ -202,6 +202,11 @@ class Optometry4 extends Component {
         if (frmData.OptometryLColorType=="Partial color blindness" && frmData.OptometryRColorType=="Partial color blindness" && !(frmData.OptometryLColorType1=="Red" && frmData.OptometryRColorType1=="Red") && !(frmData.OptometryLColorType1=="Green" && frmData.OptometryRColorType1=="Green") && !(frmData.OptometryLColorType1=="Red-Green" && frmData.OptometryRColorType1=="Red-Green")) {
             report += "<h5>" + "<strong>" + "<u>" + "Color vision check(Ishihara test)" + "</u>" + ": " + "</strong>" + "Partial color blindness in left eye: " + frmData.OptometryLColorType1 + "<br>" +  "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Partial color blindness in right eye: " + frmData.OptometryRColorType1 + "." + "</h5>";
         }
+
+        //for auto fill
+        if (frmData.OptometryColor) {
+            report += "<h5>" + "<strong>" + "<u>" + "Color vision check(Ishihara test)" + "</u>" + ": " + "</strong>" + frmData.OptometryColor + " color blindness in both eye." + "</h5>";
+        }
 		   
 		
 		
