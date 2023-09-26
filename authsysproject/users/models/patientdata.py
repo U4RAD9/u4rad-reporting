@@ -2,8 +2,8 @@ from django.db import models
 
 
 class PatientInfo(models.Model):
-    PatientId = models.CharField(max_length=15)
-    PatientName = models.CharField(max_length=30)
+    PatientId = models.CharField(max_length=50)
+    PatientName = models.CharField(max_length=70)
     age = models.CharField(max_length=30)
     gender = models.CharField(max_length=15)
     TestDate = models.CharField(max_length=20)
