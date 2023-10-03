@@ -29,10 +29,10 @@ from django.views import View
 import os
 import pickle
 # from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
+# from google_auth_oauthlib.flow import InstalledAppFlow
+# from google.auth.transport.requests import Request
 import io
-from googleapiclient.http import MediaIoBaseDownload
+# from googleapiclient.http import MediaIoBaseDownload
 import PyPDF2
 from users.models.Date import Date
 from datetime import datetime
