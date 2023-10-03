@@ -15,6 +15,7 @@ from users.models.bankinginfo import BankingInfo as BankingInfoModel
 from users.models.reportingarea import ReportingArea as ReportingAreaModel
 from users.models.timeavailability import TimeAvailability as TimeAvailabilityModel
 from users.models.patientdata import PatientInfo as PatientInfo
+from users.models.patientdetails import PatientDetails as PatientDetails
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -23,6 +24,20 @@ from django.core.serializers import serialize
 from django.contrib.auth import get_user_model
 import json
 import csv
+from django.shortcuts import HttpResponse
+from django.views import View
+import os
+import pickle
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+import io
+from googleapiclient.http import MediaIoBaseDownload
+import PyPDF2
+from users.models.Date import Date
+from datetime import datetime
+from users.models.Location import Location
+from users.models.City import City
 
 def login(request):
     if request.method == 'POST':
@@ -36,6 +51,8 @@ def login(request):
 
             if group == 'institution':
                 return redirect('proinst')
+            elif group == 'cardiologist':
+                return redirect('allocation')
             else:
                 return redirect('reportingbot')
         else:
@@ -47,6 +64,11 @@ def login(request):
 def logout(request):
     ContribLogout(request)
     return redirect('login')
+
+
+def allocation(request):
+    patients = PatientDetails.objects.all()
+    return render(request, 'users/allocation.html', {'patients': patients})
 
 
 def regrdo(request):
@@ -458,3 +480,243 @@ def uploadcsv(request):
         # return HttpResponse('Please upload a CSV file.')
         return render(request, 'users/uploadcsv.html')
     #@login_required
+
+# ECG BOT***************************************************************
+def fetch_patient_data(request):
+        patient_id = request.GET.get('patientId')
+        patient_name = request.GET.get('patientName')
+        age = request.GET.get('age')
+        gender = request.GET.get('gender')
+        HeartRate = request.Get.get('HeartRate')
+        test_date = request.GET.get('testDate')
+        report_date = request.GET.get('reportDate')
+        report_image = request.GET.get('reportImage')  # Report image URL
+        
+
+        # You can modify this logic based on how you fetch patient data
+        patient = request(
+            PatientDetails,
+            PatientId=patient_id,
+            PatientName=patient_name,
+            age=age,
+            gender=gender,
+            HeartRate=HeartRate,
+            TestDate=test_date,
+            ReportDate=report_date,
+            reportimage=report_image
+        )
+    
+    # Create a dictionary to hold the patient data
+        patient_data = {
+            'PatientId': patient.PatientId,
+            'PatientName': patient.PatientName,
+            'age': patient.age,
+            'gender': patient.gender,
+            'HeartRate': patient.HeartRate,
+            'TestDate': patient.TestDate.strftime('%Y-%m-%d'),  # Format the date as needed
+            'ReportDate': patient.ReportDate.strftime('%Y-%m-%d'),  # Format the date as needed
+            'reportimage': patient.reportimage.url,  # Get the URL of the report image
+        }
+        
+    
+        return JsonResponse(patient_data)
+        # Check if the patient's report status is updated
+
+
+
+class Google(View):
+    def get(self, request):
+        google_drive_data = GoogleDrive()
+        response = HttpResponse(google_drive_data)
+        return response
+
+def GoogleDrive():
+    # The file that contains the OAuth 2.0 credentials.
+    CLIENT_SECRET_FILE = 'users/GoogleDriveAPI.json'
+
+    # The name of the API and version of the API.
+    API_NAME = 'drive'
+    API_VERSION = 'v3'
+
+    # The scopes that are required to access the API.
+    SCOPES = ['https://www.googleapis.com/auth/drive']
+
+    def create_service():
+        # Create the credentials.
+        creds = None
+        if os.path.exists('token.pickle'):
+            with open('token.pickle', 'rb') as token:
+                creds = pickle.load(token)
+
+        # If the credentials don't exist or are invalid, then create new ones.
+        if not creds or not creds.valid:
+            if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+            else:
+                # Create the flow object.
+                flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, SCOPES)
+
+                # Run the flow to obtain the credentials.
+                creds = flow.run_local_server(port=0)
+
+                # Save the credentials for future use.
+                with open('token.pickle', 'wb') as token:
+                    pickle.dump(creds, token)
+        # Create the service object.
+        service = build(API_NAME, API_VERSION, credentials=creds)
+        return service
+
+    folder_id = '19dl9kv8zjI3Gj8muqIJspZmTH2NcVkTD'
+    service = create_service()
+
+    existing_patient_ids = set(PatientDetails.objects.values_list('PatientId', flat=True))
+    fetch_patient_data_from_folder(service, folder_id, existing_patient_ids)
+
+def fetch_patient_data_from_folder(service, folder_id, existing_patient_ids):
+    prefix = "https://lh3.googleusercontent.com/d/"
+
+    stack = [(folder_id, None)]
+    patient_data_by_date = {}
+
+    while stack:
+        current_folder_id, current_location_id = stack.pop()
+        query = f"'{current_folder_id}' in parents and mimeType='application/vnd.google-apps.folder'"
+        subfolders = service.files().list(q=query).execute()
+
+        for subfolder in subfolders.get('files', []):
+            subfolder_id = subfolder['id']
+            subfolder_name = subfolder['name']
+
+            # Process the subfolder even if it's not a known location
+            stack.append((subfolder_id, subfolder_name))
+            technician_name = subfolder_name
+            location_id = None
+
+            if technician_name:
+                location = Location.objects.filter(technician_name=technician_name).first()
+                
+                if location:
+                    location_id = location.id
+
+                query = f"'{subfolder_id}' in parents"
+                subfolder_files = service.files().list(q=query).execute().get('files', [])
+
+                for data in subfolder_files:
+                    if data['mimeType'] == 'application/pdf':
+                        file_id = data['id']
+                        # Create reportingimage by adding the prefix
+                        reportimage = f'{prefix}{file_id}'
+                        
+                        # Rest of your code...
+
+                        # Download the file content from Google Drive.
+                        request = service.files().get_media(fileId=file_id)
+                        pdf_files = io.BytesIO()
+                        downloader = MediaIoBaseDownload(pdf_files, request)
+                        done = False
+                        while not done:
+                            status, done = downloader.next_chunk()
+                        pdf_reader = PyPDF2.PdfReader(pdf_files)
+
+                        for page in pdf_reader.pages:
+                            first_page_text = page.extract_text()
+                            patient_id = str(first_page_text).split("Id :")[1].split(" ")[1].split("\n")[0]
+                            if patient_id not in existing_patient_ids:
+                                patient_name = str(first_page_text).split("Name :")[1].split("Age :")[0].split('\n')[0]
+                                patient_age = str(first_page_text).split("Age :")[1].split(" ")[1].split("\n")[0]
+                                patient_gender = str(first_page_text).split("Gender :")[1].split("\n")[0]
+                                heart_rate = str(first_page_text).split("HR:")[1].split(" ")[1].split("/")[0]
+                                report_time = str(first_page_text).split("Acquired on:")[1][12:17]
+                                raw_date = str(first_page_text).split("Acquired on:")[1][0:11].strip()
+                                formatted_date = datetime.strptime(raw_date, '%Y-%m-%d').date()
+
+                                # Update location_id within this loop if location is found
+
+                                if formatted_date not in patient_data_by_date:
+                                    patient_data_by_date[formatted_date] = []
+                                patient_data_by_date[formatted_date].append(
+                                    (patient_id, patient_name, patient_age, patient_gender, int(heart_rate), report_time))
+
+                                if patient_id not in existing_patient_ids and location_id is not None:
+                                    existing_patient_ids.add(patient_id)
+
+                                    date, created = Date.objects.get_or_create(date_field=formatted_date,
+                                                                                   location_id=location_id)
+
+                                    patient = PatientDetails(
+                                        PatientId=patient_id,
+                                        PatientName=patient_name,
+                                        age=patient_age,
+                                        gender=patient_gender,
+                                        HeartRate=heart_rate,
+                                        TestDate=report_time,
+                                        ReportDate=report_time,
+                                        date_id=date.id,
+                                        reportimage=reportimage
+                                    )
+                                    print(reportimage)
+                                    patient.save()
+                                    print(f"Patient saved: {patient}")
+
+
+def report_patient(request, patient_id):
+    # Your reporting logic here
+
+    # Set a session variable to indicate that the button has been reported
+    request.session[f"reportButtonState_{patient_id}"] = "reported"
+
+    return HttpResponse("Reported successfully")  # You can customize the response as needed
+
+
+#data***********************************
+@csrf_exempt
+def patientDetails(request):
+    if request.method == 'GET':
+        query = request.GET.get('query', None)
+        patients = PatientDetails.objects.all()
+        if query is not None:
+            patients = patients.filter(Q(PatientId__icontains=query) | Q(PatientName__icontains=query))
+        # response = {"patients": patients}
+        response = serialize("json", patients)
+        response = json.loads(response)
+        return JsonResponse(status=200, data=response, safe=False)
+    
+#Added by Aman at 05:46
+def uploadcsv(request):
+    if request.method == 'POST' and request.FILES['csv_file']:
+        csv_file = request.FILES['csv_file']
+        
+        field_names = ['PatientId', 'PatientName', 'age', 'gender', 'TestDate', 'ReportDate']
+        
+        try:
+            decoded_file = csv_file.read().decode('utf-8').splitlines()
+            reader = csv.DictReader(decoded_file, fieldnames=field_names)
+            
+            if reader.fieldnames == field_names:
+                next(reader)
+            
+            for idx, row in enumerate(reader, start=2):  # Start at line 2 due to header skip
+                # Check for empty cells or cells starting with space
+                for field in field_names:
+                    if not row[field]:
+                        return HttpResponse(f'Error: Empty cell found in row {idx} for field {field}.')
+                    if row[field].startswith(' '):
+                        return HttpResponse(f'Error: Cell starting with space found in row {idx} for field {field}.')
+                
+                PatientDetails.objects.create(
+                    PatientId=row['PatientId'],
+                    PatientName=row['PatientName'],
+                    age=row['age'],
+                    gender=row['gender'].upper(),
+                    TestDate=row['TestDate'],
+                    ReportDate=row['ReportDate'],
+                    # reportimage=row['reportimage'],
+                )
+            
+            return HttpResponse('CSV file uploaded successfully.')
+        except Exception as e:
+            return HttpResponse(f'Error: {str(e)}')
+    else:
+        return render(request, 'users/uploadcsv.html')
+
+

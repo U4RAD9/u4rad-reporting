@@ -22,6 +22,12 @@ urlpatterns = [
     path('number-exists', views.numberExists, name='numberexists'),
     path('phone-exists', views.phoneExists, name='phoneexists'),
     path('patientdata', views.patientData, name='patientdata'),
+    path('patientdetails', views.patientDetails, name='patientdetails'),
+    
     path('uploadcsv', views.uploadcsv, name='uploadcsv'),
     path('serviceslist', views.PersonalInfo, name='serviceslist'),
+    path('allocation', views.allocation, name='allocation'),
+    path('fetch_patient_data', views.fetch_patient_data, name='fetch_patient_data'),
+    path('googledrive/', views.Google.as_view(), name='upload_csv'),
+
 ]

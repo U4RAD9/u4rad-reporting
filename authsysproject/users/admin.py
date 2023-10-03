@@ -7,6 +7,11 @@ from .models.timeavailability import TimeAvailability
 from .models.instpersonalinfo import InstPersonalInfo
 from .models.institutionmodalities import InstitutionModalities
 from .models.patientdata import PatientInfo
+from .models.patientdetails import PatientDetails
+from .models.City import City
+from .models.Client import Client
+from .models.Date import Date
+from .models.Location import Location
 from .models.workexp import WorkExp
 from .models.serviceslist import ServicesList
 
@@ -19,6 +24,11 @@ admin.site.register(TimeAvailability)
 admin.site.register(InstPersonalInfo)
 admin.site.register(InstitutionModalities)
 admin.site.register(PatientInfo)
+admin.site.register(PatientDetails)
+admin.site.register(City)
+admin.site.register(Client)
+admin.site.register(Date)
+admin.site.register(Location)
 admin.site.register(ServicesList)
 
 # Register your models here.

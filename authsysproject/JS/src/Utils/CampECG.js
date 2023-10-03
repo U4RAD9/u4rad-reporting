@@ -18,6 +18,7 @@ class CampECG extends Component {
         BradycardiaRBBB: false,
         Tachycardia: false,
         Bradycardia: false,
+        Others: false,
             
       },
     };
@@ -43,6 +44,7 @@ class CampECG extends Component {
     {
       report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR21 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR21 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR21 + "</td>" + "</tr>"  + "<tr>" + "<td>" + "Gender: " + frmData.GenderTextFR21 + "</td>" + "<td>" + "Test date: " + frmData.TestDateTextFR21 + "</td>" + "<td>" + "Report date: " + frmData.ReportDateTextFR21 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
     }
+
     if (
         frmData.ECGcampNormal ||
         frmData.RhythmRBBB ||
@@ -66,29 +68,41 @@ class CampECG extends Component {
         "</u>" +
         "</strong>";
       }
+      if(frmData.HeartTextFR21){
+        report += "<p>" + "<b>" + "1. Heart rate is " + frmData.HeartTextFR21 +" BPM." + "</b>" + "</p>";
+      }
       //Normal ECG
-      if(frmData.ECGcampNormal && frmData.NormalECGText){
-        report += "<p>" + "<b>" + "1. Heart rate is " + frmData.NormalECGText +" BPM."+ "</b>" + "</p>" + "<p>" + "<b>" + "2. Normal Sinus Rhythm" + "</b>" + "</p>" + "<p>" + "<b>" + "3. No significant ST-T changes seen" + "</b>" + "</p>" + "<p>" + "<b>" + "4. No evidence of chamber enlargement or block" + "</b>" + "</p>";
+      if(frmData.ECGcampNormal){
+        report += "<p>" + "<b>" + "2. Normal Sinus Rhythm." + "</b>" + "</p>" + "<p>" + "<b>" + "3. No significant ST-T changes seen." + "</b>" + "</p>";
       }
       // Sinus rhythm with incomplete RBBB
-      if(frmData.RhythmRBBB && frmData.RhythmText){
-        report += "<p>" + "<b>" + "1. Heart rate is " + frmData.RhythmText +" BPM."+ "</b>" + "</p>" + "<p>" + "<b>" + "2. Sinus Rhythm with incomplete RBBB" + "</b>" + "</p>" + "<p>" + "<b>" + "3. No significant ST-T changes seen" + "</b>" + "</p>" + "<p>" + "<b>" + "4. No evidence of chamber enlargement or block" + "</b>" + "</p>";
+      if(frmData.RhythmRBBB){
+        report += "<p>" + "<b>" + "2. Sinus Rhythm with incomplete RBBB." + "</b>" + "</p>" + "<p>" + "<b>" + "3. No significant ST-T changes seen." + "</b>" + "</p>";
       }
       // Sinus Tachycardia with incomplete RBBB
-      if(frmData.TachycardiaRBBB && frmData.TachycardiaText){
-        report += "<p>" + "<b>" + "1. Heart rate is " + frmData.TachycardiaText +" BPM."+ "</b>" + "</p>" + "<p>" + "<b>" + "2. Sinus Tachycardia with incomplete RBBB" + "</b>" + "</p>" + "<p>" + "<b>" + "3. No significant ST-T changes seen" + "</b>" + "</p>" + "<p>" + "<b>" + "4. No evidence of chamber enlargement or block" + "</b>" + "</p>";
+      if(frmData.TachycardiaRBBB){
+        report += "<p>" + "<b>" + "2. Sinus Tachycardia with incomplete RBBB." + "</b>" + "</p>" + "<p>" + "<b>" + "3. No significant ST-T changes seen." + "</b>" + "</p>";
       }
       // Sinus Bradycardia with incomplete RBBB
-      if(frmData.BradycardiaRBBB && frmData.BradycardiaText){
-        report += "<p>" + "<b>" + "1. Heart rate is " + frmData.BradycardiaText +" BPM."+ "</b>" + "</p>" + "<p>" + "<b>" + "2. Sinus Bradycardia with incomplete RBBB" + "</b>" + "</p>" + "<p>" + "<b>" + "3. No significant ST-T changes seen" + "</b>" + "</p>" + "<p>" + "<b>" + "4. No evidence of chamber enlargement or block" + "</b>" + "</p>";
+      if(frmData.BradycardiaRBBB){
+        report += "<p>" + "<b>" + "2. Sinus Bradycardia with incomplete RBBB." + "</b>" + "</p>" + "<p>" + "<b>" + "3. No significant ST-T changes seen." + "</b>" + "</p>";
       }
-      if(frmData.Bradycardia && frmData.BradycardiarwText){
-        report += "<p>" + "<b>" + "1. Heart rate is " + frmData.BradycardiarwText +" BPM."+ "</b>" + "</p>" + "<p>" + "<b>" + "2. Sinus Bradycardia" + "</b>" + "</p>" + "<p>" + "<b>" + "3. No significant ST-T changes seen" + "</b>" + "</p>" + "<p>" + "<b>" + "4. No evidence of chamber enlargement or block" + "</b>" + "</p>";
+      if(frmData.Bradycardia){
+        report += "<p>" + "<b>" + "2. Sinus Bradycardia." + "</b>" + "</p>" + "<p>" + "<b>" + "3. No significant ST-T changes seen." + "</b>" + "</p>";
       }
       //Sinus Tachycardia
-      if(frmData.Tachycardia && frmData.TachycardiarwText){
-        report += "<p>" + "<b>" + "1. Heart rate is " + frmData.TachycardiarwText +" BPM."+ "</b>" + "</p>" + "<p>" + "<b>" + "2. Sinus Tachycardia" + "</b>" + "</p>" + "<p>" + "<b>" + "3. No significant ST-T changes seen" + "</b>" + "</p>" + "<p>" + "<b>" + "4. No evidence of chamber enlargement or block" + "</b>" + "</p>";
+      if(frmData.Tachycardia){
+        report += "<p>" + "<b>" + "2. Sinus Tachycardia." + "</b>" + "</p>" + "<p>" + "<b>" + "3. No significant ST-T changes seen." + "</b>" + "</p>";
       }
+      //Others
+      if(frmData.OthersText2) {
+        report += "<p>" + "<b>" + frmData.OthersText2 + "</b>" + "</p>";
+      }
+      // if (frmData.reportimage) {
+      //   report += "<div class='image-container'>" +
+      //     "<img src='" + frmData.reportimage + "' alt='Report' class='report-image' />" +
+      //     "</div>";
+      // }
 
 
     
@@ -99,9 +113,15 @@ class CampECG extends Component {
       this.getImpression(impression, totalCovidPoints) +
       this.getCorads(current_user);
 
-    this.setState({ reportFrmData: report }, () => {
-      this.props.generateReport(report);
-    });
+      if (frmData.reportimage) {
+        report += "<div class='image-container'>" +
+          "<img src='" + frmData.reportimage + "' alt='Report' class='report-image' />" +
+          "</div>";
+      }
+    
+      this.setState({ reportFrmData: report }, () => {
+        this.props.generateReport(report);
+      });
   }
 
   pageBreak() {
@@ -110,7 +130,7 @@ class CampECG extends Component {
 
   getCorads(user) {
     return (
-      "<p><br><img src='" +
+      "<p><img src='" +
       user.signature +
       "' height='50' /><p>" +
       user.full_name +

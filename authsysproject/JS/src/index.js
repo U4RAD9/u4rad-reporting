@@ -79,11 +79,39 @@ class App extends Component {
   }
 
 
+  ///////////ecg image by aman on 21/08/23
   componentDidMount() {
-    this.setState({
-      reportFrmData: this.generatePatientTable()
-    })
+    console.log("componentDidMount executed.");
+    try {
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      const imageUrl = urlSearchParams.get("data-reportimage");
+      console.log("Image URL:", imageUrl);
+  
+      if (imageUrl) {
+        const imageElement = document.createElement("img");
+        imageElement.src = imageUrl;
+        imageElement.className = "content-image"; // Add the class to the image element
+  
+        const editorContent = document.querySelector("#root > div > div > div.document-editor__editable-container > div");
+        if (editorContent) {
+          editorContent.appendChild(imageElement);
+          console.log("Image appended successfully.");
+        } else {
+          console.log("Editor content element not found.");
+        }
+      } else {
+        console.log("Image URL not found in query parameters.");
+      }
+  
+      this.setState({
+        reportFrmData: this.generatePatientTable()
+      });
+    } catch (error) {
+      console.error("Error in componentDidMount:", error);
+    }
   }
+  
+  ////////////////////////////////////////
 
   generateReport(data) {
     this.setState({ reportFrmData: data });
@@ -150,7 +178,7 @@ class App extends Component {
 
   actionDropDown() {
     var list = document.createElement("select");
-    var filetype = ['Export Report', 'Get PDF', 'Get WORD', 'PRINT'];
+    var filetype = ['Export Report', 'Get PDF', 'Get ECG PDF', 'Get WORD', 'PRINT'];
     list.id = "export_data"
 
     filetype.forEach((item, id) => {
@@ -324,6 +352,31 @@ class App extends Component {
     return filename;
   }
 
+  getDataUri(url)
+  {
+      return new Promise(resolve => {
+          var image = new Image();
+          image.setAttribute('crossOrigin', 'anonymous'); //getting images from external domain
+  
+          image.onload = function () {
+              var canvas = document.createElement('canvas');
+              canvas.width = this.naturalWidth;
+              canvas.height = this.naturalHeight; 
+  
+              //next three lines for white background in case png has a transparent background
+              var ctx = canvas.getContext('2d');
+              ctx.fillStyle = '#fff';  /// set white fill style
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+              canvas.getContext('2d').drawImage(this, 0, 0);
+  
+              resolve(canvas.toDataURL('image/jpeg'));
+          };
+  
+          image.src = url;
+      })
+  }
+
   // GetDivContentOnPDF() {
   //   var filename = this.createFilename();
   //   const data = document.getElementsByClassName('ck-editor__editable')[0];
@@ -456,7 +509,81 @@ GetDivContentOnPDF() {
 }
 
   
-  
+//////////ecgbot pdf**************
+GetEcgContentOnPDF() {
+  var filename = this.createFilename();
+  const data = document.getElementsByClassName('ck-editor__editable')[0];
+
+  // Create a function to load images and render PDF
+  const loadImageAndRenderPDF = async () => {
+    data.classList.add("ck-blurred");
+    data.classList.remove("ck-focused");
+
+    let graphSrc = Array.from(data.children).pop().children[0].currentSrc;
+    let graphElement = document.querySelector("figure.image:nth-last-of-type(1)");
+    graphElement.remove();
+
+    if (data != undefined) {
+      var a4Width = 595.28; // A4 width in points (1 point = 1/72 inch)
+      var a4Height = 841.89; // A4 height in points
+
+      var canvasWidth = a4Width; // Adjusted width to leave some margin
+      var canvasHeight = a4Height; // Adjusted height to maintain aspect ratio and leave margin
+
+      const canvas = await html2canvas(data, {
+        scale: 4, // Adjust the scale if needed for better quality
+        useCORS: true, // Enable CORS to capture images from external URLs
+      });
+
+      const imgData = canvas.toDataURL('image/png', 1.0);
+      const pdf = new jsPDF('p', 'pt', [a4Width, a4Height], true);
+
+      // Calculate the image dimensions to fit within the PDF dimensions
+      const canvasAspectRatio = canvas.width / canvas.height;
+      const pdfAspectRatio = a4Width / a4Height;
+
+      let pdfImageWidth = canvasWidth;
+      let pdfImageHeight = canvasHeight;
+
+      if (canvasAspectRatio > pdfAspectRatio) {
+        pdfImageWidth = canvasWidth;
+        pdfImageHeight = canvasWidth / canvasAspectRatio;
+      } else {
+        pdfImageHeight = canvasHeight;
+        pdfImageWidth = canvasHeight * canvasAspectRatio;
+      }
+
+      // Calculate the positioning to center the image
+      const xPosition = (pdf.internal.pageSize.width - pdfImageWidth) / 2;
+      const yPosition = (pdf.internal.pageSize.height - pdfImageHeight) / 2;
+
+
+      // Create a separate canvas for the rotated graph image
+      const graphCanvas = document.createElement('canvas');
+      graphCanvas.width = 1024;
+      graphCanvas.height = 1024;
+      const graphCtx = graphCanvas.getContext('2d');
+      let graphImg = await this.getDataUri(graphSrc);
+      const image = new Image();
+      image.src = graphImg;
+      image.onload = () => {
+        graphCtx.translate(graphCanvas.width / 2, graphCanvas.height / 2);
+        graphCtx.rotate(Math.PI / 2); // Rotate the image by 90 degrees
+        graphCtx.drawImage(image, -graphCanvas.height / 2, -graphCanvas.width / 2, graphCanvas.height, graphCanvas.width);
+
+        pdf.addImage(graphCanvas.toDataURL('image/png'), 'PNG', 0, 0, a4Width, a4Height);
+        
+        pdf.addPage("a4", "portrait"); // Add a new portrait-oriented page
+        pdf.addImage(imgData, 'PNG', xPosition, yPosition, pdfImageWidth, pdfImageHeight);
+
+        pdf.save(filename ? filename + ".pdf" : "download.pdf");
+      };
+    }
+  };
+
+  loadImageAndRenderPDF();
+}
+
   
   
   
@@ -630,9 +757,13 @@ GetDivContentOnPDF() {
         this.GetDivContentOnPDF();
         break;
       case 2:
+        console.log("pdf");
+        this.GetEcgContentOnPDF();
+        break;  
+      case 3:
         this.Export2Doc();
         break;
-      case 3:
+      case 4:
         this.printReport();
       break;   
       default:

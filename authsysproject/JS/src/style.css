@@ -195,13 +195,20 @@ tbody {
   display: none !important;
 }
 
-.ck-content .image {
+/* .ck-content .image {
   width: 100%;
-}
+}*/
 
-.ck-content .image img {
+/* .ck-content .image img:first-child {
   width: 40%;
   margin: 0px !important;
+}  */
+
+.content-image {
+  width: 100%;
+}
+.company-logo {
+  width: 40%;
 }
 
 @media print {
