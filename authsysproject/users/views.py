@@ -33,7 +33,7 @@ import pickle
 # from google.auth.transport.requests import Request
 import io
 # from googleapiclient.http import MediaIoBaseDownload
-import PyPDF2
+# import PyPDF2
 from users.models.Date import Date
 from datetime import datetime
 from users.models.Location import Location
