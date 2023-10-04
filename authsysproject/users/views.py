@@ -682,41 +682,41 @@ def patientDetails(request):
         return JsonResponse(status=200, data=response, safe=False)
     
 #Added by Aman at 05:46
-def uploadcsv(request):
-    if request.method == 'POST' and request.FILES['csv_file']:
-        csv_file = request.FILES['csv_file']
+# def uploadcsv(request):
+#     if request.method == 'POST' and request.FILES['csv_file']:
+#         csv_file = request.FILES['csv_file']
         
-        field_names = ['PatientId', 'PatientName', 'age', 'gender', 'TestDate', 'ReportDate']
+#         field_names = ['PatientId', 'PatientName', 'age', 'gender', 'TestDate', 'ReportDate']
         
-        try:
-            decoded_file = csv_file.read().decode('utf-8').splitlines()
-            reader = csv.DictReader(decoded_file, fieldnames=field_names)
+#         try:
+#             decoded_file = csv_file.read().decode('utf-8').splitlines()
+#             reader = csv.DictReader(decoded_file, fieldnames=field_names)
             
-            if reader.fieldnames == field_names:
-                next(reader)
+#             if reader.fieldnames == field_names:
+#                 next(reader)
             
-            for idx, row in enumerate(reader, start=2):  # Start at line 2 due to header skip
-                # Check for empty cells or cells starting with space
-                for field in field_names:
-                    if not row[field]:
-                        return HttpResponse(f'Error: Empty cell found in row {idx} for field {field}.')
-                    if row[field].startswith(' '):
-                        return HttpResponse(f'Error: Cell starting with space found in row {idx} for field {field}.')
+#             for idx, row in enumerate(reader, start=2):  # Start at line 2 due to header skip
+#                 # Check for empty cells or cells starting with space
+#                 for field in field_names:
+#                     if not row[field]:
+#                         return HttpResponse(f'Error: Empty cell found in row {idx} for field {field}.')
+#                     if row[field].startswith(' '):
+#                         return HttpResponse(f'Error: Cell starting with space found in row {idx} for field {field}.')
                 
-                PatientDetails.objects.create(
-                    PatientId=row['PatientId'],
-                    PatientName=row['PatientName'],
-                    age=row['age'],
-                    gender=row['gender'].upper(),
-                    TestDate=row['TestDate'],
-                    ReportDate=row['ReportDate'],
-                    # reportimage=row['reportimage'],
-                )
+#                 PatientDetails.objects.create(
+#                     PatientId=row['PatientId'],
+#                     PatientName=row['PatientName'],
+#                     age=row['age'],
+#                     gender=row['gender'].upper(),
+#                     TestDate=row['TestDate'],
+#                     ReportDate=row['ReportDate'],
+#                     # reportimage=row['reportimage'],
+#                 )
             
-            return HttpResponse('CSV file uploaded successfully.')
-        except Exception as e:
-            return HttpResponse(f'Error: {str(e)}')
-    else:
-        return render(request, 'users/uploadcsv.html')
+#             return HttpResponse('CSV file uploaded successfully.')
+#         except Exception as e:
+#             return HttpResponse(f'Error: {str(e)}')
+#     else:
+#         return render(request, 'users/uploadcsv.html')
 
 
