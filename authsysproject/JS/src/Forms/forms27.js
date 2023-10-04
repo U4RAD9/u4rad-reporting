@@ -11,26 +11,26 @@ import { data } from "jquery";
 const _schema = {
 	type: "object",
 	properties: {
-		NameTextFR21: {
+		NameTextFR27: {
 			type: "string",
 		},
-		IDTextFR21: {
+		IDTextFR27: {
 			type: "string",
 		},
-		AgeTextFR21: {
+		AgeTextFR27: {
 			type: "string",
 		},
-		GenderTextFR21: {
+		GenderTextFR27: {
 			type: "string",
 			enum: ['Male', 'Female', 'Others'],
 		},
-		HeartTextFR21: {
+		HeartTextFR27: {
 			type: "string",
 		},
-		TestDateTextFR21: {
+		TestDateTextFR27: {
 			type: "string",
 		},
-        ReportDateTextFR21: {
+        ReportDateTextFR27: {
 			type: "string",
 		},
 		ECGcampNormal: {
@@ -103,27 +103,27 @@ const uischema = {
 						{
 							type: "Control",
 							label: "Name",
-							scope: "#/properties/NameTextFR21",
+							scope: "#/properties/NameTextFR27",
 						},
 						{
 							type: "Control",
 							label: "Patient ID",
-							scope: "#/properties/IDTextFR21",
+							scope: "#/properties/IDTextFR27",
 						},
 						{
 							type: "Control",
 							label: "Age",
-							scope: "#/properties/AgeTextFR21",
+							scope: "#/properties/AgeTextFR27",
 						},
 						{
 							type: "Control",
 							label: "Test date",
-							scope: "#/properties/TestDateTextFR21",
+							scope: "#/properties/TestDateTextFR27",
 						},
                         {
 							type: "Control",
 							label: "Report date",
-							scope: "#/properties/ReportDateTextFR21",
+							scope: "#/properties/ReportDateTextFR27",
 						},
 					],
 				},
@@ -131,7 +131,7 @@ const uischema = {
 				{
 					type: "Control",
 					label: "Gender",
-					scope: "#/properties/GenderTextFR21",
+					scope: "#/properties/GenderTextFR27",
 					options: {
 						format: "radio",
 					},
@@ -140,7 +140,7 @@ const uischema = {
 				{
 					type: "Control",
 					label: "Heart rate",
-					scope: "#/properties/HeartTextFR21",
+					scope: "#/properties/HeartTextFR27",
 				},
 
 				// Normal******************
@@ -300,30 +300,88 @@ export default class Form27 extends Component {
 	  this.state = {
 		data: props.data,
 		schema: _schema,
+		patients: [],
+		query: '',
 	  };
+
+	  this.search = this.search.bind(this);
+	  this.setQuery = this.setQuery.bind(this);
+	  this.patientSelected = this.patientSelected.bind(this);
 	}
   
 	componentDidUpdate() { }
   
 	handleForm(data) {
 	  const { schema } = this.state;
-	  this.setState(data, () => {
+	  this.setState({data: data}, () => {
 		this.props.handleChange(data, false);
 	  });
+	  this.forceUpdate();
+	}
+
+	setQuery(e) {
+		this.setState({query: e.target.value})
+	}
+
+	search() {
+		fetch(`/patientdata?query=${this.state.query}`).then((r) => {
+			if (r.ok) {
+				return r.json();
+			}
+		}).then((d) => {
+			let patients = [];
+			d.forEach((p) => {
+				patients.push(p.fields);
+			});
+			//this.setState(patients);
+			this.setState({patients: patients});
+			//this.forceUpdate();
+		}).catch((e) => {
+			console.error(e);
+		})
+	}
+
+	patientSelected(e) {
+		const {data} = this.state;
+		const pid = e.target.value;
+		const patient = this.state.patients.find((p) => {
+			return p.PatientId === pid;
+		});
+		let formData = {
+			...data,
+			GenderTextFR27: patient.gender,
+			AgeTextFR27: patient.age,
+			NameTextFR27: patient.PatientName,
+			IDTextFR27: patient.PatientId,
+			TestDateTextFR27: patient.TestDate,
+			ReportDateTextFR27: patient.ReportDate
+		}
+		this.handleForm(formData);
 	}
   
 	render() {
-	  const { data, schema } = this.state;
+	  const { data, schema, patients } = this.state;
 	  return (
-		<JsonForms
-		  schema={schema}
-		  uischema={uischema}
-		  data={data}
-		  renderers={materialRenderers}
-		  cells={materialCells}
-		  ValidationMode="ValidateAndShow"
-		  onChange={({ data, _errors }) => this.handleForm(data)}
-		/>
+		<div>
+			<input type="text" placeholder="Enter name or Patient ID" onChange={this.setQuery}/> <button onClick={this.search}>Search</button>
+			{patients.length > 0 &&
+				<select id="patients" onChange={this.patientSelected}>
+					<option value="-1">-- Select Patient --</option>
+					{patients.map((p) => {
+						return <option value={p.PatientId} key={p.PatientId}>{p.PatientName} | ID: {p.PatientId}</option>;
+					})};	
+				</select>
+			}
+			<JsonForms
+			schema={schema}
+			uischema={uischema}
+			data={data}
+			renderers={materialRenderers}
+			cells={materialCells}
+			ValidationMode="ValidateAndShow"
+			onChange={({ data, _errors }) => this.handleForm(data)}
+			/>
+		</div>
 	  );
 	}
 }

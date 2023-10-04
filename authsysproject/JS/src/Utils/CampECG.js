@@ -40,9 +40,9 @@ class CampECG extends Component {
     let pageBreak = 0;
     let totalCovidPoints = 0;
 
-    if (frmData.NameTextFR21 && frmData.IDTextFR21 && frmData.AgeTextFR21 && frmData.GenderTextFR21)
+    if (frmData.NameTextFR27 && frmData.IDTextFR27 && frmData.AgeTextFR27 && frmData.GenderTextFR27)
     {
-      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR21 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR21 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR21 + "</td>" + "</tr>"  + "<tr>" + "<td>" + "Gender: " + frmData.GenderTextFR21 + "</td>" + "<td>" + "Test date: " + frmData.TestDateTextFR21 + "</td>" + "<td>" + "Report date: " + frmData.ReportDateTextFR21 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
+      report += "<pre>" + "<b>" +"<header>" + "<table>" + "<tr>" + "<td>" + "Name: " + frmData.NameTextFR27 + "</td>" + "<td>" + "Patient ID: " + frmData.IDTextFR27 + "</td>" + "<td>" + "Age: " + frmData.AgeTextFR27 + "</td>" + "</tr>"  + "<tr>" + "<td>" + "Gender: " + frmData.GenderTextFR27 + "</td>" + "<td>" + "Test date: " + frmData.TestDateTextFR27 + "</td>" + "<td>" + "Report date: " + frmData.ReportDateTextFR27 + "</td>" + "</tr>" + "</table>" + "</b>" + "</pre>" + "</header>";
     }
 
     if (
@@ -68,8 +68,8 @@ class CampECG extends Component {
         "</u>" +
         "</strong>";
       }
-      if(frmData.HeartTextFR21){
-        report += "<p>" + "<b>" + "1. Heart rate is " + frmData.HeartTextFR21 +" BPM." + "</b>" + "</p>";
+      if(frmData.HeartTextFR27){
+        report += "<p>" + "<b>" + "1. Heart rate is " + frmData.HeartTextFR27 +" BPM." + "</b>" + "</p>";
       }
       //Normal ECG
       if(frmData.ECGcampNormal){
