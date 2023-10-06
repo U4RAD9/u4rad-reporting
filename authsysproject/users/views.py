@@ -28,12 +28,12 @@ from django.shortcuts import HttpResponse
 from django.views import View
 import os
 import pickle
-# from googleapiclient.discovery import build
-# from google_auth_oauthlib.flow import InstalledAppFlow
-# from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
 import io
-# from googleapiclient.http import MediaIoBaseDownload
-# import PyPDF2
+from googleapiclient.http import MediaIoBaseDownload
+import PyPDF2
 from users.models.Date import Date
 from datetime import datetime
 from users.models.Location import Location
@@ -566,7 +566,7 @@ def GoogleDrive():
         service = build(API_NAME, API_VERSION, credentials=creds)
         return service
 
-    folder_id = '19dl9kv8zjI3Gj8muqIJspZmTH2NcVkTD'
+    folder_id = '1RjxYJcv4vbv1WFfcUtCWm-qh0N3KRd0n'
     service = create_service()
 
     existing_patient_ids = set(PatientDetails.objects.values_list('PatientId', flat=True))
@@ -586,7 +586,7 @@ def fetch_patient_data_from_folder(service, folder_id, existing_patient_ids):
         for subfolder in subfolders.get('files', []):
             subfolder_id = subfolder['id']
             subfolder_name = subfolder['name']
-
+             
             # Process the subfolder even if it's not a known location
             stack.append((subfolder_id, subfolder_name))
             technician_name = subfolder_name
@@ -629,6 +629,7 @@ def fetch_patient_data_from_folder(service, folder_id, existing_patient_ids):
                                 report_time = str(first_page_text).split("Acquired on:")[1][12:17]
                                 raw_date = str(first_page_text).split("Acquired on:")[1][0:11].strip()
                                 formatted_date = datetime.strptime(raw_date, '%Y-%m-%d').date()
+                                print(patient_name, patient_id)
 
                                 # Update location_id within this loop if location is found
 
