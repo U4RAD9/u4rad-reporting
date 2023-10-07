@@ -18,6 +18,7 @@ import CtAbdomen from "./Utils/CtAbdomen";
 import Audiometry from "./Utils/Audiometry";
 import ECG from "./Utils/ECG";
 import CampECG from "./Utils/CampECG";
+import CampECG2 from "./Utils/CampECG2";
 import Optometry from "./Utils/Optometry";
 import Optometry2 from "./Utils/Optometry2";
 import Optometry3 from "./Utils/Optometry3";
@@ -834,6 +835,8 @@ GetEcgContentOnPDF() {
                                                 <Vitals handleClick={this.handleClick} reportFrmData={reportFrmData} generateReport={this.generateReport} generatePatientTable={this.generatePatientTable()} /> :
                                                 this.state.modal && (options_label === "OPTOMETRY (CAMP) NO-INPUT") ?
                                                   <Optometry4 handleClick={this.handleClick} reportFrmData={reportFrmData} generateReport={this.generateReport} generatePatientTable={this.generatePatientTable()} /> :
+                                                  this.state.modal && (options_label === "CAMP (ECG)") ?
+                                                    <CampECG2 handleClick={this.handleClick} reportFrmData={reportFrmData} generateReport={this.generateReport} generatePatientTable={this.generatePatientTable()} /> :
                                     ""
         }
         <div className="document-editor">

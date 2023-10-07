@@ -24,6 +24,9 @@ const _schema = {
 			type: "string",
 			enum: ['Male', 'Female', 'Others'],
 		},
+		HeartTextFR21: {
+			type: "string",
+		},
 		TestDateTextFR21: {
 			type: "string",
 		},
@@ -71,6 +74,15 @@ const _schema = {
 		BradycardiarwText: {
 			type: "string",
 			"description": "Type between 0-300(in BPM)",
+		},
+		Others: {
+			type: "boolean",
+		},
+		OthersText1: {
+            type: "string",
+		},
+		OthersText2: {
+			type: "string",
 		},
 
 
@@ -125,40 +137,19 @@ const uischema = {
 					},
 				},
 
+				{
+					type: "Control",
+					label: "Heart rate",
+					scope: "#/properties/HeartTextFR21",
+				},
+
 				// Normal******************
 				{
 					type: "Control",
 					label: "Normal ECG",
 					scope: "#/properties/ECGcampNormal",
 				},
-				{
-					type: "Group",
-					label: "",
-					rule: {
-						effect: "HIDE",
-						condition: {
-							scope: "#/properties/ECGcampNormal",
-							schema: {
-								const: false,
-							},
-						},
-					},
-					elements: [
-						{
-							type: "HorizontalLayout",
-							label: "Heart Rate",
-							elements: [
-								{
-									"type": "Control",
-									"scope": "#/properties/NormalECGText",
-									"options": {
-										"slider": true
-									}
-								},
-							],
-						},
-					],
-				},
+				
 
 
 				// Abnormal****************
@@ -168,34 +159,7 @@ const uischema = {
 					label: "Sinus rhythm with incomplete RBBB",
 					scope: "#/properties/RhythmRBBB",
 				},
-				{
-					type: "Group",
-					label: "",
-					rule: {
-						effect: "HIDE",
-						condition: {
-							scope: "#/properties/RhythmRBBB",
-							schema: {
-								const: false,
-							},
-						},
-					},
-					elements: [
-						{
-							type: "HorizontalLayout",
-							label: "Heart Rate",
-							elements: [
-								{
-									"type": "Control",
-									"scope": "#/properties/RhythmText",
-									"options": {
-										"slider": true
-									}
-								},
-							],
-						},
-					],
-				},
+				
                 // Abnormal****************
 				// Sinus Tachycardia with incomplete RBBB
 				{
@@ -203,133 +167,40 @@ const uischema = {
 					label: "Sinus Tachycardia with incomplete RBBB",
 					scope: "#/properties/TachycardiaRBBB",
 				},
-				{
-					type: "Group",
-					label: "",
-					rule: {
-						effect: "HIDE",
-						condition: {
-							scope: "#/properties/TachycardiaRBBB",
-							schema: {
-								const: false,
-							},
-						},
-					},
-					elements: [
-						{
-							type: "HorizontalLayout",
-							label: "Heart Rate",
-							elements: [
-								{
-									"type": "Control",
-									"scope": "#/properties/TachycardiaText",
-									"options": {
-										"slider": true
-									}
-								},
-							],
-						},
-					],
-				},
+				
                 // Sinus Bradycardia with incomplete RBBB
 				{
 					type: "Control",
 					label: "Sinus Bradycardia with incomplete RBBB",
 					scope: "#/properties/BradycardiaRBBB",
 				},
-				{
-					type: "Group",
-					label: "",
-					rule: {
-						effect: "HIDE",
-						condition: {
-							scope: "#/properties/BradycardiaRBBB",
-							schema: {
-								const: false,
-							},
-						},
-					},
-					elements: [
-						{
-							type: "HorizontalLayout",
-							label: "Heart Rate",
-							elements: [
-								{
-									"type": "Control",
-									"scope": "#/properties/BradycardiaText",
-									"options": {
-										"slider": true
-									}
-								},
-							],
-						},
-					],
-				},
+				
                 // Sinus Bradycardia
 				{
 					type: "Control",
 					label: "Sinus Bradycardia",
 					scope: "#/properties/Bradycardia",
 				},
-				{
-					type: "Group",
-					label: "",
-					rule: {
-						effect: "HIDE",
-						condition: {
-							scope: "#/properties/Bradycardia",
-							schema: {
-								const: false,
-							},
-						},
-					},
-					elements: [
-						{
-							type: "HorizontalLayout",
-							label: "Heart Rate",
-							elements: [
-								{
-									"type": "Control",
-									"scope": "#/properties/BradycardiarwText",
-									"options": {
-										"slider": true
-									}
-								},
-							],
-						},
-					],
-				},
+				
                 // Sinus Tachycardia
 				{
 					type: "Control",
 					label: "Sinus Tachycardia",
 					scope: "#/properties/Tachycardia",
 				},
+				
+				// Others
 				{
-					type: "Group",
-					label: "",
-					rule: {
-						effect: "HIDE",
-						condition: {
-							scope: "#/properties/Tachycardia",
-							schema: {
-								const: false,
-							},
-						},
-					},
+					type: "HorizontalLayout",
+					label: "Findings",
 					elements: [
 						{
-							type: "HorizontalLayout",
-							label: "Heart Rate",
-							elements: [
-								{
-									"type": "Control",
-									"scope": "#/properties/TachycardiarwText",
-									"options": {
-										"slider": true
-									}
-								},
-							],
+							"type": "Control",
+							"label": "Findings",
+							"scope": "#/properties/OthersText2",
+							"options": {
+								"slider": true
+							}
 						},
 					],
 				},
@@ -429,88 +300,30 @@ export default class Form21 extends Component {
 	  this.state = {
 		data: props.data,
 		schema: _schema,
-		patients: [],
-		query: '',
 	  };
-
-	  this.search = this.search.bind(this);
-	  this.setQuery = this.setQuery.bind(this);
-	  this.patientSelected = this.patientSelected.bind(this);
 	}
   
 	componentDidUpdate() { }
   
 	handleForm(data) {
 	  const { schema } = this.state;
-	  this.setState({data: data}, () => {
+	  this.setState(data, () => {
 		this.props.handleChange(data, false);
 	  });
-	  this.forceUpdate();
-	}
-
-	setQuery(e) {
-		this.setState({query: e.target.value})
-	}
-
-	search() {
-		fetch(`/patientdata?query=${this.state.query}`).then((r) => {
-			if (r.ok) {
-				return r.json();
-			}
-		}).then((d) => {
-			let patients = [];
-			d.forEach((p) => {
-				patients.push(p.fields);
-			});
-			//this.setState(patients);
-			this.setState({patients: patients});
-			//this.forceUpdate();
-		}).catch((e) => {
-			console.error(e);
-		})
-	}
-
-	patientSelected(e) {
-		const {data} = this.state;
-		const pid = e.target.value;
-		const patient = this.state.patients.find((p) => {
-			return p.PatientId === pid;
-		});
-		let formData = {
-			...data,
-			GenderTextFR21: patient.gender,
-			AgeTextFR21: patient.age,
-			NameTextFR21: patient.PatientName,
-			IDTextFR21: patient.PatientId,
-			TestDateTextFR21: patient.TestDate,
-			ReportDateTextFR21: patient.ReportDate
-		}
-		this.handleForm(formData);
 	}
   
 	render() {
-	  const { data, schema, patients } = this.state;
+	  const { data, schema } = this.state;
 	  return (
-		<div>
-			<input type="text" placeholder="Enter name or Patient ID" onChange={this.setQuery}/> <button onClick={this.search}>Search</button>
-			{patients.length > 0 &&
-				<select id="patients" onChange={this.patientSelected}>
-					<option value="-1">-- Select Patient --</option>
-					{patients.map((p) => {
-						return <option value={p.PatientId} key={p.PatientId}>{p.PatientName} | ID: {p.PatientId}</option>;
-					})};	
-				</select>
-			}
-			<JsonForms
-			schema={schema}
-			uischema={uischema}
-			data={data}
-			renderers={materialRenderers}
-			cells={materialCells}
-			ValidationMode="ValidateAndShow"
-			onChange={({ data, _errors }) => this.handleForm(data)}
-			/>
-		</div>
+		<JsonForms
+		  schema={schema}
+		  uischema={uischema}
+		  data={data}
+		  renderers={materialRenderers}
+		  cells={materialCells}
+		  ValidationMode="ValidateAndShow"
+		  onChange={({ data, _errors }) => this.handleForm(data)}
+		/>
 	  );
 	}
 }
