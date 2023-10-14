@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-bbwrvz56rue-v#$jid)f!8^s1lxl5pih((3$+00ir7#=7t$jc*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','.ngrok.io']
-CSRF_TRUSTED_ORIGINS = ['https://127.0.0.1','https://78e0-2401-4900-1c67-1ed0-514c-d878-6891-4dcc.in.ngrok.io']
+ALLOWED_HOSTS = ['127.0.0.1','.ngrok.io', 'd3c7-2401-4900-4455-956b-6983-26f8-35ac-3f41.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://127.0.0.1','https://d3c7-2401-4900-4455-956b-6983-26f8-35ac-3f41.ngrok-free.app']
 
 # Application definition
 
@@ -77,13 +77,20 @@ WSGI_APPLICATION = 'authsysproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'DB1',
+#         'USER': 'postgres',
+#         'PASSWORD': 'aman@1229',
+#         'HOST': 'localhost'
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'DB1',
-        'USER': 'postgres',
-        'PASSWORD': 'aman@1229',
-        'HOST': 'localhost'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'sqlite.db',
     }
 }
 

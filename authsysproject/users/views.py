@@ -28,7 +28,7 @@ from django.shortcuts import HttpResponse
 from django.views import View
 import os
 import pickle
-from apiclient.discovery import build
+from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 import io
@@ -566,7 +566,8 @@ def GoogleDrive():
         service = build(API_NAME, API_VERSION, credentials=creds)
         return service
 
-    folder_id = '1RjxYJcv4vbv1WFfcUtCWm-qh0N3KRd0n'
+    # folder_id = '1RjxYJcv4vbv1WFfcUtCWm-qh0N3KRd0n'
+    folder_id = '1ejnci27e9p7Y7uk-huplMgWSqNGx6U30'
     service = create_service()
 
     existing_patient_ids = set(PatientDetails.objects.values_list('PatientId', flat=True))
@@ -681,43 +682,5 @@ def patientDetails(request):
         response = serialize("json", patients)
         response = json.loads(response)
         return JsonResponse(status=200, data=response, safe=False)
-    
-#Added by Aman at 05:46
-# def uploadcsv(request):
-#     if request.method == 'POST' and request.FILES['csv_file']:
-#         csv_file = request.FILES['csv_file']
-        
-#         field_names = ['PatientId', 'PatientName', 'age', 'gender', 'TestDate', 'ReportDate']
-        
-#         try:
-#             decoded_file = csv_file.read().decode('utf-8').splitlines()
-#             reader = csv.DictReader(decoded_file, fieldnames=field_names)
-            
-#             if reader.fieldnames == field_names:
-#                 next(reader)
-            
-#             for idx, row in enumerate(reader, start=2):  # Start at line 2 due to header skip
-#                 # Check for empty cells or cells starting with space
-#                 for field in field_names:
-#                     if not row[field]:
-#                         return HttpResponse(f'Error: Empty cell found in row {idx} for field {field}.')
-#                     if row[field].startswith(' '):
-#                         return HttpResponse(f'Error: Cell starting with space found in row {idx} for field {field}.')
-                
-#                 PatientDetails.objects.create(
-#                     PatientId=row['PatientId'],
-#                     PatientName=row['PatientName'],
-#                     age=row['age'],
-#                     gender=row['gender'].upper(),
-#                     TestDate=row['TestDate'],
-#                     ReportDate=row['ReportDate'],
-#                     # reportimage=row['reportimage'],
-#                 )
-            
-#             return HttpResponse('CSV file uploaded successfully.')
-#         except Exception as e:
-#             return HttpResponse(f'Error: {str(e)}')
-#     else:
-#         return render(request, 'users/uploadcsv.html')
 
 

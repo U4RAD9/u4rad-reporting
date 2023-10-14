@@ -11,18 +11,56 @@ export default class PopupCampECG extends React.Component {
       },
       err: false,
     };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleDone = this.handleDone.bind(this);
-  }
-
-  handleChange(data, err) {
-    if (!err) {
-      this.setState({ data }, () => this.props.handleData(data));
+    // this.handleChange = this.handleChange.bind(this);
+    // this.handleDone = this.handleDone.bind(this);
+    this.handleChange = (data, err) => {
+      if (!err) {
+        this.setState({ data }, () => this.props.handleData(data));
+      }
+  
+      this.setState({ err });
     }
-    
-
-    this.setState({ err });
+  
+    this.handleDone = () => {
+      const { data, err } = this.state;
+      // Rest of your code
+    }
   }
+
+  // handleSendWhatsAppMessage = () => {
+  //   const urlSearchParams = new URLSearchParams(window.location.search);
+  //   const patientId = urlSearchParams.get("data-patientid");
+  //   const patientName = urlSearchParams.get("data-patientname");
+
+  //   // Construct the WhatsApp message URL
+  //   const whatsappMessageURL = `https://api.whatsapp.com/send?text=Patient Name: ${patientName}%0AID: ${patientId}&phone=+919122878369`;
+
+  //   // Open the WhatsApp message link in a new tab
+  //   window.open(whatsappMessageURL, '_blank');
+  // };
+
+  handleSendWhatsAppMessage = () => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const patientId = urlSearchParams.get("data-patientid");
+    const patientName = urlSearchParams.get("data-patientname");
+    
+    // Construct the WhatsApp message URL
+    const phoneNumber = '+919122878369'; // Replace with the recipient's phone number
+    const message = `Please repeat ECG again of Patient Name: ${patientName}\nID: ${patientId}`;
+    const whatsappMessageURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    
+    // Try to open the WhatsApp chat window
+    const newWindow = window.open(whatsappMessageURL, '_blank');
+    
+    // Check if the new window was successfully opened
+    if (newWindow) {
+      newWindow.focus(); // Bring the window to the front
+    } else {
+      // Handle the case where the browser blocks pop-up windows
+      // You can display a message or provide an alternative way to contact the recipient.
+      alert('Please enable pop-ups to open WhatsApp chat.');
+    }
+  };
 
 
   handleDone() {
@@ -122,6 +160,15 @@ export default class PopupCampECG extends React.Component {
               onClick={this.handleDone}
             >
               Done
+            </button>
+            {/* Add a WhatsApp button */}
+            <button
+              type="button"
+              className="btn btn-danger"
+              style={{ margin: "9px" }}
+              onClick={this.handleSendWhatsAppMessage}
+            >
+              Reject
             </button>
           </div>
         </div>
