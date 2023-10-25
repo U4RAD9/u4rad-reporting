@@ -533,6 +533,7 @@ class Google(View):
 def GoogleDrive():
     # The file that contains the OAuth 2.0 credentials.
     CLIENT_SECRET_FILE = 'users/GoogleDriveAPI.json'
+    print(CLIENT_SECRET_FILE)
 
     # The name of the API and version of the API.
     API_NAME = 'drive'
@@ -542,17 +543,22 @@ def GoogleDrive():
     SCOPES = ['https://www.googleapis.com/auth/drive']
 
     def create_service():
+        print("at 1")
         # Create the credentials.
         creds = None
         if os.path.exists('token.pickle'):
+            print("at 2")
             with open('token.pickle', 'rb') as token:
                 creds = pickle.load(token)
 
         # If the credentials don't exist or are invalid, then create new ones.
         if not creds or not creds.valid:
+            print("at 3")
             if creds and creds.expired and creds.refresh_token:
+                print("at 4")
                 creds.refresh(Request())
             else:
+                print("at 5")
                 # Create the flow object.
                 flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, SCOPES)
 
@@ -564,17 +570,22 @@ def GoogleDrive():
                     pickle.dump(creds, token)
         # Create the service object.
         service = build(API_NAME, API_VERSION, credentials=creds)
+        print("at 5")
         return service
 
     # folder_id = '1RjxYJcv4vbv1WFfcUtCWm-qh0N3KRd0n'
     folder_id = '1ejnci27e9p7Y7uk-huplMgWSqNGx6U30'
+    print("at 6")
     service = create_service()
+    print("at 7")
 
     existing_patient_ids = set(PatientDetails.objects.values_list('PatientId', flat=True))
     fetch_patient_data_from_folder(service, folder_id, existing_patient_ids)
+    print("at 8")
 
 def fetch_patient_data_from_folder(service, folder_id, existing_patient_ids):
     prefix = "https://lh3.googleusercontent.com/d/"
+    print("at 8")
 
     stack = [(folder_id, None)]
     patient_data_by_date = {}
@@ -582,11 +593,13 @@ def fetch_patient_data_from_folder(service, folder_id, existing_patient_ids):
     while stack:
         current_folder_id, current_location_id = stack.pop()
         query = f"'{current_folder_id}' in parents and mimeType='application/vnd.google-apps.folder'"
+        print("at 9")
         subfolders = service.files().list(q=query).execute()
 
         for subfolder in subfolders.get('files', []):
             subfolder_id = subfolder['id']
             subfolder_name = subfolder['name']
+            print("at 10")
              
             # Process the subfolder even if it's not a known location
             stack.append((subfolder_id, subfolder_name))
