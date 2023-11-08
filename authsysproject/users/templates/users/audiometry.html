@@ -5,7 +5,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
 <script src="https://cdn.plot.ly/plotly-kaleido-latest.min.js"></script>
 <!-- Latest compiled and minified CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+/>
 <!-- Latest compiled JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <style>
@@ -119,6 +122,7 @@
 <div class="input-container">
   <label for="rightEarLevel">Right Ear Hearing Loss:</label>
   <select id="rightEarLevel">
+    <option value="Normal">Normal</option>
     <option value="Mild">Mild</option>
     <option value="Moderate">Moderate</option>
     <option value="Moderate-Severe">Moderate-Severe</option>
@@ -128,6 +132,7 @@
   <!-- Dropdown for left ear hearing loss level -->
   <label for="leftEarLevel">Left Ear Hearing Loss:</label>
   <select id="leftEarLevel">
+    <option value="Normal">Normal</option>
     <option value="Mild">Mild</option>
     <option value="Moderate">Moderate</option>
     <option value="Moderate-Severe">Moderate-Severe</option>
@@ -303,12 +308,12 @@
         // Capture the table content within the CKEditor div
         const ckEditorTable = document.querySelector("table");
         if (ckEditorTable) {
-          const ckEditorTableText = ckEditorTable.textContent || '';
+          const ckEditorTableText = ckEditorTable.textContent || "";
           // Adjust the font size as needed
           pdf.setFontSize(2);
           // Set the text color to white
           pdf.setTextColor(255, 255, 255);
-  
+
           // Calculate the Y coordinate for the text at the bottom of the page
           const yOffsetBottom = a4Height - 20;
           pdf.text(20, yOffsetBottom, ckEditorTableText);
@@ -415,7 +420,6 @@
       tickfont: {
         size: 8, // Set the ticktext font size to 8 (adjust as needed)
       },
-      
     },
     yaxis: {
       range: [120, -10],
@@ -446,7 +450,6 @@
       tickfont: {
         size: 8, // Set the ticktext font size to 8 (adjust as needed)
       },
-      
     },
     yaxis: {
       range: [120, -10],
@@ -545,7 +548,7 @@
         showlegend: false,
       },
     ];
-    
+
     Plotly.newPlot("myPlot", updatedLeftEarData, layout);
     Plotly.newPlot("myPlot2", updatedRightEarData, layout2);
 
@@ -555,12 +558,17 @@
 
     // Update the text below the graph based on user selections
     const hearingLossRText = document.getElementById("hearingLossRText");
-    if (leftEarLevel) {
+    if (leftEarLevel && leftEarLevel !== "Normal") {
       hearingLossRText.textContent = `${leftEarLevel} hearing loss in the left ear.`;
+    } else {
+      hearingLossRText.textContent = `${leftEarLevel} in left ear.`; // Clear the text if "Normal" is selected
     }
+
     const hearingLossLText = document.getElementById("hearingLossLText");
-    if (rightEarLevel) {
+    if (rightEarLevel && rightEarLevel !== "Normal") {
       hearingLossLText.textContent = `${rightEarLevel} hearing loss in the right ear.`;
+    } else {
+      hearingLossLText.textContent = `${rightEarLevel} in right ear.`; // Clear the text if "Normal" is selected
     }
   }
 
@@ -674,8 +682,10 @@
       document.getElementById("xAxis").textContent = selectedPatient.frquency;
       document.getElementById("rightEarY").value = selectedPatient.rightEarDB;
       document.getElementById("leftEarY").value = selectedPatient.leftEarDB;
-      document.getElementById("leftEarBoneY").value = selectedPatient.leftEarBoneDB;
-      document.getElementById("rightEarBoneY").value = selectedPatient.rightEarBoneDB;
+      document.getElementById("leftEarBoneY").value =
+        selectedPatient.leftEarBoneDB;
+      document.getElementById("rightEarBoneY").value =
+        selectedPatient.rightEarBoneDB;
     } else {
       // If patient data is not available, reset patient details
       resetPatientDetails();
