@@ -300,6 +300,20 @@
         pdf.text(20, yOffset + 10, hearingLossRText);
         pdf.text(20, yOffset + 20, hearingLossLText);
 
+        // Capture the table content within the CKEditor div
+        const ckEditorTable = document.querySelector("table");
+        if (ckEditorTable) {
+          const ckEditorTableText = ckEditorTable.textContent || '';
+          // Adjust the font size as needed
+          pdf.setFontSize(2);
+          // Set the text color to white
+          pdf.setTextColor(255, 255, 255);
+  
+          // Calculate the Y coordinate for the text at the bottom of the page
+          const yOffsetBottom = a4Height - 20;
+          pdf.text(20, yOffsetBottom, ckEditorTableText);
+        }
+
         // Reset the graph container dimensions to their original values
         document.getElementById("myPlot").style.width = "100%";
         document.getElementById("myPlot").style.height = "400px";
