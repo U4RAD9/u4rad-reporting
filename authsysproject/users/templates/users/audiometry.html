@@ -85,7 +85,13 @@
     bottom: 0;
     overflow: auto; /* Add scrollbars if content overflows */
   }
+  #logoutContainer {
+    position: absolute;
+    top: 20px; /* Adjust the top position as needed */
+    right: 20px; /* Adjust the right position as needed */
+  }
 </style>
+<div id="logoutContainer"><a href="{% url 'logout' %}" class="btn btn-danger">Logout</a></div>
 <div class="input-container">
   <div class="patient-details">
     <input
