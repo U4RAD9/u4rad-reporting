@@ -23,10 +23,12 @@ urlpatterns = [
     path('phone-exists', views.phoneExists, name='phoneexists'),
     path('patientdata', views.patientData, name='patientdata'),
     path('patientdetails', views.patientDetails, name='patientdetails'),
-    
+    path('audiopatientdata', views.audiopatientDetails, name='audiopatientdata'),
     path('uploadcsv', views.uploadcsv, name='uploadcsv'),
+    path('uploadcsvforaudio', views.uploadcsvforaudio, name='uploadcsvforaudio'),
     path('serviceslist', views.PersonalInfo, name='serviceslist'),
     path('allocation', views.allocation, name='allocation'),
+    path('audiometry', views.audiometry, name='audiometry'),
     path('fetch_patient_data', views.fetch_patient_data, name='fetch_patient_data'),
     path('googledrive/', views.Google.as_view(), name='upload_csv'),
 

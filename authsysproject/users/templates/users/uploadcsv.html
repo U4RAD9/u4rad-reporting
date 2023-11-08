@@ -7,6 +7,11 @@
         <input type="file" name="csv_file" accept=".csv">
         <button type="submit">Upload CSV</button>
     </form>
+    <form method="POST" enctype="multipart/form-data" action="{% url 'uploadcsvforaudio' %}">
+        {% csrf_token %}
+        <input type="file" name="csv_file" accept=".csv">
+        <button type="submit">Upload CSV for audio</button>
+    </form>
 </div>
 <a href="logout">Logout</a>
 {% endblock content %}

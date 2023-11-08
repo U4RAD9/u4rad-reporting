@@ -16,6 +16,7 @@ from users.models.reportingarea import ReportingArea as ReportingAreaModel
 from users.models.timeavailability import TimeAvailability as TimeAvailabilityModel
 from users.models.patientdata import PatientInfo as PatientInfo
 from users.models.patientdetails import PatientDetails as PatientDetails
+from users.models.audiopatientdata import audioPatientDetails
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -53,6 +54,8 @@ def login(request):
                 return redirect('proinst')
             elif group == 'cardiologist':
                 return redirect('allocation')
+            elif group == 'audiometrist':
+                return redirect('audiometry')
             else:
                 return redirect('reportingbot')
         else:
@@ -69,6 +72,11 @@ def logout(request):
 def allocation(request):
     patients = PatientDetails.objects.all()
     return render(request, 'users/allocation.html', {'patients': patients})
+
+
+@login_required
+def audiometry(request):
+    return render(request, 'users/audiometry.html')
 
 
 def regrdo(request):
@@ -434,6 +442,8 @@ def patientData(request):
         response = json.loads(response)
         return JsonResponse(status=200, data=response, safe=False)
     
+    
+    
 #Added by Aman at 05:46
 def uploadcsv(request):
     if request.method == 'POST' and request.FILES['csv_file']:
@@ -479,7 +489,62 @@ def uploadcsv(request):
     else:
         # return HttpResponse('Please upload a CSV file.')
         return render(request, 'users/uploadcsv.html')
-    #@login_required
+
+
+#audiometry******************************************
+def audiopatientDetails(request):
+    if request.method == 'GET':
+        query = request.GET.get('query', None)
+        patients = audioPatientDetails.objects.all()
+        if query is not None:
+            patients = patients.filter(Q(PatientId__icontains=query) | Q(PatientName__icontains=query))
+        # response = {"patients": patients}
+        response = serialize("json", patients)
+        response = json.loads(response)
+        return JsonResponse(status=200, data=response, safe=False)
+
+
+
+def uploadcsvforaudio(request):
+    if request.method == 'POST' and request.FILES['csv_file']:
+        csv_file = request.FILES['csv_file']
+        
+        # Adjust the field names according to your CSV file structure
+        field_names = ['PatientId', 'PatientName', 'age', 'gender', 'TestDate', 'ReportDate', 'leftEarDB', 'leftEarBoneDB', 'rightEarDB', 'rightEarBoneDB']
+        
+        try:
+            # Decode the CSV file data and split it into lines
+            decoded_file = csv_file.read().decode('utf-8').splitlines()
+            
+            # Parse the CSV data using the DictReader
+            reader = csv.DictReader(decoded_file, fieldnames=field_names)
+            
+            # Skip the header row if it exists
+            if reader.fieldnames == field_names:
+                next(reader)
+            
+            # Iterate over each row and insert into the PatientInfo table
+            for row in reader:
+                audioPatientDetails.objects.create(
+                    PatientId=row['PatientId'],
+                    PatientName=row['PatientName'],
+                    age=row['age'],
+                    gender=row['gender'],
+                    TestDate=row['TestDate'],
+                    ReportDate=row['ReportDate'],
+                    leftEarDB=row['leftEarDB'],
+                    leftEarBoneDB=row['leftEarBoneDB'],
+                    rightEarDB=row['rightEarDB'],
+                    rightEarBoneDB=row['rightEarBoneDB'],
+                )
+            
+            return HttpResponse('CSV file uploaded successfully.')
+        except Exception as e:
+            return HttpResponse(f'Error: {str(e)}')
+    else:
+        # return HttpResponse('Please upload a CSV file.')
+        return render(request, 'users/uploadcsv.html')
+             
 
 # ECG BOT***************************************************************
 def fetch_patient_data(request):
