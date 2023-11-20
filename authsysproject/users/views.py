@@ -510,7 +510,7 @@ def uploadcsvforaudio(request):
         csv_file = request.FILES['csv_file']
         
         # Adjust the field names according to your CSV file structure
-        field_names = ['PatientId', 'PatientName', 'age', 'gender', 'TestDate', 'ReportDate', 'leftEarDB', 'leftEarBoneDB', 'rightEarDB', 'rightEarBoneDB']
+        field_names = ['PatientId', 'PatientName', 'age', 'gender', 'TestDate', 'ReportDate', 'leftEarDB', 'leftEarBoneDB', 'rightEarDB', 'rightEarBoneDB', 'leftEarLevel', 'rightEarLevel']
         
         try:
             # Decode the CSV file data and split it into lines
@@ -536,6 +536,8 @@ def uploadcsvforaudio(request):
                     leftEarBoneDB=row['leftEarBoneDB'],
                     rightEarDB=row['rightEarDB'],
                     rightEarBoneDB=row['rightEarBoneDB'],
+                    rightEarLevel=row['rightEarLevel'],
+                    leftEarLevel=row['leftEarLevel'],
                 )
             
             return HttpResponse('CSV file uploaded successfully.')

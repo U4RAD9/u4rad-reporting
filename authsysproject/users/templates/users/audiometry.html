@@ -668,30 +668,27 @@
     document.getElementById("rightEarY").textContent = "";
     document.getElementById("leftEarBoneY").textContent = "";
     document.getElementById("rightEarBoneY").textContent = "";
+    document.getElementById("leftEarLevel").textContent = "";
+    document.getElementById("rightEarLevel").textContent = "";
   }
 
   function populatePatientDetails(selectedPatientId) {
     const selectedPatient = patientData[selectedPatientId];
     if (selectedPatient) {
       // Populate patient details based on the selected patient
-      document.getElementById("patientName").textContent =
-        selectedPatient.PatientName;
-      document.getElementById("patientID").textContent =
-        selectedPatient.PatientId;
+      document.getElementById("patientName").textContent = selectedPatient.PatientName;
+      document.getElementById("patientID").textContent = selectedPatient.PatientId;
       document.getElementById("patientAge").textContent = selectedPatient.age;
-      document.getElementById("patientGender").textContent =
-        selectedPatient.gender;
-      document.getElementById("testDate").textContent =
-        selectedPatient.TestDate;
-      document.getElementById("reportDate").textContent =
-        selectedPatient.ReportDate;
+      document.getElementById("patientGender").textContent = selectedPatient.gender;
+      document.getElementById("testDate").textContent = selectedPatient.TestDate;
+      document.getElementById("reportDate").textContent = selectedPatient.ReportDate;
       document.getElementById("xAxis").textContent = selectedPatient.frquency;
       document.getElementById("rightEarY").value = selectedPatient.rightEarDB;
       document.getElementById("leftEarY").value = selectedPatient.leftEarDB;
-      document.getElementById("leftEarBoneY").value =
-        selectedPatient.leftEarBoneDB;
-      document.getElementById("rightEarBoneY").value =
-        selectedPatient.rightEarBoneDB;
+      document.getElementById("leftEarBoneY").value = selectedPatient.leftEarBoneDB;
+      document.getElementById("rightEarBoneY").value = selectedPatient.rightEarBoneDB;
+      document.getElementById("leftEarLevel").value = selectedPatient.leftEarLevel;
+      document.getElementById("rightEarLevel").value = selectedPatient.rightEarLevel;
     } else {
       // If patient data is not available, reset patient details
       resetPatientDetails();
