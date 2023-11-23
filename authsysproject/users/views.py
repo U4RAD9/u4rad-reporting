@@ -510,7 +510,13 @@ def uploadcsvforaudio(request):
         csv_file = request.FILES['csv_file']
         
         # Adjust the field names according to your CSV file structure
-        field_names = ['PatientId', 'PatientName', 'age', 'gender', 'TestDate', 'ReportDate', 'leftEarDB', 'leftEarBoneDB', 'rightEarDB', 'rightEarBoneDB', 'leftEarLevel', 'rightEarLevel']
+        field_names = ['Timestamp', 'Name', 'Patient ID', 'Age', 'Gender', 'Left Air conduction DB 1 (250 Hz)', 'Left Air conduction DB 2 (500 Hz)', 'Left Air conduction DB 3 (1000 Hz)',
+                        'Left Air conduction DB 4 (2000 Hz)', 'Left Air conduction DB 5 (4000 Hz)', 'Left Air conduction DB 6 (8000 Hz)', 'Left Bone Conduction 1 (250 Hz)', 
+                        'Left Bone Conduction 2 (500 Hz)', 'Left Bone Conduction 3 (1000 Hz)', 'Left Bone Conduction 4 (2000 Hz)', 'Left Bone Conduction 5 (4000 Hz)', 
+                        'Right Air Conduction 1 (250 Hz)', 'Right Air Conduction 2 (500 Hz)', 'Right Air Conduction 3 (1000 Hz)', 'Right Air Conduction 4 (2000 Hz)', 
+                        'Right Air Conduction 5 (4000 Hz)', 'Right Air Conduction 6 (8000 Hz)', 'Right Bone Conduction 1 (250 Hz)', 'Right Bone Conduction 2 (500 Hz)', 
+                        'Right Bone Conduction 3 (1000 Hz)', 'Right Bone Conduction 4 (2000 Hz)', 'Right Bone Conduction 5 (4000 Hz)', 'Left Ear Finding', 'Right Ear Finding']
+        
         
         try:
             # Decode the CSV file data and split it into lines
@@ -525,19 +531,75 @@ def uploadcsvforaudio(request):
             
             # Iterate over each row and insert into the PatientInfo table
             for row in reader:
+                # Extract values for Left Air conduction DB columns
+                left_ear_db_values = [
+                    row['Left Air conduction DB 1 (250 Hz)'],
+                    row['Left Air conduction DB 2 (500 Hz)'],
+                    row['Left Air conduction DB 3 (1000 Hz)'],
+                    row['Left Air conduction DB 4 (2000 Hz)'],
+                    row['Left Air conduction DB 5 (4000 Hz)'],
+                    row['Left Air conduction DB 6 (8000 Hz)'],
+                ]
+
+                # Concatenate values with commas and store in leftEarDB field
+                left_ear_db_combined = ', '.join(left_ear_db_values)
+
+
+                # Extract values for Left Bone conduction DB columns
+                left_ear_bone_db_values = [
+                    row['Left Bone Conduction 1 (250 Hz)'],
+                    row['Left Bone Conduction 2 (500 Hz)'],
+                    row['Left Bone Conduction 3 (1000 Hz)'],
+                    row['Left Bone Conduction 4 (2000 Hz)'],
+                    row['Left Bone Conduction 5 (4000 Hz)'],
+                ]
+
+                # Concatenate values with commas and store in leftEarDB field
+                left_ear_bone_db_combined = ', '.join(left_ear_bone_db_values)
+
+                # Extract values for Right Air conduction DB columns
+                right_ear_db_values = [
+                    row['Right Air Conduction 1 (250 Hz)'],
+                    row['Right Air Conduction 2 (500 Hz)'],
+                    row['Right Air Conduction 3 (1000 Hz)'],
+                    row['Right Air Conduction 4 (2000 Hz)'],
+                    row['Right Air Conduction 5 (4000 Hz)'],
+                    row['Right Air Conduction 6 (8000 Hz)'],
+                ]
+
+                # Concatenate values with commas and store in leftEarDB field
+                right_ear_db_combined = ', '.join(right_ear_db_values)
+
+
+                # Extract values for Right Bone conduction DB columns
+                right_ear_bone_db_values = [
+                    row['Right Bone Conduction 1 (250 Hz)'],
+                    row['Right Bone Conduction 2 (500 Hz)'],
+                    row['Right Bone Conduction 3 (1000 Hz)'],
+                    row['Right Bone Conduction 4 (2000 Hz)'],
+                    row['Right Bone Conduction 5 (4000 Hz)'],
+                ]
+
+                # Concatenate values with commas and store in leftEarDB field
+                right_ear_bone_db_combined = ', '.join(right_ear_bone_db_values)
+
+                # Extract date from Timestamp
+                timestamp_str = row['Timestamp']
+                timestamp_date = datetime.strptime(timestamp_str, '%m/%d/%Y %H:%M').date()
+
                 audioPatientDetails.objects.create(
-                    PatientId=row['PatientId'],
-                    PatientName=row['PatientName'],
-                    age=row['age'],
-                    gender=row['gender'],
-                    TestDate=row['TestDate'],
-                    ReportDate=row['ReportDate'],
-                    leftEarDB=row['leftEarDB'],
-                    leftEarBoneDB=row['leftEarBoneDB'],
-                    rightEarDB=row['rightEarDB'],
-                    rightEarBoneDB=row['rightEarBoneDB'],
-                    rightEarLevel=row['rightEarLevel'],
-                    leftEarLevel=row['leftEarLevel'],
+                    PatientId=row['Patient ID'],
+                    PatientName=row['Name'],
+                    age=row['Age'],
+                    gender=row['Gender'],
+                    TestDate=timestamp_date,
+                    ReportDate=timestamp_date,
+                    leftEarDB=left_ear_db_combined,
+                    leftEarBoneDB=left_ear_bone_db_combined,
+                    rightEarDB=right_ear_db_combined,
+                    rightEarBoneDB=right_ear_bone_db_combined,
+                    rightEarLevel=row['Left Ear Finding'],
+                    leftEarLevel=row['Right Ear Finding'],
                 )
             
             return HttpResponse('CSV file uploaded successfully.')
