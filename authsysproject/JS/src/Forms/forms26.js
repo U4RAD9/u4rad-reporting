@@ -317,7 +317,7 @@ export default class Form26 extends Component {
   }
 
   search() {
-    fetch(`/patientdata?query=${this.state.query}`)
+    fetch(`/optopatientdata?query=${this.state.query}`)
       .then((r) => {
         if (r.ok) {
           return r.json();

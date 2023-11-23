@@ -17,6 +17,8 @@ from users.models.timeavailability import TimeAvailability as TimeAvailabilityMo
 from users.models.patientdata import PatientInfo as PatientInfo
 from users.models.patientdetails import PatientDetails as PatientDetails
 from users.models.audiopatientdata import audioPatientDetails
+from users.models.optopatientdata import optoPatientDetails
+from users.models.vitalpatientdata import vitalPatientDetails
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -430,6 +432,7 @@ def phoneExists(request):
         else:
             return JsonResponse(status=200, data=x is None, safe=False)
 
+#*************************************************** CSV Upload for General Purpose *******************************************************************
 @csrf_exempt
 def patientData(request):
     if request.method == 'GET':
@@ -445,6 +448,7 @@ def patientData(request):
     
     
 #Added by Aman at 05:46
+
 def uploadcsv(request):
     if request.method == 'POST' and request.FILES['csv_file']:
         csv_file = request.FILES['csv_file']
@@ -491,7 +495,7 @@ def uploadcsv(request):
         return render(request, 'users/uploadcsv.html')
 
 
-#audiometry******************************************
+#audiometry****************************************************************** CSV Upload ***************************************************************************
 def audiopatientDetails(request):
     if request.method == 'GET':
         query = request.GET.get('query', None)
@@ -584,16 +588,32 @@ def uploadcsvforaudio(request):
                 right_ear_bone_db_combined = ', '.join(right_ear_bone_db_values)
 
                 # Extract date from Timestamp
+                # timestamp_str = row['Timestamp']
+                # timestamp_date = datetime.strptime(timestamp_str, '%m/%d/%Y %H:%M:%S').date()
+                # timestamp_date = timestamp_date.strftime('%d/%m/%Y')
+
+
+                # Extract date and time from Timestamp
                 timestamp_str = row['Timestamp']
-                timestamp_date = datetime.strptime(timestamp_str, '%m/%d/%Y %H:%M').date()
+
+                try:
+                    # Try parsing with seconds included
+                    timestamp_datetime = datetime.strptime(timestamp_str, '%m/%d/%Y %H:%M:%S')
+                except ValueError:
+                    # If parsing with seconds fails, try without seconds
+                    timestamp_datetime = datetime.strptime(timestamp_str, '%m/%d/%Y %H:%M')
+
+                    # Extract only the date part and format it as day/month/year
+                timestamp_date = timestamp_datetime.date()
+                timestamp_date_str = timestamp_date.strftime('%d/%m/%Y')
 
                 audioPatientDetails.objects.create(
                     PatientId=row['Patient ID'],
                     PatientName=row['Name'],
                     age=row['Age'],
                     gender=row['Gender'],
-                    TestDate=timestamp_date,
-                    ReportDate=timestamp_date,
+                    TestDate=timestamp_date_str,
+                    ReportDate=timestamp_date_str,
                     leftEarDB=left_ear_db_combined,
                     leftEarBoneDB=left_ear_bone_db_combined,
                     rightEarDB=right_ear_db_combined,
@@ -608,6 +628,152 @@ def uploadcsvforaudio(request):
     else:
         # return HttpResponse('Please upload a CSV file.')
         return render(request, 'users/uploadcsv.html')
+    
+
+#optometry****************************************************************** CSV Upload ***************************************************************************
+def optopatientDetails(request):
+    if request.method == 'GET':
+        query = request.GET.get('query', None)
+        patients = optoPatientDetails.objects.all()
+        if query is not None:
+            patients = patients.filter(Q(PatientId__icontains=query) | Q(PatientName__icontains=query))
+        # response = {"patients": patients}
+        response = serialize("json", patients)
+        response = json.loads(response)
+        return JsonResponse(status=200, data=response, safe=False)
+
+
+
+def uploadcsvforopto(request):
+    if request.method == 'POST' and request.FILES['csv_file']:
+        csv_file = request.FILES['csv_file']
+        
+        # Adjust the field names according to your CSV file structure
+        field_names = ['Timestamp', 'Name', 'Patient ID', 'Age', 'Gender', 'Far vision right', 'Far vision left', 'Near vision right', 'Near vision left', 'Colour vision']
+        
+        
+        try:
+            # Decode the CSV file data and split it into lines
+            decoded_file = csv_file.read().decode('utf-8').splitlines()
+            
+            # Parse the CSV data using the DictReader
+            reader = csv.DictReader(decoded_file, fieldnames=field_names)
+            
+            # Skip the header row if it exists
+            if reader.fieldnames == field_names:
+                next(reader)
+            
+            # Iterate over each row and insert into the PatientInfo table
+            for row in reader:
+                
+                # Extract date and time from Timestamp
+                timestamp_str = row['Timestamp']
+
+                try:
+                    # Try parsing with seconds included
+                    timestamp_datetime = datetime.strptime(timestamp_str, '%m/%d/%Y %H:%M:%S')
+                except ValueError:
+                    # If parsing with seconds fails, try without seconds
+                    timestamp_datetime = datetime.strptime(timestamp_str, '%m/%d/%Y %H:%M')
+
+                    # Extract only the date part and format it as day/month/year
+                timestamp_date = timestamp_datetime.date()
+                timestamp_date_str = timestamp_date.strftime('%d/%m/%Y')
+
+                optoPatientDetails.objects.create(
+                    PatientId=row['Patient ID'],
+                    PatientName=row['Name'],
+                    age=row['Age'],
+                    gender=row['Gender'],
+                    TestDate=timestamp_date_str,
+                    ReportDate=timestamp_date_str,
+                    FarVisionRight=row['Far vision right'],
+                    FarVisionLeft=row['Far vision left'],
+                    NearVisionRight=row['Near vision right'],
+                    NearVisionLeft=row['Near vision left'],
+                    ColorBlindness=row['Colour vision'],
+                )
+            
+            return HttpResponse('CSV file uploaded successfully.')
+        except Exception as e:
+            return HttpResponse(f'Error: {str(e)}')
+    else:
+        # return HttpResponse('Please upload a CSV file.')
+        return render(request, 'users/uploadcsv.html')
+    
+
+
+#vital****************************************************************** CSV Upload ***************************************************************************
+def vitalpatientDetails(request):
+    if request.method == 'GET':
+        query = request.GET.get('query', None)
+        patients = vitalPatientDetails.objects.all()
+        if query is not None:
+            patients = patients.filter(Q(PatientId__icontains=query) | Q(PatientName__icontains=query))
+        # response = {"patients": patients}
+        response = serialize("json", patients)
+        response = json.loads(response)
+        return JsonResponse(status=200, data=response, safe=False)
+
+
+
+def uploadcsvforvital(request):
+    if request.method == 'POST' and request.FILES['csv_file']:
+        csv_file = request.FILES['csv_file']
+        
+        # Adjust the field names according to your CSV file structure
+        field_names = ['Timestamp', 'Patient Name', 'Patient ID', 'Age', 'Gender', 'BP', 'Pulse', 'Height', 'Weight']
+        
+        
+        try:
+            # Decode the CSV file data and split it into lines
+            decoded_file = csv_file.read().decode('utf-8').splitlines()
+            
+            # Parse the CSV data using the DictReader
+            reader = csv.DictReader(decoded_file, fieldnames=field_names)
+            
+            # Skip the header row if it exists
+            if reader.fieldnames == field_names:
+                next(reader)
+            
+            # Iterate over each row and insert into the PatientInfo table
+            for row in reader:
+                
+                # Extract date and time from Timestamp
+                timestamp_str = row['Timestamp']
+
+                try:
+                    # Try parsing with seconds included
+                    timestamp_datetime = datetime.strptime(timestamp_str, '%m/%d/%Y %H:%M:%S')
+                except ValueError:
+                    # If parsing with seconds fails, try without seconds
+                    timestamp_datetime = datetime.strptime(timestamp_str, '%m/%d/%Y %H:%M')
+
+                    # Extract only the date part and format it as day/month/year
+                timestamp_date = timestamp_datetime.date()
+                timestamp_date_str = timestamp_date.strftime('%d/%m/%Y')
+
+                vitalPatientDetails.objects.create(
+                    PatientId=row['Patient ID'],
+                    PatientName=row['Patient Name'],
+                    age=row['Age'],
+                    gender=row['Gender'],
+                    TestDate=timestamp_date_str,
+                    ReportDate=timestamp_date_str,
+                    height=row['Height'],
+                    weight=row['Weight'],
+                    blood=row['BP'],
+                    pulse=row['Pulse'],
+                )
+            
+            return HttpResponse('CSV file uploaded successfully.')
+        except Exception as e:
+            return HttpResponse(f'Error: {str(e)}')
+    else:
+        # return HttpResponse('Please upload a CSV file.')
+        return render(request, 'users/uploadcsv.html')    
+        
+            
              
 
 # ECG BOT***************************************************************

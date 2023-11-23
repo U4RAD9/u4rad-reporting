@@ -161,7 +161,7 @@ export default class Form24 extends Component {
   }
 
   search() {
-    fetch(`/patientdata?query=${this.state.query}`)
+    fetch(`/vitalpatientdata?query=${this.state.query}`)
       .then((r) => {
         if (r.ok) {
           return r.json();
