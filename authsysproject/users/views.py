@@ -17,7 +17,8 @@ from users.models.timeavailability import TimeAvailability as TimeAvailabilityMo
 from users.models.patientdata import PatientInfo as PatientInfo
 from users.models.patientdetails import PatientDetails as PatientDetails
 from users.models.audiopatientdata import audioPatientDetails
-from users.models.optometrydata import optometryDetails
+from users.models.optometrydata import optopatientDetails
+from users.models.vitalpatientdata import vitalPatientDetails
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -432,66 +433,66 @@ def phoneExists(request):
             return JsonResponse(status=200, data=x is None, safe=False)
 
 #*************************************************** CSV Upload for General Purpose *******************************************************************
-# @csrf_exempt
-# def patientData(request):
-#     if request.method == 'GET':
-#         query = request.GET.get('query', None)
-#         patients = PatientInfo.objects.all()
-#         if query is not None:
-#             patients = patients.filter(Q(PatientId__icontains=query) | Q(PatientName__icontains=query))
-#         # response = {"patients": patients}
-#         response = serialize("json", patients)
-#         response = json.loads(response)
-#         return JsonResponse(status=200, data=response, safe=False)
+@csrf_exempt
+def patientData(request):
+    if request.method == 'GET':
+        query = request.GET.get('query', None)
+        patients = PatientInfo.objects.all()
+        if query is not None:
+            patients = patients.filter(Q(PatientId__icontains=query) | Q(PatientName__icontains=query))
+        # response = {"patients": patients}
+        response = serialize("json", patients)
+        response = json.loads(response)
+        return JsonResponse(status=200, data=response, safe=False)
     
     
     
-# #Added by Aman at 05:46
+#Added by Aman at 05:46
 
-# def uploadcsv(request):
-#     if request.method == 'POST' and request.FILES['csv_file']:
-#         csv_file = request.FILES['csv_file']
+def uploadcsv(request):
+    if request.method == 'POST' and request.FILES['csv_file']:
+        csv_file = request.FILES['csv_file']
         
-#         # Adjust the field names according to your CSV file structure
-#         field_names = ['PatientId', 'PatientName', 'age', 'gender', 'TestDate', 'ReportDate', 'height', 'weight', 'blood', 'pulse', 'FarVisionRight', 'FarVisionLeft', 'NearVisionRight', 'NearVisionLeft', 'ColorBlindness']
+        # Adjust the field names according to your CSV file structure
+        field_names = ['PatientId', 'PatientName', 'age', 'gender', 'TestDate', 'ReportDate', 'height', 'weight', 'blood', 'pulse', 'FarVisionRight', 'FarVisionLeft', 'NearVisionRight', 'NearVisionLeft', 'ColorBlindness']
         
-#         try:
-#             # Decode the CSV file data and split it into lines
-#             decoded_file = csv_file.read().decode('utf-8').splitlines()
+        try:
+            # Decode the CSV file data and split it into lines
+            decoded_file = csv_file.read().decode('utf-8').splitlines()
             
-#             # Parse the CSV data using the DictReader
-#             reader = csv.DictReader(decoded_file, fieldnames=field_names)
+            # Parse the CSV data using the DictReader
+            reader = csv.DictReader(decoded_file, fieldnames=field_names)
             
-#             # Skip the header row if it exists
-#             if reader.fieldnames == field_names:
-#                 next(reader)
+            # Skip the header row if it exists
+            if reader.fieldnames == field_names:
+                next(reader)
             
-#             # Iterate over each row and insert into the PatientInfo table
-#             for row in reader:
-#                 PatientInfo.objects.create(
-#                     PatientId=row['PatientId'],
-#                     PatientName=row['PatientName'],
-#                     age=row['age'],
-#                     gender=row['gender'],
-#                     TestDate=row['TestDate'],
-#                     ReportDate=row['ReportDate'],
-#                     height=row['height'],
-#                     weight=row['weight'],
-#                     blood=row['blood'],
-#                     pulse=row['pulse'],
-#                     FarVisionRight=row['FarVisionRight'],
-#                     FarVisionLeft=row['FarVisionLeft'],
-#                     NearVisionRight=row['NearVisionRight'],
-#                     NearVisionLeft=row['NearVisionLeft'],
-#                     ColorBlindness=row['ColorBlindness'],
-#                 )
+            # Iterate over each row and insert into the PatientInfo table
+            for row in reader:
+                PatientInfo.objects.create(
+                    PatientId=row['PatientId'],
+                    PatientName=row['PatientName'],
+                    age=row['age'],
+                    gender=row['gender'],
+                    TestDate=row['TestDate'],
+                    ReportDate=row['ReportDate'],
+                    height=row['height'],
+                    weight=row['weight'],
+                    blood=row['blood'],
+                    pulse=row['pulse'],
+                    FarVisionRight=row['FarVisionRight'],
+                    FarVisionLeft=row['FarVisionLeft'],
+                    NearVisionRight=row['NearVisionRight'],
+                    NearVisionLeft=row['NearVisionLeft'],
+                    ColorBlindness=row['ColorBlindness'],
+                )
             
-#             return HttpResponse('CSV file uploaded successfully.')
-#         except Exception as e:
-#             return HttpResponse(f'Error: {str(e)}')
-#     else:
-#         # return HttpResponse('Please upload a CSV file.')
-#         return render(request, 'users/uploadcsv.html')
+            return HttpResponse('CSV file uploaded successfully.')
+        except Exception as e:
+            return HttpResponse(f'Error: {str(e)}')
+    else:
+        # return HttpResponse('Please upload a CSV file.')
+        return render(request, 'users/uploadcsv.html')
 
 
 #audiometry****************************************************************** CSV Upload ***************************************************************************
@@ -626,14 +627,14 @@ def uploadcsvforaudio(request):
             return HttpResponse(f'Error: {str(e)}')
     else:
         # return HttpResponse('Please upload a CSV file.')
-        return render(request, 'users/uploadcsv.html')    
-        
-            
+        return render(request, 'users/uploadcsv.html')
+    
+
 #optometry****************************************************************** CSV Upload ***************************************************************************
-def optometryData(request):
+def optopatientDetails(request):
     if request.method == 'GET':
         query = request.GET.get('query', None)
-        patients = optometryDetails.objects.all()
+        patients = optopatientDetails.objects.all()
         if query is not None:
             patients = patients.filter(Q(PatientId__icontains=query) | Q(PatientName__icontains=query))
         # response = {"patients": patients}
@@ -679,7 +680,7 @@ def uploadcsvforopto(request):
                 timestamp_date = timestamp_datetime.date()
                 timestamp_date_str = timestamp_date.strftime('%d/%m/%Y')
 
-                optometryDetails.objects.create(
+                optopatientDetails.objects.create(
                     PatientId=row['Patient ID'],
                     PatientName=row['Name'],
                     age=row['Age'],
@@ -698,7 +699,82 @@ def uploadcsvforopto(request):
             return HttpResponse(f'Error: {str(e)}')
     else:
         # return HttpResponse('Please upload a CSV file.')
-        return render(request, 'users/uploadcsv.html')             
+        return render(request, 'users/uploadcsv.html')
+    
+
+
+#vital****************************************************************** CSV Upload ***************************************************************************
+def vitalpatientDetails(request):
+    if request.method == 'GET':
+        query = request.GET.get('query', None)
+        patients = vitalPatientDetails.objects.all()
+        if query is not None:
+            patients = patients.filter(Q(PatientId__icontains=query) | Q(PatientName__icontains=query))
+        # response = {"patients": patients}
+        response = serialize("json", patients)
+        response = json.loads(response)
+        return JsonResponse(status=200, data=response, safe=False)
+
+
+
+def uploadcsvforvital(request):
+    if request.method == 'POST' and request.FILES['csv_file']:
+        csv_file = request.FILES['csv_file']
+        
+        # Adjust the field names according to your CSV file structure
+        field_names = ['Timestamp', 'Patient Name', 'Patient ID', 'Age', 'Gender', 'BP', 'Pulse', 'Height', 'Weight']
+        
+        
+        try:
+            # Decode the CSV file data and split it into lines
+            decoded_file = csv_file.read().decode('utf-8').splitlines()
+            
+            # Parse the CSV data using the DictReader
+            reader = csv.DictReader(decoded_file, fieldnames=field_names)
+            
+            # Skip the header row if it exists
+            if reader.fieldnames == field_names:
+                next(reader)
+            
+            # Iterate over each row and insert into the PatientInfo table
+            for row in reader:
+                
+                # Extract date and time from Timestamp
+                timestamp_str = row['Timestamp']
+
+                try:
+                    # Try parsing with seconds included
+                    timestamp_datetime = datetime.strptime(timestamp_str, '%m/%d/%Y %H:%M:%S')
+                except ValueError:
+                    # If parsing with seconds fails, try without seconds
+                    timestamp_datetime = datetime.strptime(timestamp_str, '%m/%d/%Y %H:%M')
+
+                    # Extract only the date part and format it as day/month/year
+                timestamp_date = timestamp_datetime.date()
+                timestamp_date_str = timestamp_date.strftime('%d/%m/%Y')
+
+                vitalPatientDetails.objects.create(
+                    PatientId=row['Patient ID'],
+                    PatientName=row['Patient Name'],
+                    age=row['Age'],
+                    gender=row['Gender'],
+                    TestDate=timestamp_date_str,
+                    ReportDate=timestamp_date_str,
+                    height=row['Height'],
+                    weight=row['Weight'],
+                    blood=row['BP'],
+                    pulse=row['Pulse'],
+                )
+            
+            return HttpResponse('CSV file uploaded successfully.')
+        except Exception as e:
+            return HttpResponse(f'Error: {str(e)}')
+    else:
+        # return HttpResponse('Please upload a CSV file.')
+        return render(request, 'users/uploadcsv.html')    
+        
+            
+             
 
 # ECG BOT***************************************************************
 def fetch_patient_data(request):

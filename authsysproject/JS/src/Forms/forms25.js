@@ -384,7 +384,7 @@ export default class Form25 extends Component {
   }
 
   search() {
-    fetch(`/optometrypatientdata?query=${this.state.query}`)
+    fetch(`/optometrydata?query=${this.state.query}`)
       .then((r) => {
         if (r.ok) {
           return r.json();
