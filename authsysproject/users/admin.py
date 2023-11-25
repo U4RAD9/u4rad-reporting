@@ -15,7 +15,7 @@ from .models.Location import Location
 from .models.workexp import WorkExp
 from .models.serviceslist import ServicesList
 from .models.audiopatientdata import audioPatientDetails
-from .models.optometrydata import optometryDetails
+from .models.optometrydata import optopatientDetails
 from .models.vitalpatientdata import vitalPatientDetails
 
 admin.site.register(PersonalInfo)
@@ -29,7 +29,7 @@ admin.site.register(InstitutionModalities)
 admin.site.register(PatientInfo)
 admin.site.register(PatientDetails)
 admin.site.register(audioPatientDetails)
-admin.site.register(optometryDetails)
+admin.site.register(optopatientDetails)
 admin.site.register(vitalPatientDetails)
 admin.site.register(City)
 admin.site.register(Client)
