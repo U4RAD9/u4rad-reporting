@@ -15,7 +15,7 @@ from .models.Location import Location
 from .models.workexp import WorkExp
 from .models.serviceslist import ServicesList
 from .models.audiopatientdata import audioPatientDetails
-from .models.optopatientdata import optoPatientDetails
+from .models.optometrypatientdata import optoPatientDetails
 from .models.vitalpatientdata import vitalPatientDetails
 
 admin.site.register(PersonalInfo)
