@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class optoPatientDetails(models.Model):
+class optometryDetails(models.Model):
     PatientId = models.CharField(max_length=50)
     PatientName = models.CharField(max_length=70)
     age = models.CharField(max_length=50)
