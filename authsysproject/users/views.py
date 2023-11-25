@@ -17,7 +17,7 @@ from users.models.timeavailability import TimeAvailability as TimeAvailabilityMo
 from users.models.patientdata import PatientInfo as PatientInfo
 from users.models.patientdetails import PatientDetails as PatientDetails
 from users.models.audiopatientdata import audioPatientDetails
-from users.models.optopatientdata import optoPatientDetails
+from users.models.optometrypatientdata import optoPatientDetails
 from users.models.vitalpatientdata import vitalPatientDetails
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt

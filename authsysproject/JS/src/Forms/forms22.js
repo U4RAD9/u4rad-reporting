@@ -2751,7 +2751,7 @@ export default class Form22 extends Component {
   }
 
   search() {
-    fetch(`/optopatientdata?query=${this.state.query}`)
+    fetch(`/optometrypatientdata?query=${this.state.query}`)
       .then((r) => {
         if (r.ok) {
           return r.json();
