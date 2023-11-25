@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models.personalinfo import PersonalInfo
+# from .models.personalinfo import PersonalInfo
 from .models.qualificationdetails import QualificationDetails
 from .models.bankinginfo import BankingInfo
 from .models.reportingarea import ReportingArea
@@ -17,7 +17,7 @@ from .models.workexp import WorkExp
 from .models.serviceslist import ServicesList
 from .models.audiopatientdata import audioPatientDetails
 
-admin.site.register(PersonalInfo)
+# admin.site.register(PersonalInfo)
 admin.site.register(WorkExp)
 admin.site.register(QualificationDetails)
 admin.site.register(BankingInfo)

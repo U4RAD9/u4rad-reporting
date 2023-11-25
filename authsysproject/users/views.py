@@ -432,66 +432,66 @@ def phoneExists(request):
             return JsonResponse(status=200, data=x is None, safe=False)
 
 #*************************************************** CSV Upload for General Purpose *******************************************************************
-@csrf_exempt
-def patientData(request):
-    if request.method == 'GET':
-        query = request.GET.get('query', None)
-        patients = PatientInfo.objects.all()
-        if query is not None:
-            patients = patients.filter(Q(PatientId__icontains=query) | Q(PatientName__icontains=query))
-        # response = {"patients": patients}
-        response = serialize("json", patients)
-        response = json.loads(response)
-        return JsonResponse(status=200, data=response, safe=False)
+# @csrf_exempt
+# def patientData(request):
+#     if request.method == 'GET':
+#         query = request.GET.get('query', None)
+#         patients = PatientInfo.objects.all()
+#         if query is not None:
+#             patients = patients.filter(Q(PatientId__icontains=query) | Q(PatientName__icontains=query))
+#         # response = {"patients": patients}
+#         response = serialize("json", patients)
+#         response = json.loads(response)
+#         return JsonResponse(status=200, data=response, safe=False)
     
     
     
-#Added by Aman at 05:46
+# #Added by Aman at 05:46
 
-def uploadcsv(request):
-    if request.method == 'POST' and request.FILES['csv_file']:
-        csv_file = request.FILES['csv_file']
+# def uploadcsv(request):
+#     if request.method == 'POST' and request.FILES['csv_file']:
+#         csv_file = request.FILES['csv_file']
         
-        # Adjust the field names according to your CSV file structure
-        field_names = ['PatientId', 'PatientName', 'age', 'gender', 'TestDate', 'ReportDate', 'height', 'weight', 'blood', 'pulse', 'FarVisionRight', 'FarVisionLeft', 'NearVisionRight', 'NearVisionLeft', 'ColorBlindness']
+#         # Adjust the field names according to your CSV file structure
+#         field_names = ['PatientId', 'PatientName', 'age', 'gender', 'TestDate', 'ReportDate', 'height', 'weight', 'blood', 'pulse', 'FarVisionRight', 'FarVisionLeft', 'NearVisionRight', 'NearVisionLeft', 'ColorBlindness']
         
-        try:
-            # Decode the CSV file data and split it into lines
-            decoded_file = csv_file.read().decode('utf-8').splitlines()
+#         try:
+#             # Decode the CSV file data and split it into lines
+#             decoded_file = csv_file.read().decode('utf-8').splitlines()
             
-            # Parse the CSV data using the DictReader
-            reader = csv.DictReader(decoded_file, fieldnames=field_names)
+#             # Parse the CSV data using the DictReader
+#             reader = csv.DictReader(decoded_file, fieldnames=field_names)
             
-            # Skip the header row if it exists
-            if reader.fieldnames == field_names:
-                next(reader)
+#             # Skip the header row if it exists
+#             if reader.fieldnames == field_names:
+#                 next(reader)
             
-            # Iterate over each row and insert into the PatientInfo table
-            for row in reader:
-                PatientInfo.objects.create(
-                    PatientId=row['PatientId'],
-                    PatientName=row['PatientName'],
-                    age=row['age'],
-                    gender=row['gender'],
-                    TestDate=row['TestDate'],
-                    ReportDate=row['ReportDate'],
-                    height=row['height'],
-                    weight=row['weight'],
-                    blood=row['blood'],
-                    pulse=row['pulse'],
-                    FarVisionRight=row['FarVisionRight'],
-                    FarVisionLeft=row['FarVisionLeft'],
-                    NearVisionRight=row['NearVisionRight'],
-                    NearVisionLeft=row['NearVisionLeft'],
-                    ColorBlindness=row['ColorBlindness'],
-                )
+#             # Iterate over each row and insert into the PatientInfo table
+#             for row in reader:
+#                 PatientInfo.objects.create(
+#                     PatientId=row['PatientId'],
+#                     PatientName=row['PatientName'],
+#                     age=row['age'],
+#                     gender=row['gender'],
+#                     TestDate=row['TestDate'],
+#                     ReportDate=row['ReportDate'],
+#                     height=row['height'],
+#                     weight=row['weight'],
+#                     blood=row['blood'],
+#                     pulse=row['pulse'],
+#                     FarVisionRight=row['FarVisionRight'],
+#                     FarVisionLeft=row['FarVisionLeft'],
+#                     NearVisionRight=row['NearVisionRight'],
+#                     NearVisionLeft=row['NearVisionLeft'],
+#                     ColorBlindness=row['ColorBlindness'],
+#                 )
             
-            return HttpResponse('CSV file uploaded successfully.')
-        except Exception as e:
-            return HttpResponse(f'Error: {str(e)}')
-    else:
-        # return HttpResponse('Please upload a CSV file.')
-        return render(request, 'users/uploadcsv.html')
+#             return HttpResponse('CSV file uploaded successfully.')
+#         except Exception as e:
+#             return HttpResponse(f'Error: {str(e)}')
+#     else:
+#         # return HttpResponse('Please upload a CSV file.')
+#         return render(request, 'users/uploadcsv.html')
 
 
 #audiometry****************************************************************** CSV Upload ***************************************************************************
