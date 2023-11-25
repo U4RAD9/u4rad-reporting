@@ -14,5 +14,7 @@ class optoPatientDetails(models.Model):
     NearVisionLeft = models.CharField(max_length=50, null=True, default=None, blank=True)
     ColorBlindness = models.CharField(max_length=50, null=True, default=None, blank=True)
 
+    # def __str__(self):
+    #     return self.PatientId
     def __str__(self):
-        return self.PatientId
+          return f"Patient ID: {self.PatientId}, Patient Name: {self.PatientName}"
