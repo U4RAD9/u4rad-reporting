@@ -556,6 +556,13 @@ class XrayKnee extends Component {
       this.getImpression(impression, totalCovidPoints) +
       this.getCorads(current_user); // TO BE ADDED
 
+
+      if (frmData.reportimage) {
+        report += "<div class='image-container'>" +
+          "<img src='" + frmData.reportimage + "' alt='Report' class='report-image' />" +
+          "</div>";
+      }
+
     this.setState({ reportFrmData: report }, () => {
       this.props.generateReport(report);
     });

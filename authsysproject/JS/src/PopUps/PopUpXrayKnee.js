@@ -136,6 +136,24 @@ export default class PopUpXrayKnee extends React.Component {
   // event handling methods go here
   render() {
     const { data, handleClick, name } = this.props;
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const patientId = urlSearchParams.get("data-patientid");
+    const patientName = urlSearchParams.get("data-patientname");
+    const age = urlSearchParams.get("data-age");
+    const gender = urlSearchParams.get("data-gender");
+    const testDate = urlSearchParams.get("data-testdate");
+    const reportDate = urlSearchParams.get("data-reportdate");
+    const reportimage = urlSearchParams.get("data-reportimage");
+
+    const formData = {
+      NameTextFR15: patientName,
+      IDTextFR15: patientId,
+      AgeTextFR15: age,
+      GenderTextFR15: gender,
+      TestDateTextFR15: testDate,
+      ReportDateTextFR15: reportDate,
+      reportimage: reportimage,
+    };
     return (
       <Modal visible={true} onClickBackdrop={this.modalBackdropClicked}>
         <div className="modal-header">

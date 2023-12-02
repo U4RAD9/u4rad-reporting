@@ -19,6 +19,8 @@ from users.models.patientdetails import PatientDetails as PatientDetails
 from users.models.audiopatientdata import audioPatientDetails
 from users.models.optometrydata import optopatientDetails
 from users.models.vitalpatientdata import vitalPatientDetails
+from users.models.DICOMData import DICOMData
+from users.forms import DICOMDataForm
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -30,6 +32,12 @@ import csv
 from django.shortcuts import HttpResponse
 from django.views import View
 import os
+import pydicom
+from pydicom import dcmread
+import matplotlib.pyplot as plt
+from pydicom.data import get_testdata_files
+from PIL import Image
+from io import BytesIO
 import pickle
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -56,6 +64,8 @@ def login(request):
                 return redirect('proinst')
             elif group == 'cardiologist':
                 return redirect('allocation')
+            elif group == 'cardiologist2':
+                return redirect('xrayallocation')
             elif group == 'audiometrist':
                 return redirect('audiometry')
             else:
@@ -75,6 +85,9 @@ def allocation(request):
     patients = PatientDetails.objects.all()
     return render(request, 'users/allocation.html', {'patients': patients})
 
+def xrayallocation(request):
+    patients = DICOMData.objects.all()
+    return render(request, 'users/xrayallocation.html', {'patients': patients})
 
 @login_required
 def audiometry(request):
@@ -990,5 +1003,57 @@ def patientDetails(request):
         response = serialize("json", patients)
         response = json.loads(response)
         return JsonResponse(status=200, data=response, safe=False)
+
+
+def upload_dicom(request):
+    if request.method == 'POST':
+        form = DICOMDataForm(request.POST, request.FILES)
+        if form.is_valid():
+            dicom_instance = form.save(commit=False)
+
+            # Save the instance to get the DICOM file path
+            dicom_instance.save()
+
+            # Extract metadata
+            dicom_data = dcmread(dicom_instance.dicom_file.path)
+            dicom_instance.patient_name = str(dicom_data.PatientName)
+            dicom_instance.patient_id = str(dicom_data.PatientID)
+            # Additional fields
+            dicom_instance.age = dicom_data.PatientAge
+            # dicom_instance.gender = dicom_data.PatientSex
+            # Convert 'M' to 'Male' and 'F' to 'Female'
+            dicom_instance.gender = 'Male' if dicom_data.PatientSex.upper() == 'M' else 'Female'
+
+            # Format the study_date as "date/month/year"
+            if dicom_data.StudyDate:
+                datetime_obj = datetime.strptime(dicom_data.StudyDate, "%Y%m%d")
+                dicom_instance.study_date = datetime_obj.strftime("%d/%m/%Y")
+            else:
+                dicom_instance.study_date = None
+
+            dicom_instance.study_description = str(dicom_data.StudyDescription)
+
+            # Convert DICOM image to JPEG-compatible format
+            pixel_data = dicom_data.pixel_array
+            if dicom_data.BitsAllocated == 16:
+                pixel_data = pixel_data.astype('uint16')  # Convert to 16-bit unsigned integer
+                pixel_data = pixel_data >> (dicom_data.BitsStored - 8)  # Right-shift to 8-bit
+
+            # Convert DICOM image to JPEG and save
+            with BytesIO() as output:
+                Image.fromarray(pixel_data).convert('L').save(output, format='JPEG')  # 'L' for grayscale
+
+                # Save the JPEG file
+                dicom_instance.jpeg_file.save(f"{dicom_data.SOPInstanceUID}.jpg", content=BytesIO(output.getvalue()))
+
+            # Update and save the instance with metadata
+            dicom_instance.save()
+
+            return HttpResponse("Image upload")  # Replace 'upload_success' with the name of your success page
+
+    else:
+        form = DICOMDataForm()
+
+    return render(request, 'users/upload_dicom.html', {'form': form})        
 
 

@@ -267,6 +267,24 @@ export default class PopUpXrayChest extends React.Component {
   // event handling methods go here
   render() {
     const { data, handleClick, name } = this.props;
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const patientId = urlSearchParams.get("data-patientid");
+    const patientName = urlSearchParams.get("data-patientname");
+    const age = urlSearchParams.get("data-age");
+    const gender = urlSearchParams.get("data-gender");
+    const testDate = urlSearchParams.get("data-testdate");
+    const reportDate = urlSearchParams.get("data-reportdate");
+    const reportimage = urlSearchParams.get("data-reportimage");
+
+    const formData = {
+      NameTextFR2: patientName,
+      IDTextFR2: patientId,
+      AgeTextFR2: age,
+      GenderTextFR2: gender,
+      TestDateTextFR2: testDate,
+      ReportDateTextFR2: reportDate,
+      reportimage: reportimage,
+    };
     return (
 
       <Modal visible={true} onClickBackdrop={this.modalBackdropClicked}>
