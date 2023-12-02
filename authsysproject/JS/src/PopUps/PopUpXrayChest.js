@@ -265,6 +265,32 @@ export default class PopUpXrayChest extends React.Component {
   }
 
   // event handling methods go here
+  // render() {
+  //   const { data, handleClick, name } = this.props;
+  //   return (
+
+  //     <Modal visible={true} onClickBackdrop={this.modalBackdropClicked}>
+
+  //       <div className="modal-header">
+  //         <h5 className="modal-title">{name}</h5>
+  //         <div>
+  //           <button type="button" className="btn btn-secondary" onClick={() => window.location.reload()}>Back</button>
+  //           <button type="button" className="btn btn-primary" style={{ margin: '9px' }} onClick={this.handleDone}>Done</button>
+  //         </div>
+
+  //       </div>
+
+
+  //       <div className="modal-body">
+  //         <Form2 data={data} handleChange={this.handleChange} />
+  //       </div>
+  //       <div className="modal-footer">
+  //       </div>
+  //     </Modal>
+  //   );
+  // }
+
+  // event handling methods go here
   render() {
     const { data, handleClick, name } = this.props;
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -285,24 +311,45 @@ export default class PopUpXrayChest extends React.Component {
       ReportDateTextFR2: reportDate,
       reportimage: reportimage,
     };
+    
     return (
-
       <Modal visible={true} onClickBackdrop={this.modalBackdropClicked}>
-
         <div className="modal-header">
           <h5 className="modal-title">{name}</h5>
           <div>
-            <button type="button" className="btn btn-secondary" onClick={() => window.location.reload()}>Back</button>
-            <button type="button" className="btn btn-primary" style={{ margin: '9px' }} onClick={this.handleDone}>Done</button>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => window.location.reload()}
+            >
+              Back
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              style={{ margin: "9px" }}
+              onClick={this.handleDone}
+            >
+              Done
+            </button>
+            {/* Add a WhatsApp button */}
+            <button
+              type="button"
+              className="btn btn-danger"
+              style={{ margin: "9px" }}
+              onClick={this.handleSendWhatsAppMessage}
+            >
+              Reject
+            </button>
           </div>
-
         </div>
-
-
         <div className="modal-body">
-          <Form2 data={data} handleChange={this.handleChange} />
-        </div>
-        <div className="modal-footer">
+          <Form2 data={formData} handleChange={this.handleChange} />
+          {reportimage && (
+            <div className="image-container">
+              <img src={reportimage} alt="Report" className="report-image" />
+            </div>
+          )}
         </div>
       </Modal>
     );

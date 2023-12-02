@@ -13,12 +13,14 @@ export default class PopUpXrayKnee extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleDone = this.handleDone.bind(this);
+    
   }
 
   handleChange(data, err) {
     if (!err) {
       this.setState({ data }, () => this.props.handleData(data));
     }
+
     this.setState({ err });
   }
   handleDone() {
@@ -154,19 +156,45 @@ export default class PopUpXrayKnee extends React.Component {
       ReportDateTextFR15: reportDate,
       reportimage: reportimage,
     };
+    
     return (
       <Modal visible={true} onClickBackdrop={this.modalBackdropClicked}>
         <div className="modal-header">
           <h5 className="modal-title">{name}</h5>
           <div>
-            <button type="button" className="btn btn-secondary" onClick={() => window.location.reload()}>Back</button>
-            <button type="button" className="btn btn-primary" style={{ margin: '9px' }} onClick={this.handleDone}>Done</button>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => window.location.reload()}
+            >
+              Back
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              style={{ margin: "9px" }}
+              onClick={this.handleDone}
+            >
+              Done
+            </button>
+            {/* Add a WhatsApp button */}
+            <button
+              type="button"
+              className="btn btn-danger"
+              style={{ margin: "9px" }}
+              onClick={this.handleSendWhatsAppMessage}
+            >
+              Reject
+            </button>
           </div>
         </div>
         <div className="modal-body">
-          <Form15 data={data} handleChange={this.handleChange} />
-        </div>
-        <div className="modal-footer">
+          <Form15 data={formData} handleChange={this.handleChange} />
+          {reportimage && (
+            <div className="image-container">
+              <img src={reportimage} alt="Report" className="report-image" />
+            </div>
+          )}
         </div>
       </Modal>
     );
