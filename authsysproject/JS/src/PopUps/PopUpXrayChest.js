@@ -11,15 +11,26 @@ export default class PopUpXrayChest extends React.Component {
       },
       err: false,
     };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleDone = this.handleDone.bind(this);
+    // this.handleChange = this.handleChange.bind(this);
+    // this.handleDone = this.handleDone.bind(this);
+    this.handleChange = (data, err) => {
+      if (!err) {
+        this.setState({ data }, () => this.props.handleData(data));
+      }
+  
+      this.setState({ err });
+    }
+  
+    this.handleDone = () => {
+      const { data, err } = this.state;
+      // Rest of your code
+    }
   }
 
-  handleChange(data, err) {
-    if (!err) {
-      this.setState({ data }, () => this.props.handleData(data));
-    }
-
+  // ***********************************************************************************
+  handleDone() {
+    const { data, err } = this.state;
+    console.log("======data", data);
 
     if (data.opacities) {
       if (data.opacitiesType) {
@@ -35,20 +46,7 @@ export default class PopUpXrayChest extends React.Component {
         });
       }
     }
-    // if (data.rightCostophrenicAngle) {
-    //   if (data.rightCostophrenicAngle === 'Obliterated' || data.rightObliteratedType) {
-    //     document.querySelectorAll('label[id^="#/properties/rightCostophrenicAngle"]').forEach((el) => {
-    //       el.classList.remove("err");
-    //     });
-    //   }
-    // }
-    // if (data.leftCostophrenicAngle) {
-    //   if (data.leftObliteratedType) {
-    //     document.querySelectorAll('label[id^="#/properties/leftCostophrenicAngle"]').forEach((el) => {
-    //       el.classList.remove("err");
-    //     });
-    //   }
-    // }
+
     if (data.pneumothorax) {
       if (data.pneumothoraxL || data.pneumothoraxR) {
         document.querySelectorAll('label[id^="#/properties/pneumothorax"]').forEach((el) => {
@@ -71,15 +69,6 @@ export default class PopUpXrayChest extends React.Component {
         el.classList.remove("err");
       });
     }
-
-
-    this.setState({ err });
-  }
-
-  // ***********************************************************************************
-  handleDone() {
-    const { data, err } = this.state;
-    console.log("======data", data);
 
     if (!data.XrayTypes) {
       document.querySelectorAll('label[id^="#/properties/XrayTypes"]').forEach((el) => {
