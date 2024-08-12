@@ -1,0 +1,1225 @@
+{% extends 'users/base.html' %} {% load static %} {% block content %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js" async></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-kaleido-latest.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Latest compiled and minified CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+<!-- Latest compiled JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+  /* Styles for the container holding the charts */
+  .chart-container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 100vw;
+  }
+
+  /* Styles for each chart */
+  .chart {
+    width: 200px;
+    /* Reduced chart width */
+    height: 150px;
+    /* Reduced chart height */
+  }
+
+  /* Styles for the input container */
+  /* .input-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+  } */
+
+  /* Styles for the input fields */
+
+  /* Styles for the buttons */
+  button {
+    width: 120px;
+    /* Set button width */
+    padding: 5px;
+    /* Add some padding */
+    margin-top: 10px;
+    /* Add space between buttons */
+  }
+
+  /* Styles for the patient details table */
+  table {
+    margin-top: 20px;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+
+  .point.cross {
+    transform: rotate(45deg);
+  }
+
+  /* CSS for the A4-sized canvas div */
+  .a4-canvas {
+    position: absolute;
+    width: 210mm;
+    /* A4 width in millimeters */
+    height: 297mm;
+    /* A4 height in millimeters */
+    right: 0px;
+    /* Center the div horizontally */
+    background-color: white;
+    /* Background color of the canvas */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    /* Box shadow for the canvas */
+  }
+
+  /* Additional styling for content within the canvas */
+  .a4-canvas-content {
+    padding: 20px;
+    /* Padding for the content within the canvas */
+    position: absolute;
+    /* Position the content absolutely within the canvas */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    /* Add scrollbars if content overflows */
+  }
+
+  #logoutContainer {
+    position: absolute;
+    top: 20px;
+    /* Adjust the top position as needed */
+    right: 20px;
+    /* Adjust the right position as needed */
+  }
+
+  .container {
+    left: 0;
+  }
+
+  .loader {
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    display: none;
+    /* Initially hidden */
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .notification {
+    background-color: #4caf50;
+    color: white;
+    text-align: center;
+    padding: 16px;
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    display: none;
+    /* Initially hidden */
+  }
+
+  .hidden {
+    color: white;
+  }
+
+  .label2 {
+    width: 100px;
+  }
+
+  .label1 {
+    width: 300px;
+  }
+
+  #csv {
+    margin-top: 10px;
+    margin-right: 0px;
+  }
+
+  #rowCount {
+    position: absolute;
+    top: 20px;
+    /* Adjust the top position as needed */
+    left: 50%;
+    color: white;
+    font-weight: bold;
+    /* Adjust the right position as needed */
+  }
+
+  .error-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+
+  .error-card {
+    width: 700px; /* adjust width as needed */
+    height: 500px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* shadow effect */
+    z-index: 999;
+  }
+
+  .card-header {
+    padding: 10px;
+    background-color: #f8f9fa; /* light gray */
+    border-bottom: 1px solid #dee2e6; /* border color */
+  }
+
+  .card-footer {
+    margin: 5px;
+    background-color: #f8f9fa; /* light gray */
+    border-bottom: 1px solid #dee2e6; /* border color */
+  }
+
+  .card-body {
+    padding: 10px;
+    width: 700px;
+    height: 500px;
+    overflow-y: auto;
+    background-color: #f8f9fa; /* light gray */
+    border-bottom: 1px solid #dee2e6; /* border color */
+  }
+
+  .card-title {
+    margin-bottom: 0;
+  }
+</style>
+<div id="logoutContainer">
+  <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+</div>
+
+
+
+<div class="loader"></div>
+<div id="notification" class="notification">PDF successfully uploaded!</div>
+
+{% if messages %}
+<div class="error-overlay">
+  <div class="error-card">
+    <div class="card-header center">
+      <h5 class="card-title text-center">Notification</h5>
+    </div>
+    <div class="card-body">
+      <ul class="messages">
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="card-footer text-center">
+      <button onclick="dismissError()" class="btn btn-primary center">OK</button>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<div id="rowCount">
+  <p>Total number of Patients: {{ patients|length }}</p>
+</div>
+<div class="row container mt-2">
+  <div class="col-lg-6 col-sm-12 mb-3">
+    <div class="input-container">
+      <form method="POST" id="tools" action="{% url 'add_patient_audio' %}">
+        {% csrf_token %}
+        <div class="row mb-3">
+          <div class="col">
+            <input class="form-control" type="text" name="PatientName" placeholder="Patient Name" required>
+          </div>
+          <div class="col">
+            <input class="form-control" type="text" name="PatientId" placeholder="Patient ID" required>
+          </div>
+          <div class="col">
+            <input class="form-control" type="text" name="age" placeholder="Age" required>
+          </div>
+          <div class="col">
+            <input class="form-control" type="text" name="gender" placeholder="Gender" required>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <input class="form-control" type="text" name="TestDate" placeholder="Test Date" required>
+          </div>
+          <div class="col">
+            <input class="form-control" type="text" name="ReportDate" placeholder="Report Date" required>
+          </div>
+          <div class="col">
+            <input class="form-control" type="text" name="rightEarDB" placeholder="Right Ear Air Conduction" required>
+          </div>
+          <div class="col">
+            <input class="form-control" type="text" name="leftEarDB" placeholder="Left Ear Air Conduction" required>
+          </div>
+        </div>
+        <div class="row  mb-3">
+
+          <div class="col">
+            <input class="form-control" type="text" name="rightEarBoneDB" placeholder="Right Ear Bone Conduction"
+              required>
+          </div>
+          <div class="col">
+            <input class="form-control" type="text" name="leftEarBoneDB" placeholder="Left Ear Bone Conduction"
+              required>
+          </div>
+          <div class="col">
+            <input class="form-control" type="text" name="rightEarLevel" placeholder="Right Ear Level" required>
+          </div>
+          <div class="col">
+            <input class="form-control" type="text" name="leftEarLevel" placeholder="Left Ear Level" required>
+          </div>
+          <div class="col">
+            <input class="form-control" type="text" id="xAxis" value="250,500,1000,2000,4000,8000" />
+          </div>
+        </div>
+        <div class="row">
+          <!-- Add input fields for other patient attributes as needed -->
+          <button id="add_patient" class="btn btn-success col-lg-12" type="submit">Add Patient</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Dropdown for right ear hearing loss level -->
+
+    <div class="row">
+      <div class="col-lg-8" id="tools">
+        <form class="row" method="POST" enctype="multipart/form-data" action="{% url 'uploadcsvforaudio' %}">
+          {% csrf_token %}
+          <div class="col-lg-8" id="csv">
+            <input class="form-control" type="file" name="csv_file" accept=".csv" />
+          </div>
+          <div class="col-lg-4">
+            <button class="btn btn-success" type="submit">Upload</button>
+          </div>
+        </form>
+      </div>
+      <div class="col-lg-2" id="tools">
+        <button class="btn btn-success" onclick="startDownload()">Start</button>
+      </div>
+      <div class="col-lg-2" id="tools">
+        <form method="post" action="{% url 'delete_all_patients_audio' %}">
+          {% csrf_token %}
+          <button class="btn btn-danger" type="submit">Delete</button>
+        </form>
+      </div>
+      <!-- <div class="col-lg-2" id="tools">
+        <button class="btn btn-primary" onclick="GetDivContentOnPDF()">Download</button>
+      </div> -->
+      <!-- <div class="col">
+        <button class="btn btn-danger" onclick="uploadGeneratedPDF()">Upload PDF</button>
+      </div> -->
+    </div>
+    <form class="mt-2">
+      <h5 class="mt-3 mb-3" style="text-align: center">Audiometry Patient List</h5>
+      <ul>
+        {% for patient in patients %}
+        <li style="list-style: none">
+          <input type="checkbox" class="patientCheckbox" onchange="displaySelectedData(this)" />
+          <label class="label1">{{ patient.PatientName }}</label>
+          <label class="label2">{{ patient.PatientId }}</label>
+          <label class="label2">{{ patient.age }}</label>
+          <label class="label2">{{ patient.gender }}</label>
+          <label class="hidden label2">{{ patient.TestDate }}</label>
+          <label class="hidden label2">{{ patient.ReportDate }}</label>
+          <label class="hidden label2">{{ patient.leftEarDB }}</label>
+          <label class="hidden label2">{{ patient.leftEarBoneDB }}</label>
+          <label class="hidden label2">{{ patient.rightEarDB }}</label>
+          <label class="hidden label2">{{ patient.rightEarBoneDB }}</label>
+          <label class="hidden label2">{{ patient.rightEarLevel }}</label>
+          <label class="hidden label2">{{ patient.leftEarLevel }}</label>
+        </li>
+        {% endfor %}
+      </ul>
+    </form>
+  </div>
+  <div class="col col-lg-6 col-sm-12 mb-3">
+    <div class="a4-canvas">
+      <div class="a4-canvas-content">
+        <div class="content">
+          <div class="container-fluid">
+            <table id="patientTable">
+              <tr>
+                <th>Name</th>
+                <td id="patientName"></td>
+                <th>Patient ID</th>
+                <td id="patientID"></td>
+                <th>Age</th>
+                <td id="patientAge"></td>
+              </tr>
+              <tr>
+                <th>Gender</th>
+                <td id="patientGender"></td>
+                <th>Test date</th>
+                <td id="testDate"></td>
+                <th>Report date</th>
+                <td id="reportDate"></td>
+              </tr>
+            </table>
+          </div>
+          <br />
+          <br />
+          <div class="row">
+            <div class="col-sm-12">
+              <div id="myPlotWrapper">
+                <div id="myPlot" style="width: 100%; max-width: 700px"></div>
+              </div>
+              <br />
+              <br />
+            </div>
+            <div class="col-sm-12">
+              <div id="myPlotWrapper">
+                <div id="myPlot2" style="width: 100%; max-width: 700px"></div>
+              </div>
+            </div>
+            <br />
+            <br />
+          </div>
+          <br />
+          <br />
+          <b>
+            <p>Finding:</p>
+          </b>
+          <b>
+            <p id="hearingLossRText"></p>
+          </b>
+          <b>
+            <p id="hearingLossLText"></p>
+          </b>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  //Here I'm creating filename using Patient ID and Patient Name***************************************************************
+  function createFilename() {
+    var patientName = document.getElementById("patientName")?.innerHTML;
+    console.log(patientName);
+    var PatientId = document.getElementById("patientID")?.innerHTML;
+    console.log(PatientId);
+    var filename = [patientName, PatientId];
+    console.log(filename);
+    if (
+      patientName == undefined ||
+      patientName == null ||
+      PatientId == undefined
+    ) {
+      filename = ["Patient", "0"];
+      console.log("here");
+    } else {
+      filename = [
+        PatientId.replace("Patient ID:", "").replace(" ", "_"),
+        patientName.replace("Name: ", ""),
+      ];
+      console.log("here ok");
+    }
+
+    filename = filename.filter(Boolean).join("_").toUpperCase();
+    filename = filename.replace(/^_/, ""); // Remove leading underscore if present
+    return filename;
+    console.log("ok");
+  }
+  //Here I'm converting HTML content to pdf and downloading it*****************************************************************
+  function GetDivContentOnPDF(callback) {
+    const filename = createFilename();
+    const a4Width = 210; // A4 width in millimeters
+    const a4Height = 297; // A4 height in millimeters
+    const graphWidth = 80; // Reduced width for each graph
+    const graphHeight = 100; // Reduced height for each graph
+    const tableTopMargin = 30; // Increased margin above the table
+    const tableHeight = 25; // Adjusted table height
+
+    // Reduce the graph width and height for side-by-side display
+    document.getElementById("myPlot").style.width = graphWidth + "mm";
+    document.getElementById("myPlot").style.height = graphHeight + "mm";
+    document.getElementById("myPlot2").style.width = graphWidth + "mm";
+    document.getElementById("myPlot2").style.height = graphHeight + "mm";
+
+    // Wait for Plotly to render the graphs
+    Promise.all([
+      Plotly.toImage("myPlot", {
+        format: "png",
+        width: graphWidth * 4,
+        height: graphHeight * 4,
+      }),
+      Plotly.toImage("myPlot2", {
+        format: "png",
+        width: graphWidth * 4,
+        height: graphHeight * 4,
+      }),
+    ]).then(function ([url1, url2]) {
+      const pdf = new jsPDF("p", "mm", [a4Width, a4Height]);
+      pdf.setFontSize(5); // Set the font size to 10
+
+      // Capture the table content and findings
+      html2canvas(document.getElementById("patientTable"), {
+        scale: 10,
+      }).then((tableCanvas) => {
+        const tableImgData = tableCanvas.toDataURL("image/png", 1.0);
+        pdf.addImage(
+          tableImgData,
+          "PNG",
+          10,
+          tableTopMargin,
+          a4Width - 20,
+          tableHeight
+        );
+
+        // Add the first graph as an image to the PDF
+        pdf.addImage(
+          url1,
+          "PNG",
+          0,
+          tableHeight + tableTopMargin + 10,
+          graphWidth * 1.6,
+          graphHeight
+        );
+
+        // Add the second graph as an image next to the first one
+        pdf.addImage(
+          url2,
+          "PNG",
+          100,
+          tableHeight + tableTopMargin + 10,
+          graphWidth * 1.6,
+          graphHeight
+        );
+
+        // Set the font size for the finding text
+        pdf.setFontSize(12); // Adjust the font size as needed
+
+        const findingText = "Finding:";
+        const hearingLossRText =
+          document.getElementById("hearingLossRText").innerText;
+        const hearingLossLText =
+          document.getElementById("hearingLossLText").innerText;
+
+        const yOffset = tableHeight + tableTopMargin + graphHeight + 40; // Adjust the Y coordinate
+        pdf.text(20, yOffset, findingText);
+        pdf.text(20, yOffset + 10, hearingLossRText);
+        pdf.text(20, yOffset + 20, hearingLossLText);
+
+        // Capture the table content within the CKEditor div
+        const ckEditorTable = document.querySelector("table");
+        if (ckEditorTable) {
+          const ckEditorTableText = ckEditorTable.textContent || "";
+          // Adjust the font size as needed
+          pdf.setFontSize(2);
+          // Set the text color to white
+          pdf.setTextColor(255, 255, 255);
+
+          // Calculate the Y coordinate for the text at the bottom of the page
+          const yOffsetBottom = a4Height - 20;
+          pdf.text(20, yOffsetBottom, ckEditorTableText);
+        }
+
+        // Reset the graph container dimensions to their original values
+        document.getElementById("myPlot").style.width = "100%";
+        document.getElementById("myPlot").style.height = "400px";
+        document.getElementById("myPlot2").style.width = "100%";
+        document.getElementById("myPlot2").style.height = "400px";
+
+        // Trigger the download of the PDF
+        pdf.save(filename + ".pdf");
+
+        console.log("PDF downloaded to the device.");
+        // Execute the callback function once PDF generation is complete
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+      });
+    });
+  }
+
+  ////////////////////////////////////////////////////////////////// Upload Audiometry As PDF //////////////////////////////////////////////////////////////////////////
+
+  function formatDate(dateString) {
+    // Assuming the date string format is 'YYYY-MM-DD'
+    const [year, month, day] = dateString.split("-");
+    return `${year}-${month}-${day}`;
+  }
+
+  function uploadGeneratedPDF() {
+    // Show loader
+    const loader = document.querySelector(".loader");
+    loader.style.display = "block";
+
+    // Fetch CSRF token
+    fetch("/get-csrf-token/")
+      .then((response) => response.json())
+      .then((data) => {
+        const csrfToken = data.csrf_token;
+
+        const patientId = document.getElementById("patientID").innerText;
+        const patientName = document.getElementById("patientName").innerText;
+
+        const reportDateElement = document.getElementById("reportDate");
+        const testDateElement = document.getElementById("testDate");
+
+        // Check if date elements exist and have valid text
+        if (!reportDateElement || !testDateElement) {
+          console.error("Date elements not found.");
+          return;
+        }
+
+        const reportDateText = reportDateElement.innerText.trim();
+        const testDateText = testDateElement.innerText.trim();
+
+        console.log("Report date text:", reportDateText);
+        console.log("Test date text:", testDateText);
+
+        // Validate date strings
+        if (!reportDateText || !testDateText) {
+          console.error("Date strings are empty.");
+          return;
+        }
+
+        const reportDate = formatDate(reportDateText);
+        const testDate = formatDate(testDateText);
+
+        const filename = createFilename();
+        const a4Width = 210; // A4 width in millimeters
+        const a4Height = 297; // A4 height in millimeters
+        const graphWidth = 80; // Reduced width for each graph
+        const graphHeight = 100; // Reduced height for each graph
+        const tableTopMargin = 30; // Increased margin above the table
+        const tableHeight = 25; // Adjusted table height
+
+        // Reduce the graph width and height for side-by-side display
+        document.getElementById("myPlot").style.width = graphWidth + "mm";
+        document.getElementById("myPlot").style.height = graphHeight + "mm";
+        document.getElementById("myPlot2").style.width = graphWidth + "mm";
+        document.getElementById("myPlot2").style.height = graphHeight + "mm";
+
+        // Wait for Plotly to render the graphs
+        Promise.all([
+          Plotly.toImage("myPlot", {
+            format: "png",
+            width: graphWidth * 4,
+            height: graphHeight * 4,
+          }),
+          Plotly.toImage("myPlot2", {
+            format: "png",
+            width: graphWidth * 4,
+            height: graphHeight * 4,
+          }),
+        ]).then(function ([url1, url2]) {
+          const pdf = new jsPDF("p", "mm", [a4Width, a4Height]);
+          pdf.setFontSize(5); // Set the font size to 10
+
+          // Capture the table content and findings
+          html2canvas(document.getElementById("patientTable"), {
+            scale: 10,
+          }).then((tableCanvas) => {
+            const tableImgData = tableCanvas.toDataURL("image/png", 1.0);
+            pdf.addImage(
+              tableImgData,
+              "PNG",
+              10,
+              tableTopMargin,
+              a4Width - 20,
+              tableHeight
+            );
+
+            // Add the first graph as an image to the PDF
+            pdf.addImage(
+              url1,
+              "PNG",
+              0,
+              tableHeight + tableTopMargin + 10,
+              graphWidth * 1.6,
+              graphHeight
+            );
+
+            // Add the second graph as an image next to the first one
+            pdf.addImage(
+              url2,
+              "PNG",
+              100,
+              tableHeight + tableTopMargin + 10,
+              graphWidth * 1.6,
+              graphHeight
+            );
+
+            // Set the font size for the finding text
+            pdf.setFontSize(12); // Adjust the font size as needed
+
+            const findingText = "Finding:";
+            const hearingLossRText =
+              document.getElementById("hearingLossRText").innerText;
+            const hearingLossLText =
+              document.getElementById("hearingLossLText").innerText;
+
+            const yOffset = tableHeight + tableTopMargin + graphHeight + 40; // Adjust the Y coordinate
+            pdf.text(20, yOffset, findingText);
+            pdf.text(20, yOffset + 10, hearingLossRText);
+            pdf.text(20, yOffset + 20, hearingLossLText);
+
+            // Capture the table content within the CKEditor div
+            const ckEditorTable = document.querySelector("table");
+            if (ckEditorTable) {
+              const ckEditorTableText = ckEditorTable.textContent || "";
+              // Adjust the font size as needed
+              pdf.setFontSize(2);
+              // Set the text color to white
+              pdf.setTextColor(255, 255, 255);
+
+              // Calculate the Y coordinate for the text at the bottom of the page
+              const yOffsetBottom = a4Height - 20;
+              pdf.text(20, yOffsetBottom, ckEditorTableText);
+            }
+
+            // Reset the graph container dimensions to their original values
+            document.getElementById("myPlot").style.width = "100%";
+            document.getElementById("myPlot").style.height = "400px";
+            document.getElementById("myPlot2").style.width = "100%";
+            document.getElementById("myPlot2").style.height = "400px";
+
+            // Convert the PDF to a blob
+            const blob = pdf.output("blob");
+
+            // Create a FormData object
+            const formData = new FormData();
+            formData.append("pdf", blob, filename + ".pdf");
+            formData.append("patientId", patientId);
+            formData.append("patientName", patientName);
+            formData.append("reportDate", reportDate);
+            formData.append("testDate", testDate);
+            formData.append("csrfmiddlewaretoken", csrfToken); // Include CSRF token
+
+            // Example of uploading with fetch API
+            fetch("upload_audiometry_pdf/", {
+              method: "POST",
+              body: formData,
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error("Network response was not ok");
+                }
+                return response.json();
+              })
+              .then((data) => {
+                console.log("PDF uploaded:", data);
+
+                // Hide loader
+                loader.style.display = "none";
+
+                // Show notification
+                const notification = document.getElementById("notification");
+                notification.style.display = "block";
+
+                // Reload page after 1 second
+                setTimeout(() => {
+                  window.location.reload(true);
+                }, 1000);
+              })
+              .catch((error) => {
+                console.error("Error uploading PDF:", error);
+                // Hide loader in case of error
+                loader.style.display = "none";
+              });
+          });
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching CSRF token:", error);
+      });
+  }
+
+  ////////////////////////////////// Upload Audiometry PDF without IMAGE (END) ////////////////////////
+
+  // Function to convert a data URL to a Blob
+  function dataURLtoBlob(dataURL) {
+    const arr = dataURL.split(",");
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime });
+  }
+</script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<script>
+  // Function to adjust frequency values based on the specified rules*********************************
+  function adjustFrequencyValues(inputData) {
+    const adjustedData = [];
+    for (const value of inputData) {
+      if (value <= 125) {
+        adjustedData.push(value);
+      } else if (value <= 250) {
+        adjustedData.push(value);
+      } else if (value <= 500) {
+        adjustedData.push(value - 125);
+      } else if (value <= 1000) {
+        adjustedData.push(value - 500);
+      } else if (value <= 2000) {
+        adjustedData.push(value - 1375);
+      } else if (value <= 4000) {
+        adjustedData.push(value - 3250);
+      } else if (value <= 8000) {
+        adjustedData.push(value - 7125);
+      } else if (value <= 12000) {
+        adjustedData.push(value - 11000);
+      }
+    }
+    return adjustedData;
+  }
+  // Initialize the plots with default data
+  const xAxis = [];
+  const leftEarY = [];
+  const rightEarY = [];
+
+  const leftEarData = [
+    {
+      title: "Left Ear",
+      x: xAxis,
+      y: leftEarY,
+      mode: "lines+markers",
+      marker: {
+        symbol: "x-thin",
+        size: 10,
+        line: { width: 2, color: "blue" },
+      },
+    },
+  ];
+
+  const rightEarData = [
+    {
+      x: xAxis,
+      y: rightEarY,
+      mode: "lines+markers",
+      marker: {
+        symbol: "circle-open",
+        size: 10,
+        line: { width: 2, color: "red" },
+      },
+    },
+  ];
+
+  const yTickVals = [-10, 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]; // Consistent tick values
+
+  const layout = {
+    xaxis: {
+      range: [0, 1000],
+      title: "Frequency (Fz)",
+      tickvals: [0, 125, 250, 375, 500, 625, 750, 875, 1000],
+      ticktext: ["0", "125", "250", "500", "1k", "2k", "4k", "8k", "12k"],
+      gridcolor: "black", // Set the grid lines color to black
+      width: "20px",
+      showspikes: false,
+      showlegend: false,
+      tickfont: {
+        size: 8, // Set the ticktext font size to 8 (adjust as needed)
+      },
+    },
+    yaxis: {
+      range: [120, -10],
+      title: "Decibel (db)",
+      tickvals: yTickVals,
+      ticktext: yTickVals.map(String), // Use the tick values as labels
+      gridcolor: "black", // Set the grid lines color to black
+      showspikes: false,
+      showlegend: false,
+      tickfont: {
+        size: 8, // Set the ticktext font size to 8 (adjust as needed)
+      },
+    },
+    // Add title for the graph
+    title: "Left Ear Graph",
+  };
+
+  const layout2 = {
+    xaxis: {
+      range: [0, 1000],
+      title: "Frequency (Fz)",
+      tickvals: [0, 125, 250, 375, 500, 625, 750, 875, 1000],
+      ticktext: ["0", "125", "250", "500", "1k", "2k", "4k", "8k", "12k"],
+      gridcolor: "black", // Set the grid lines color to black
+      width: "20px",
+      showspikes: false,
+      showlegend: false,
+      tickfont: {
+        size: 8, // Set the ticktext font size to 8 (adjust as needed)
+      },
+    },
+    yaxis: {
+      range: [120, -10],
+      title: "Decibel (db)",
+      tickvals: yTickVals,
+      ticktext: yTickVals.map(String), // Use the tick values as labels
+      gridcolor: "black", // Set the grid lines color to black
+      showspikes: false,
+      showlegend: false,
+      tickfont: {
+        size: 8, // Set the ticktext font size to 8 (adjust as needed)
+      },
+    },
+    // Add title for the graph
+    title: "Right Ear Graph",
+  };
+
+  Plotly.newPlot("myPlot", leftEarData, layout, {
+    modeBarButtonsToRemove: [-"2D"],
+  });
+  Plotly.newPlot("myPlot2", rightEarData, layout2, {
+    modeBarButtonsToRemove: ["toImage"],
+  });
+
+  ////////////////////////////////////// added on 28-03/12:53 //////////////////////////////
+
+  function startDownload() {
+    var checkboxes = document.querySelectorAll(".patientCheckbox");
+    var index = 0;
+
+    function selectNextCheckbox() {
+      if (index < checkboxes.length) {
+        checkboxes[index].checked = true;
+        checkboxes[index].dispatchEvent(new Event("change")); // Manually trigger the change event
+        GetDivContentOnPDF(function () {
+          // Callback function to be executed after PDF generation is complete
+          setTimeout(function () {
+            index++; // Move to the next checkbox
+            selectNextCheckbox(); // Call the function recursively for the next checkbox
+          }, 100); // Delay before selecting the next checkbox
+        });
+      } else {
+        console.log("All data downloaded");
+      }
+    }
+    selectNextCheckbox();
+  }
+
+  function displaySelectedData(checkbox) {
+    if (checkbox.checked) {
+      const listItem = checkbox.closest("li");
+      const patientDetails = {
+        PatientName: listItem.querySelector(".label1:nth-child(2)").textContent,
+        PatientId: listItem.querySelector(".label2:nth-child(3)").textContent,
+        age: listItem.querySelector(".label2:nth-child(4)").textContent,
+        gender: listItem.querySelector(".label2:nth-child(5)").textContent,
+        TestDate: listItem.querySelector(".label2:nth-child(6)").textContent,
+        ReportDate: listItem.querySelector(".label2:nth-child(7)").textContent,
+        leftEarY: listItem
+          .querySelector(".label2:nth-child(8)")
+          .textContent.split(",")
+          .map(Number),
+        rightEarY: listItem
+          .querySelector(".label2:nth-child(10)")
+          .textContent.split(",")
+          .map(Number),
+        leftEarBoneY: listItem
+          .querySelector(".label2:nth-child(9)")
+          .textContent.split(",")
+          .map(Number),
+        rightEarBoneY: listItem
+          .querySelector(".label2:nth-child(11)")
+          .textContent.split(",")
+          .map(Number),
+        leftEarLevel: listItem.querySelector(".label2:nth-child(13)")
+          .textContent,
+        rightEarLevel: listItem.querySelector(".label2:nth-child(12)")
+          .textContent,
+      };
+      populatePatientDetails(patientDetails);
+      updateEarPlots(patientDetails);
+    }
+  }
+
+  // Function to update both Ear plots
+  // function updateEarPlots() {
+  //   const xAxis = document.getElementById("xAxis").value.split(",").map(Number);
+  //   const leftEarY = document
+  //     .getElementById("leftEarY")
+  //     .value.split(",")
+  //     .map(Number);
+  //   const rightEarY = document
+  //     .getElementById("rightEarY")
+  //     .value.split(",")
+  //     .map(Number);
+  //   const leftEarBoneY = document
+  //     .getElementById("leftEarBoneY")
+  //     .value.split(",")
+  //     .map(Number);
+  //   const rightEarBoneY = document
+  //     .getElementById("rightEarBoneY")
+  //     .value.split(",")
+  //     .map(Number);
+  //   const adjustedXAxis = adjustFrequencyValues(xAxis);
+
+  //   const updatedLeftEarData = [
+  //     {
+  //       x: adjustedXAxis,
+  //       y: leftEarY,
+  //       mode: "lines+markers",
+  //       line: { color: "blue" },
+  //       marker: {
+  //         symbol: "x-thin",
+  //         size: 10,
+  //         line: { width: 2, color: "blue" },
+  //       },
+  //       showlegend: false,
+  //     },
+  //     {
+  //       x: adjustedXAxis,
+  //       y: leftEarBoneY,
+  //       mode: "lines+markers",
+  //       line: { color: "blue" },
+  //       marker: {
+  //         symbol: "y-left",
+  //         size: 10,
+  //         line: { width: 2, color: "blue" },
+  //       },
+  //       showlegend: false,
+  //     },
+  //   ];
+
+  //   const updatedRightEarData = [
+  //     {
+  //       x: adjustedXAxis,
+  //       y: rightEarY,
+  //       mode: "lines+markers",
+  //       line: { color: "red" },
+  //       marker: {
+  //         symbol: "circle-open",
+  //         size: 10,
+  //         line: { width: 2, color: "red" },
+  //       },
+  //       showlegend: false,
+  //     },
+  //     {
+  //       x: adjustedXAxis,
+  //       y: rightEarBoneY,
+  //       mode: "lines+markers",
+  //       line: { color: "red" },
+  //       marker: {
+  //         symbol: "y-right",
+  //         size: 10,
+  //         line: { width: 2, color: "red" },
+  //       },
+  //       showlegend: false,
+  //     },
+  //   ];
+
+  //   Plotly.newPlot("myPlot", updatedLeftEarData, layout);
+  //   Plotly.newPlot("myPlot2", updatedRightEarData, layout2);
+
+  //   // Get selected hearing loss levels from dropdown menus
+  //   const leftEarLevel = document.getElementById("leftEarLevel").value;
+  //   const rightEarLevel = document.getElementById("rightEarLevel").value;
+
+  //   // Update the text below the graph based on user selections
+  //   const hearingLossRText = document.getElementById("hearingLossRText");
+  //   if (leftEarLevel && leftEarLevel !== "Normal") {
+  //     hearingLossRText.textContent = `${leftEarLevel} hearing loss in the left ear.`;
+  //   } else {
+  //     hearingLossRText.textContent = `${leftEarLevel} in left ear.`; // Clear the text if "Normal" is selected
+  //   }
+
+  //   const hearingLossLText = document.getElementById("hearingLossLText");
+  //   if (rightEarLevel && rightEarLevel !== "Normal") {
+  //     hearingLossLText.textContent = `${rightEarLevel} hearing loss in the right ear.`;
+  //   } else {
+  //     hearingLossLText.textContent = `${rightEarLevel} in right ear.`; // Clear the text if "Normal" is selected
+  //   }
+  // }
+
+  function updateEarPlots(patientDetails) {
+    const xAxis = document.getElementById("xAxis").value.split(",").map(Number);
+    const adjustedXAxis = adjustFrequencyValues(xAxis);
+
+    const updatedLeftEarData = [
+      {
+        x: adjustedXAxis,
+        y: patientDetails.leftEarY,
+        mode: "lines+markers",
+        line: { color: "blue" },
+        marker: {
+          symbol: "x-thin",
+          size: 10,
+          line: { width: 2, color: "blue" },
+        },
+        showlegend: false,
+      },
+      {
+        x: adjustedXAxis,
+        y: patientDetails.leftEarBoneY,
+        mode: "lines+markers",
+        line: { color: "blue" },
+        marker: {
+          symbol: "y-left",
+          size: 10,
+          line: { width: 2, color: "blue" },
+        },
+        showlegend: false,
+      },
+    ];
+
+    const updatedRightEarData = [
+      {
+        x: adjustedXAxis,
+        y: patientDetails.rightEarY,
+        mode: "lines+markers",
+        line: { color: "red" },
+        marker: {
+          symbol: "circle-open",
+          size: 10,
+          line: { width: 2, color: "red" },
+        },
+        showlegend: false,
+      },
+      {
+        x: adjustedXAxis,
+        y: patientDetails.rightEarBoneY,
+        mode: "lines+markers",
+        line: { color: "red" },
+        marker: {
+          symbol: "y-right",
+          size: 10,
+          line: { width: 2, color: "red" },
+        },
+        showlegend: false,
+      },
+    ];
+
+    Plotly.newPlot("myPlot", updatedLeftEarData, layout);
+    Plotly.newPlot("myPlot2", updatedRightEarData, layout2);
+
+    // Update the text below the graph based on user selections
+    const hearingLossRText = document.getElementById("hearingLossRText");
+    if (
+      patientDetails.leftEarLevel &&
+      patientDetails.leftEarLevel !== "Normal"
+    ) {
+      hearingLossRText.textContent = `${patientDetails.leftEarLevel} hearing loss in the left ear.`;
+    } else {
+      hearingLossRText.textContent = `${patientDetails.leftEarLevel} in left ear.`; // Clear the text if "Normal" is selected
+    }
+
+    const hearingLossLText = document.getElementById("hearingLossLText");
+    if (
+      patientDetails.rightEarLevel &&
+      patientDetails.rightEarLevel !== "Normal"
+    ) {
+      hearingLossLText.textContent = `${patientDetails.rightEarLevel} hearing loss in the right ear.`;
+    } else {
+      hearingLossLText.textContent = `${patientDetails.rightEarLevel} in right ear.`; // Clear the text if "Normal" is selected
+    }
+  }
+
+  //Here I've written function to directly print HTML content**********************************************
+  function printReport() {
+    const data = document.querySelector(".content.container-fluid");
+
+    if (data !== null) {
+      data.classList.add("ck-blurred");
+      data.classList.remove("ck-focused");
+
+      // Apply inline CSS styles
+      data.style.fontSize = "28px";
+      data.style.padding = "6px";
+
+      // Add CSS styles for the table
+      const tableStyle = `
+        <style>
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed; /* Added to ensure equal cell sizes */
+          }
+  
+          td {
+            border: 1px solid black;
+            padding: 2px;
+            font-size: 20px;
+            width: auto; /* Adjust this value as needed */
+          }
+        </style>
+      `;
+      data.innerHTML = tableStyle + data.innerHTML;
+
+      window.print();
+    }
+  }
+
+  function resetPatientDetails() {
+    // Reset patient details
+    document.getElementById("patientName").textContent = "";
+    document.getElementById("patientID").textContent = "";
+    document.getElementById("patientAge").textContent = "";
+    document.getElementById("patientGender").textContent = "";
+    document.getElementById("testDate").textContent = "";
+    document.getElementById("reportDate").textContent = "";
+    // document.getElementById("xAxis").textContent = "";
+    document.getElementById("leftEarY").textContent = "";
+    document.getElementById("rightEarY").textContent = "";
+    document.getElementById("leftEarBoneY").textContent = "";
+    document.getElementById("rightEarBoneY").textContent = "";
+    document.getElementById("leftEarLevel").textContent = "";
+    document.getElementById("rightEarLevel").textContent = "";
+  }
+
+  function populatePatientDetails(patientDetails) {
+    // Populate patient details based on the selected patient
+    document.getElementById("patientName").textContent =
+      patientDetails.PatientName;
+    document.getElementById("patientID").textContent = patientDetails.PatientId;
+    document.getElementById("patientAge").textContent = patientDetails.age;
+    document.getElementById("patientGender").textContent =
+      patientDetails.gender;
+    document.getElementById("testDate").textContent = patientDetails.TestDate;
+    document.getElementById("reportDate").textContent =
+      patientDetails.ReportDate;
+  }
+
+  // Define an object to store patient data
+  const patientData = {};
+</script>
+<script>
+  function dismissError() {
+    // Remove the error overlay from the DOM
+    document.querySelector('.error-overlay').remove();
+  }
+</script>
+{% endblock %}

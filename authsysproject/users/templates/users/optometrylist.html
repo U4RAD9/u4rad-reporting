@@ -1,0 +1,528 @@
+{% extends 'users/base.html' %} {% load static %} {% block content %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}" />
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+  var currentIndex = 0; // Index of currently selected patient
+
+  function startProcess() {
+    console.log("Start button clicked.");
+    // Reset index and clear selected data container
+    currentIndex = 0;
+    document.getElementById("selected-data").innerHTML = "";
+    selectNextPatient();
+  }
+
+  function selectNextPatient() {
+    console.log("Selecting next patient.");
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    if (currentIndex < checkboxes.length) {
+      var checkbox = checkboxes[currentIndex];
+      checkbox.checked = true; // Automatically check the checkbox
+      displaySelectedData(checkbox); // Display selected data
+      generatePDF(); // Generate PDF
+      currentIndex++; // Move to the next patient
+    } else {
+      // All patients processed, display a message or perform any other action
+      console.log("All patients processed.");
+    }
+  }
+
+  function generatePDF() {
+    var selectedDataContainer = document.getElementById("selected-data");
+
+    // Apply inline CSS styles to the table
+    var tableStyle = `
+        <style>
+          body {
+            background-color: white;
+          }
+          #selected-data {
+            background-color: white;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed; /* Added to ensure equal cell sizes */
+          }
+  
+          td {
+            border: 2px solid black;
+            padding: 2px;
+            font-size: 16px;
+            width: auto; /* Adjust this value as needed */
+            text-align: center;
+          }
+
+          tr {
+            height: 50px;
+          }
+
+          #main-container {
+            margin: 15px;
+            background-color: white;
+          }
+
+          img {
+            max-width: 80%;
+            height: auto;
+            background-color: white;
+          }
+        </style>
+    `;
+
+    // Apply styles to the inner HTML of the selected data container
+    selectedDataContainer.innerHTML =
+      tableStyle + selectedDataContainer.innerHTML;
+
+    html2canvas(selectedDataContainer, {
+      onrendered: function (canvas) {
+        // Convert the canvas to PDF
+        var pdf = new jsPDF("p", "mm", "a4");
+        var imgData = canvas.toDataURL("image/jpeg", 1.0);
+        var imgWidth = 210; // A4 size: 210 x 297 mm
+        var imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        pdf.addImage(imgData, "JPEG", 0, 0, imgWidth, imgHeight);
+
+        // Get the patient ID and patient name
+        var patientId = document
+          .querySelector("#patient-id")
+          .innerText.trim()
+          .replace(/^Patient ID: /, "");
+        var patientName = document
+          .querySelector("#patient-name")
+          .innerText.trim()
+          .replace(/^Patient Name: /, "");
+
+        // Construct the file name
+        var fileName = patientId + "_" + patientName + ".pdf";
+
+        // Include text content in PDF
+        var textContent = selectedDataContainer.innerText;
+
+        // Set text color to white
+        pdf.setTextColor("#FFFFFF");
+
+        // Calculate position for text at the bottom of the page
+        var textX = 10;
+        var textY = pdf.internal.pageSize.height - 10;
+
+        // Add text to the PDF
+        pdf.text(textContent, textX, textY, {
+          align: "left",
+          baseline: "bottom",
+        });
+
+        // Save the PDF with the constructed file name
+        pdf.save(fileName);
+
+        // Delay selection of next patient after PDF generation is complete
+        setTimeout(selectNextPatient, 1000); // Change the delay time as needed
+      },
+    });
+  }
+
+  function displaySelectedData(checkbox) {
+    var row = checkbox.parentElement.getElementsByTagName("label");
+    var selectedDataContainer = document.getElementById("selected-data");
+    selectedDataContainer.innerHTML = ""; // Clear previous data
+    selectedDataContainer.innerHTML += `
+                <div id="main-container">
+                  <br>
+                  <br>
+                  <br>
+                  <br>
+                    <table>
+                        <tr>
+                            <td id="patient-id">
+                                Patient ID: ${row[1].innerText}
+                            </td>
+                            <td id="patient-name">    
+                                Patient Name: ${row[0].innerText}
+                            </td>
+                            <td>    
+                                Age: ${row[2].innerText}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>    
+                                Gender: ${row[3].innerText}
+                            </td>
+                            <td>    
+                                Test Date: ${row[4].innerText}
+                            </td>
+                            <td>    
+                                Report Date: ${row[5].innerText}
+                            </td>
+                        </tr>
+                    </table>
+                    <br>
+                    <br>
+                    <h5>OPTOMETRY REPORT</h5>
+                    <br>
+                    <table>
+                        <tr>
+                            <td colspan="3">    
+                                Visual Acuity
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>    
+                                -
+                            </td>
+                            <td>    
+                                Distance(Vision)
+                            </td>
+                            <td>    
+                                Reading(Vision)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>    
+                                Right Eye
+                            </td>
+                            <td>    
+                              ${row[6].innerText}
+                            </td>
+                            <td>    
+                              ${row[8].innerText}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>    
+                              Left Eye
+                            </td>
+                            <td>    
+                              ${row[7].innerText}  
+                            </td>
+                            <td>    
+                                ${row[9].innerText}
+                            </td>
+                        </tr>
+                    </table>
+                    <br>
+                    <br>
+                    <strong>Color vision check(Ishihara test): </strong> ${row[10].innerText} color blindness in both eyes.
+                    <br>
+                    <br>
+                    <strong>Visual Acuity:</strong>
+                    <br>
+                    <br>
+                    <strong>Distance(Far)</strong>: ${row[6].innerText} vision in right eye-${row[8].innerText} vision in left eye.
+                    <br>
+                    <strong>Distance(Far)</strong>: ${row[7].innerText} vision in right eye-${row[9].innerText} vision in left eye.
+                    <br>
+                    <br>
+                    <img src="static/image/moin.png" alt="Description of image">
+                    <br>
+                    <br>
+                    Moin Khan 
+                    <br>
+                    Optometrist
+                </div>
+            `;
+  }
+
+  function calculateBMI(height, weight) {
+    // Convert height from cm to meters
+    var heightMeters = height / 100;
+
+    // Calculate BMI
+    var bmi = (weight / (heightMeters * heightMeters)).toFixed(2);
+
+    return bmi;
+  }
+</script>
+<script>
+  function dismissError() {
+    // Remove the error overlay from the DOM
+    document.querySelector('.error-overlay').remove();
+  }
+</script>
+<style>
+  body {
+    background-color: white;
+  }
+
+  #rowCount {
+    position: absolute;
+    top: 20px;
+    /* Adjust the top position as needed */
+    left: 50%;
+    color: white;
+    font-weight: bold;
+    /* Adjust the right position as needed */
+  }
+
+  #selected-data {
+    padding: 10px;
+    width: 210mm;
+    /* A4 width in millimeters */
+    height: 297mm;
+    /* A4 height in millimeters */
+    position: fixed;
+    top: 60px;
+    right: 0;
+    margin: 20px;
+    /* Adjust margin as needed */
+    background-color: white;
+    /* Background color of the container */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    /* Ensure it appears above other content */
+  }
+
+  /* Styles for the patient details table */
+  table {
+    margin-top: 20px;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+
+  .form-control {
+    max-width: 300px;
+  }
+
+ 
+
+  #tools {
+    padding: 10px;
+    width: 750px;
+    /* A4 width in millimeters */
+    height: auto;
+    margin: 10px;
+  }
+
+  #logoutContainer {
+    position: absolute;
+    top: 20px;
+    /* Adjust the top position as needed */
+    right: 20px;
+    /* Adjust the right position as needed */
+  }
+
+  #routeContainer {
+    position: absolute;
+    top: 20px;
+    /* Adjust the top position as needed */
+    right: 120px;
+    /* Adjust the right position as needed */
+  }
+
+  .hidden {
+    color: white;
+  }
+
+  label {
+    width: 100px;
+  }
+
+  .label1 {
+    width: 300px;
+  }
+
+  #Layout {
+    position: absolute;
+    top: 70px;
+    /* Adjust the top position as needed */
+    left: 10px;
+    /* Adjust the right position as needed */
+  }
+
+  .error-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+
+  .error-card {
+    width: 700px; /* adjust width as needed */
+    height: 500px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* shadow effect */
+    z-index: 999;
+  }
+
+  .card-header {
+    padding: 10px;
+    background-color: #f8f9fa; /* light gray */
+    border-bottom: 1px solid #dee2e6; /* border color */
+  }
+
+  .card-footer {
+    background-color: #f8f9fa; /* light gray */
+    border-bottom: 1px solid #dee2e6; /* border color */
+  }
+
+  .card-body {
+    padding: 10px;
+    width: 700px;
+    height: 500px;
+    overflow-y: auto;
+    background-color: #f8f9fa; /* light gray */
+    border-bottom: 1px solid #dee2e6; /* border color */
+  }
+
+  .card-title {
+    margin-bottom: 0;
+  }
+
+  .buttons-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+
+  .inline-form {
+    display: inline;
+  }
+
+</style>
+
+<div id="Layout">
+  <div class="row" id="tools">
+    <div class="col-lg-8">
+      <form class="row" method="POST" enctype="multipart/form-data" action="{% url 'uploadcsv' %}">
+        {% csrf_token %}
+        <input class="form-control col-lg-10" type="file" name="csv_file" accept=".csv" />
+        <button class="btn btn-success col-lg-2" type="submit">Upload</button>
+      </form>
+    </div>
+    <button class="btn btn-success col-lg-2" onclick="startProcess()">
+      Start
+    </button>
+    <form class="col-lg-2" method="post" action="{% url 'delete_all_patients_opto' %}">
+      {% csrf_token %}
+      <button class="btn btn-danger" type="submit">Delete</button>
+    </form>
+  
+  </div>
+  
+  <!-- Start button -->
+  
+  <form method="POST" id="tools" action="{% url 'add_patient_opto' %}">
+    {% csrf_token %}
+    <div class="row mb-3">
+      <div class="col">
+        <input class="form-control" type="text" name="PatientName" placeholder="Patient Name" required>
+      </div>
+      <div class="col">
+        <input class="form-control" type="text" name="PatientId" placeholder="Patient ID" required>
+      </div>
+      <div class="col">
+        <input class="form-control" type="text" name="age" placeholder="Age" required>
+      </div>
+      <div class="col">
+        <input class="form-control" type="text" name="gender" placeholder="Gender" required>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col">
+        <input class="form-control" type="text" name="TestDate" placeholder="Test Date" required>
+      </div>
+      <div class="col">
+        <input class="form-control" type="text" name="ReportDate" placeholder="Report Date" required>
+      </div>
+      <div class="col">
+        <input class="form-control" type="text" name="ColorBlindness" placeholder="Color Blindness" required>
+      </div>
+    </div>
+    <div class="row  mb-3">
+      <div class="col">
+        <input class="form-control" type="text" name="FarVisionRight" placeholder="Far Vision Right" required>
+      </div>
+      <div class="col">
+        <input class="form-control" type="text" name="FarVisionLeft" placeholder="Far Vision Left" required>
+      </div>
+      <div class="col">
+        <input class="form-control" type="text" name="NearVisionRight" placeholder="Near Vision Right" required>
+      </div>
+      <div class="col">
+        <input class="form-control" type="text" name="NearVisionLeft" placeholder="Near Vision Left" required>
+      </div>
+    </div>
+    <div class="row">
+      <!-- Add input fields for other patient attributes as needed -->
+      <button id="add_patient" class="btn btn-success col-lg-12" type="submit">Add Patient</button>
+    </div>
+    
+  </form>
+  <h5>Optometry Patient Details</h5>
+  <form>
+    <ul>
+      {% for patient in patients %}
+      <li>
+        <input type="checkbox" onchange="displaySelectedData(this)" />
+        <label class="label1">{{ patient.PatientName }}</label>
+        <label>{{ patient.PatientId }}</label>
+        <label>{{ patient.age }}</label>
+        <label>{{ patient.gender }}</label>
+        <label class="hidden">{{ patient.TestDate }}</label>
+        <label class="hidden">{{ patient.ReportDate }}</label>
+        <label class="hidden">{{ patient.FarVisionRight }}</label>
+        <label class="hidden">{{ patient.FarVisionLeft }}</label>
+        <label class="hidden">{{ patient.NearVisionRight }}</label>
+        <label class="hidden">{{ patient.NearVisionLeft }}</label>
+        <label class="hidden">{{ patient.ColorBlindness }}</label>
+      </li>
+      {% endfor %}
+    </ul>
+  </form>
+</div>
+<div id="logoutContainer">
+  <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+</div>
+<div id="routeContainer">
+  <a href="{% url 'vitalslist' %}" class="btn btn-warning">vitals</a>
+</div>
+
+{% if messages %}
+<div class="error-overlay">
+  <div class="error-card">
+    <div class="card-header center">
+      <h5 class="card-title text-center">Notification</h5>
+    </div>
+    <div class="card-body">
+      <ul class="messages">
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="card-footer text-center">
+      <button onclick="dismissError()" class="btn btn-primary center">OK</button>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<div id="rowCount">
+  <p>Total number of Patients: {{ patients|length }}</p>
+</div>
+
+
+<div id="selected-data">
+  <!-- Selected data will be displayed here -->
+</div>
+{% endblock %}

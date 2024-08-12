@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+{% load tz %} {% load static %}
+<head>
+    <title>XRAi Reporting</title>
+    <link rel="stylesheet" href="{% static 'resource/css/main.css' %}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+        }
+
+        .container {
+          margin: 0 auto;
+          width: 100%;
+          max-width: 100%;
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+
+        .card {
+          border: none;
+          border-radius:7px;
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+          margin-bottom: 20px;
+          background-color: #fff;
+        }
+
+        .card-body {
+          padding: 20px; /* Increased padding for better spacing */
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          background-color: #ccc;
+        }
+
+        th,
+        td {
+          padding: 10px; /* Increased padding for better spacing */
+          text-align: left;
+          border-bottom: 1px solid #ccc;
+        }
+
+        th:first-child,
+        td:first-child {
+          position: sticky;
+          left: 0;
+          background-color: #fff;
+          z-index: 1;
+        }
+
+        .table-container {
+          height: 100%;
+          overflow-y: auto;
+        }
+        #patientTable {
+          width: 100%;
+          background-color: white;
+          color: black;
+        }
+        .form-control {
+           width: 135px;
+           height: 35px;
+           margin-top: 6px;
+        }
+        .btn1 {
+            width: 100px;
+            height: 35px;
+            margin-top: 6px;
+            background-color: transparent;
+            color: #007bff;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn1:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/allocation1">XRAi Reporting</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+                    <form class="d-flex" method="GET">
+                        <input class="form-control me-2" type="date" placeholder="Select Date" aria-label="Select Date" name="selected_date">
+                        <button class="btn1" type="submit">Apply Filter</button>
+                    </form>
+                    <li class="nav-item">
+                        <a href="/set_target" class="nav-link">
+                            <button class="btn btn-sm btn-warning"><strong>Set Proposal</strong></button>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/logout" class="nav-link">
+                            <button class="logout-button btn btn-sm btn-danger"><strong>Logout</strong></button>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-container">
+                    <table id="patientTable">
+                        <thead>
+                            <tr>
+                                <th>Client Name</th>
+                                <th>Proposed by Client</th>
+                                <th>Total Case Done</th>
+                                <th>Total Uploaded</th>
+                                <th>Total Assigned</th>
+                                <th>Total Reported</th>
+                                <th>Pending Reports</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for client_data in total_count_data %}
+                            <tr>
+                                <td>{{ client_data.client_name }}</td>
+                                <td>{{ client_data.total_proposal|default:"0" }}</td>
+                                <td>{{ client_data.total_done|default:"0" }}</td>
+                                <td>{{ client_data.total_count }}</td>
+                                <td>{{ client_data.total_assigned }}</td>
+                                <td>{{ client_data.total_reported }}</td>
+                                <td>{{ client_data.pending_reports }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

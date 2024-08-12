@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "@cornerstonejs/calculate-suv": "^1.1.0",
+    "@cornerstonejs/core": "^1.81.2",
+    "@cornerstonejs/dicom-image-loader": "^1.81.2",
+    "@cornerstonejs/streaming-image-volume-loader": "^1.81.2",
+    "@cornerstonejs/tools": "^1.81.2",
+    "dcmjs": "^0.33.0",
+    "dicom-parser": "^1.8.21",
+    "dicomweb-client": "^0.10.4",
+    "jquery": "^3.7.1"
+  },
+  "type": "module"
+}

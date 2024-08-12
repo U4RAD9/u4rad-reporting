@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <title>XRAi Reporting</title>
+</head>
+<style>
+    .navbar {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .card {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    h1 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    select {
+        width: 100%;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+    }
+
+    button[type="submit"] {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+
+    #alertMessage {
+        margin-bottom: 20px;
+    }
+
+</style>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/allocation1">XRAi Reporting</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a href="/logout" class="nav-link">
+                            <button class="logout-button btn btn-sm btn-danger"><strong>Logout</strong></button>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Form -->
+    <div class="card">
+        <h1>Get Report Observation</h1>
+        <form action="{% url 'get_excel' %}" method="post">
+            {% csrf_token %}
+            <label for="city">Select City:</label>
+            <select name="city" id="city">
+                <option value="">Select City</option>
+                {% for city in cities %}
+                <option value="{{ city.name }}">{{ city }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <label for="location">Select Location:</label>
+            <select name="location" id="location">
+                <option value="">Select Location</option>
+            </select>
+            <br>
+             <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary">Generate Excel</button>
+            </div>
+            <div class="d-flex justify-content-center mt-2">
+                <a href = '/allocation1'>Go To Dashboard</a>
+            </div>
+        </form>
+    </div>
+
+   <script>
+        document.getElementById('city').addEventListener('change', function() {
+            var selectedCity = this.value;
+            var locationSelect = document.getElementById('location');
+
+            // Clear existing options
+            locationSelect.innerHTML = '<option value="">Select Location</option>';
+
+            // Filter locations based on the selected city
+            {% for city in cities %}
+                if ("{{ city.name }}" === selectedCity) {
+                    {% for location in city.xlocation_set.all %}
+                        var option = document.createElement('option');
+                        option.value = "{{ location.name }}";
+                        option.textContent = "{{ location.name }}";
+                        locationSelect.appendChild(option);
+                    {% endfor %}
+                }
+            {% endfor %}
+        });
+    </script>
+
+</body>
+</html>
