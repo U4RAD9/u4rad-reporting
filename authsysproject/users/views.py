@@ -88,7 +88,7 @@ import fitz
 import pandas as pd
 import math
 from pyorthanc import Orthanc, find_patients
-import datetime
+#import datetime
 
 
 #ssh tunnel
@@ -2217,7 +2217,8 @@ def upload_xray_pdf(request):
                     destination.write(chunk)
 
             # Convert report_date_str to a datetime object
-            test_date = datetime.strptime(test_date_str, "%Y-%m-%d").date()
+            print(datetime)
+            test_date = datetime.strptime(test_date_str, "%d-%m-%Y").date()
             report_date = datetime.strptime(report_date_str, "%Y-%m-%d").date()
 
             # Save the PDF file path and additional data to the database
