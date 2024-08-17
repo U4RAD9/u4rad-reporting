@@ -88,7 +88,10 @@ import fitz
 import pandas as pd
 import math
 from pyorthanc import Orthanc, find_patients
-import datetime
+from twilio.rest import Client as tw
+import re
+from django.utils.timezone import now
+#import datetime
 
 
 #ssh tunnel
@@ -2217,6 +2220,7 @@ def upload_xray_pdf(request):
                     destination.write(chunk)
 
             # Convert report_date_str to a datetime object
+            print(datetime)
             test_date = datetime.strptime(test_date_str, "%Y-%m-%d").date()
             report_date = datetime.strptime(report_date_str, "%Y-%m-%d").date()
 
@@ -2230,6 +2234,26 @@ def upload_xray_pdf(request):
                 report_date=report_date
             )
             pdf_model_instance.save()
+            print(patient_id)
+
+            if re.fullmatch(r'\d{10}', patient_id):
+                account_sid = settings.TWILIO_ACCOUNT_SID
+                auth_token = settings.TWILIO_AUTH_TOKEN
+                client = tw(account_sid, auth_token)
+                #patient_name = 'Jangra'
+                # media_url = 'media/uploads/xray_pdfs/RUCH1234_RUCHI%20JANGRA_IQ%20CITY%20ROAD.pdf'
+                prefix = "media/uploads/xray_pdfs/"
+                encoded_filename = pdf_file.name.replace(" ", "%20")
+                media_url = prefix + encoded_filename
+                print(media_url)
+                message = client.messages.create(
+                    content_sid='HXff6a8bf74ca42c765eefe580fb5b376b',
+                    from_='MG228f0104ea3ddfc780cfcc1a0ca561d9',
+                    to=f'whatsapp:+91{patient_id}',
+                    content_variables=json.dumps({'1': patient_name, '2': media_url}),
+                    
+                )
+                print(message)
 
             return JsonResponse({'message': 'PDF successfully uploaded and processed.'})
         except Exception as e:
