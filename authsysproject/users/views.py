@@ -88,12 +88,13 @@ import fitz
 import pandas as pd
 import math
 from pyorthanc import Orthanc, find_patients
+import boto3
+from twilio.rest import Client as tw
+import re
+from django.utils.timezone import now
+
 #import datetime
 
-
-#ssh tunnel
-
-    
 
 def login(request):
     if request.method == 'POST':
@@ -223,10 +224,8 @@ def logout(request):
 
 def server_data(request):
     if request.method == 'POST':
-        
         url = 'http://13.202.103.243:2002/'
         server = Orthanc(url, username='admin', password='u4rad')
-        
         for key in request.POST.keys():
             study_id = key
         study = server.get_studies_id(study_id)
@@ -848,10 +847,19 @@ def PersonalInfo(request):
         insti_group, _ = Group.objects.get_or_create(name="radiologist")
         insti_group.user_set.add(user)
 
+        # Upload signature and company logo to S3
+        signature_path = upload_to_s3(signature, f'signatures/{signature.name}') if signature else None
+        companylogo_path = upload_to_s3(companylogo, f'company_logos/{companylogo.name}') if companylogo else None
+
+        # Ensure paths were uploaded successfully
+        if not signature_path or not companylogo_path:
+            return JsonResponse(status=500, data={"message": "Failed to upload files to S3"})
+
+
         personal_info = PersonalInfoModel.objects.create(user=user, phone=phone, altphone=altphone,
                                                          reference=reference, resume=resume,
-                                                         uploadpicture=uploadpicture, signature=signature,
-                                                         companylogo=companylogo)
+                                                         uploadpicture=uploadpicture, signature=signature_s3_path,
+                                                         companylogo=companylogo_s3_path)
         personal_info.serviceslist.set(serviceslist)  # Set the ManyToManyField with the selected
         personal_info.exportlist.set(exportlist)
 
@@ -1829,7 +1837,7 @@ def handle_single_file_per_person_upload(request, form, locations):
                                 study_description=str(dicom_data.StudyDescription),
                                 notes=request.POST.get("note"),
                                 body_part_examined=str(dicom_data.BodyPartExamined),
-                                location=location
+                                location=location.name
                             )
                             if dicom_instance.notes == '':
                                 dicom_instance.notes = 'No Clinical History.'
@@ -1967,7 +1975,7 @@ def handle_multiple_file_single_person_upload(request, form, locations):
                         # Initialize common fields if this is a newly created DICOMData instance
                         dicom_instance.client = client
                         dicom_instance.city = city
-                        dicom_instance.location = location
+                        dicom_instance.location = location.name
                         dicom_instance.patient_name = str(dicom_data.PatientName)
                         # if
                         dicom_instance.age = str(dicom_data.PatientAge)
@@ -2190,6 +2198,7 @@ def handle_xray_pdf_upload(pdf_file):
     your_pdf_model_instance.save()
 
 
+
 def upload_xray_pdf(request):
     if request.method == 'POST':
         try:
@@ -2204,17 +2213,11 @@ def upload_xray_pdf(request):
             if not pdf_file:
                 return JsonResponse({'error': 'No PDF file provided.'}, status=400)
 
-            # Specify the upload path and create a folder if it doesn't exist
-            upload_path = os.path.join('uploads', 'xray_pdfs')
-            os.makedirs(upload_path, exist_ok=True)
+            # Upload the file to S3 using Django's default file storage
+            s3_client = boto3.client('s3', region_name=settings.AWS_S3_REGION_NAME)
+            s3_file_path = f'uploads/xray_pdfs/{pdf_file.name}'
 
-            # Save the PDF file to the specified path
-            pdf_file_path = os.path.join(upload_path, pdf_file.name)
-            print("PDF file path:", pdf_file_path)
-
-            with open(pdf_file_path, 'wb+') as destination:
-                for chunk in pdf_file.chunks():
-                    destination.write(chunk)
+            s3_client.upload_fileobj(pdf_file, settings.AWS_STORAGE_BUCKET_NAME, s3_file_path)
 
             # Convert report_date_str to a datetime object
             print(datetime)
@@ -2223,7 +2226,7 @@ def upload_xray_pdf(request):
 
             # Save the PDF file path and additional data to the database
             pdf_model_instance = XrayReport(
-                pdf_file=pdf_file_path,
+                pdf_file=s3_file_path,
                 name=patient_name,
                 patient_id=patient_id,
                 location=location,
@@ -2231,6 +2234,30 @@ def upload_xray_pdf(request):
                 report_date=report_date
             )
             pdf_model_instance.save()
+            print(patient_id)
+
+            # Generate a pre-signed URL for the PDF file
+            presigned_url = generate_presigned_url(pdf_model_instance.pdf_file.name)
+            if presigned_url is None:
+                return JsonResponse({'error': 'Could not generate pre-signed URL.'}, status=500)
+
+            if re.fullmatch(r'\d{10}', patient_id):
+                account_sid = settings.TWILIO_ACCOUNT_SID
+                auth_token = settings.TWILIO_AUTH_TOKEN
+                client = tw(account_sid, auth_token)
+
+                # Generate the S3 media URL
+                media_url = f'https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.{settings.AWS_S3_REGION_NAME}.amazonaws.com/{s3_file_path}'
+                print("Media URL:", media_url)
+
+                message = client.messages.create(
+                    content_sid='HX1a91399a3722754fdab9c0a1a3edf43f',
+                    from_='MG228f0104ea3ddfc780cfcc1a0ca561d9',
+                    to=f'whatsapp:+91{patient_id}',
+                    content_variables=json.dumps({'1': patient_name, '2': presigned_url}),
+                )
+                print(message)
+                print(patient_name, presigned_url)
 
             return JsonResponse({'message': 'PDF successfully uploaded and processed.'})
         except Exception as e:
@@ -2238,6 +2265,11 @@ def upload_xray_pdf(request):
             return JsonResponse({'error': 'Internal server error.'}, status=500)
 
     return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
+
+
+
+
 
 
 def get_csrf_token(request):
@@ -2249,6 +2281,25 @@ def get_csrf_token(request):
     return JsonResponse(csrf_token)
 
 
+def generate_presigned_url(key):
+    s3_client = boto3.client(
+        's3',
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        region_name=settings.AWS_REGION,
+    )
+    try:
+        response = s3_client.generate_presigned_url(
+            'get_object',
+            Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME, 'Key': key},
+            ExpiresIn=3600  # URL expires in 1 hour
+        )
+        return response
+    except Exception as e:
+        print(f"Error generating presigned URL: {e}")
+        return None
+
+
 @user_type_required('xraycoordinator')
 ############################ To retrive data
 # def xray_pdf_report(request):
@@ -2256,8 +2307,30 @@ def get_csrf_token(request):
 #     print([pdf.get_pdf_url() for pdf in pdfs])
 #     return render(request, 'users/xray_pdf_report.html', {'pdfs': pdfs})
 
+#def xray_pdf_report(request):
+#    pdfs = XrayReport.objects.all().order_by('-report_date')
+
+    # Collect unique dates and locations from the PDFs
+#    test_dates = set(pdf.test_date for pdf in pdfs)
+#    formatted_dates = [date.strftime('%Y-%m-%d') for date in test_dates]
+#    report_dates = set(pdf.report_date for pdf in pdfs)
+#    unique_locations = XLocation.objects.all()
+
+#    context = {
+#        'pdfs': pdfs,
+#        'Test_Date': sorted(formatted_dates),
+#        'Report_Date': sorted(report_dates),  # Ensure dates are sorted for dropdown
+#        'Location': unique_locations  # Ensure locations are sorted for dropdown
+#    }
+
+#    return render(request, 'users/xray_pdf_report.html', context)
+
 def xray_pdf_report(request):
     pdfs = XrayReport.objects.all().order_by('-report_date')
+
+    # Generate signed URLs for each PDF file
+    for pdf in pdfs:
+        pdf.signed_url = generate_presigned_url(pdf.pdf_file.name)
 
     # Collect unique dates and locations from the PDFs
     test_dates = set(pdf.test_date for pdf in pdfs)
@@ -2268,8 +2341,8 @@ def xray_pdf_report(request):
     context = {
         'pdfs': pdfs,
         'Test_Date': sorted(formatted_dates),
-        'Report_Date': sorted(report_dates),  # Ensure dates are sorted for dropdown
-        'Location': unique_locations  # Ensure locations are sorted for dropdown
+        'Report_Date': sorted(report_dates),
+        'Location': unique_locations
     }
 
     return render(request, 'users/xray_pdf_report.html', context)

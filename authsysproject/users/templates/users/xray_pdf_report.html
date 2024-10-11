@@ -530,7 +530,7 @@
                 <td>{{ pdf.report_date }}</td>
                 <td>{{ pdf.location }}</td>
                 <td>
-                  <a class="reportButton" href="{{ pdf.get_pdf_url }}" download>DOWNLOAD</a>
+                  <a class="reportButton" href="{{ pdf.signed_url }}" download>DOWNLOAD</a>
                 </td>
                 <td><input type="checkbox" class="rowCheckbox" /></td>
               </tr>
