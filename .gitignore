@@ -6,6 +6,9 @@ __pycache__
 db.sqlite3
 media
 
+# Removing settings.py file so that it doesn't affect the git pushes - Himanshu.
+authsysproject/authsysproject/settings.py
+
 # Backup files # 
 *.bak 
 
